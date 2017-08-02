@@ -1417,6 +1417,20 @@
 						letter-spacing: -0.015em;
 						margin-top: 0;
 					}
+					#me header > a.link {
+						position: absolute;
+						left: 0;
+						top: 65%;
+						font-size: 1.0em;
+						letter-spacing: -0.015em;
+						margin-top: 0;
+						color: dodgerblue;
+					}
+
+					#me header > a.link:hover {
+						color: green;
+						transform: skew(-20deg);
+					}
 
 		/* Footer */
 
