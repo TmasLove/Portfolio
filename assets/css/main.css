@@ -1596,3 +1596,20 @@
 					}
 
 	}
+
+
+.map {
+	border: 1px solid black;
+	width: 320px;
+	height: 350px;
+	float:left;
+}
+
+.contact-info {
+	border: 1px solid black;
+	width: 350px;
+	height: 320px;
+	float:right;
+	padding-left: 15px;
+
+}
