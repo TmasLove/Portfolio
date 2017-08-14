@@ -1490,18 +1490,6 @@
 					margin-top: 0;
 				}
 
-		/* Button */
-
-			input[type="button"],
-			input[type="submit"],
-			input[type="reset"],
-			button,
-			.button {
-				display: block;
-				width: 100%;
-				padding: 0.75em 0 0.75em 0;
-				text-align: center;
-			}
 
 		/* Wrapper */
 
@@ -1538,6 +1526,7 @@
 
 			#main {
 				background: none;
+
 			}
 
 			.panel {
@@ -1552,6 +1541,11 @@
 				}
 
 		/* Me */
+
+article#me .panel {
+	border-radius: 10px;
+
+}
 
 			#me .pic {
 				width: 100%;
@@ -1618,4 +1612,62 @@ img.here {
 	width: 379px;
 	height: 349px;
 	float: left;
+}
+
+
+
+.progress-bar.color1 {
+	background-color: green !important;
+}
+
+.progress-bar.color2 {
+	background-color: orange !important;
+}
+
+.progress-bar.color3 {
+	background-color: dodgerblue !important;
+}
+
+.progress-bar.color4 {
+	background-color: #993383 !important;
+}
+
+.progress-bar.color5 {
+	background-color: #BB3E3E !important;
+}
+
+.progress-bar.color6 {
+	background-color: purple !important;
+}
+
+.progress-bar.color7 {
+	background-color: #22672F !important;
+}
+
+.progress-bar.color8 {
+	background-color: #2B6282 !important;
+}
+
+.fa-phone:before {
+	color: forestgreen;
+}
+
+.fa-envelope:before {
+	color: #0A639F;
+}
+
+.fa-download:before {
+	color: #0A639F;
+}
+
+.fa-home.contact:before {
+	color: #0A639F;
+}
+
+img.here {
+	box-shadow: 2px 2px 4px #000000;
+}
+
+.contact-info {
+	box-shadow: 1px #0000;
 }
