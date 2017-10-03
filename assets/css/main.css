@@ -1735,6 +1735,18 @@ img.here {
     width: 100%;
 }
 
+.workk figure dt {
+	text-align: center;
+}
+
+.workk h3 {
+	text-align: center;
+}
+
+.workk a {
+	color: gold !important;
+}
+
 .workk figure dl {
     opacity: 0;
     position: absolute;
