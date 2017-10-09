@@ -1084,23 +1084,6 @@
 		position: relative;
 	}
 
-/* Me */
-
-	#me .pic {
-		position: relative;
-		display: block;
-	}
-
-		#me .pic:before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			background: url("images/overlay.png");
-			width: 100%;
-			height: 100%;
-			z-index: 1;
-		}
 
 /* Footer */
 
@@ -1546,7 +1529,7 @@
 
 		/* Me */
 
-article#me .panel {
+	article#me .panel {
 	border-radius: 10px;
 
 }
@@ -1577,6 +1560,7 @@ article#me .panel {
 					font-size: 1.25em;
 				}
 
+
 		/* Footer */
 
 			#footer {
@@ -1595,6 +1579,34 @@ article#me .panel {
 
 	}
 
+	.typewritter p {
+
+	font-family: serif;
+	overflow: hidden; /* Ensures the content is not revealed until the animation */
+	border-right: .10em solid orange; /* The typwriter cursor */
+	white-space: pre-line; /* Keeps the content on a single line */
+	margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+	letter-spacing: .15em; /* Adjust as needed */
+	animation:
+	typing 3.5s steps(30, end),
+	blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: transparent }
+}
+
+
+
+
 
 .contact-info {
 	border: 1px solid black;
@@ -1603,9 +1615,8 @@ article#me .panel {
 	float:right;
 	padding-left: 15px;
 	margin-right: 350px;
-margin-top: 20px;
-border-radius: 10px;
-padding-top: 10px;
+	border-radius: 10px;
+	padding-top: 10px;
 }
 
 .hi {
@@ -1618,7 +1629,25 @@ img.here {
 	float: left;
 }
 
+.container-other {
+	padding-top: 126px;
+}
 
+.mean-stack {
+	float: right;
+	width: 35%;
+	position: relative;
+	left: 250px;
+	bottom: 315px;
+}
+
+.other-stack {
+	float: right;
+width: 260px;
+position: relative;
+right: 300px;
+bottom: 335px
+}
 
 .progress-bar.color1 {
 	background-color: green !important;
@@ -1668,12 +1697,9 @@ img.here {
 	color: #0A639F;
 }
 
-img.here {
-	box-shadow: 2px 2px 4px #000000;
-}
 
 .contact-info {
-	box-shadow: 1px #0000;
+	box-shadow: 2px 3px 4px #000000;
 }
 
 
@@ -1745,6 +1771,10 @@ img.here {
 
 .workk a {
 	color: gold !important;
+}
+
+.workk dd a.test {
+	color: white !important;
 }
 
 .workk figure dl {
