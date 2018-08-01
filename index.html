@@ -1,391 +1,77 @@
-<!DOCTYPE HTML>
-
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 
 <head>
-  <title>
-    Tomas Roldan
-  </title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <link rel="stylesheet" href="assets/css/main.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tomas Roldan's Porfolio Site">
+  <meta property="og:description" content="Tomas Roldan's Porfolio Site">
+  <meta property="og:title" content="Tomas Roldan's Porfolio Site">
+  <meta property="og:image" content="">
+  <meta property="og:url" content="tomcat.codes">
+  <title>Welcome</title>
   <link rel="stylesheet" href="css/animate.css">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-  <!-- Global Site Tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-107761621-1');
-  </script>
-
-<!-- <link rel="shortcut icon" href="images/logo-white.png"> -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 
-  <div width="100%" height="80%" id="vid">
-    <video style="height:73em;"  autoplay loop>
-      <source src="assets/css/images/back.mp4" type="video/mp4">
-      </video>
-  </div>
+  <div class="text-container">
+
+    <a href="index.html" class="animated fadeIn" id="main">Tommy Roldan</a>
+    <code class="animated fadeIn">Web Developer</code>
 
 
-
-  <!-- Wrapper-->
-  <div id="wrapper">
-
-    <!-- Nav -->
-    <nav id="nav">
-      <a href="#me" class="icon fa-home active"><span>Hi</span></a>
-      <a href="#about" class="icon fa-user"><span>About Me</span></a>
-      <a href="#work" class="icon fa-terminal fa-stack-1x"><span>My Work</span></a>
-      <a href="#contact" class="icon fa-paper-plane"><span>Contact Me</span></a>
-      <a href="https://www.linkedin.com/in/tommy-roldan/" class="icon fa-linkedin"><span>LinkedIn</span></a>
+    <nav>
+      <ul>
+        <li>
+          <a href="about.html">About</a>
+        </li>
+        <span>/</span>
+        <li>
+          <a href="work.html">My Work</a>
+        </li>
+        <span>/</span>
+        <li>
+          <a href="contact.html">Contact</a>
+        </li>
     </nav>
 
-    <!-- Main -->
-    <div id="main">
+    <ul class="social">
+      <li>
+        <a href="www.instagram.com/tmcattt" class="animated fadeIn"><i class="fa fa-instagram"></i></a>
+      </li>
+      <li>
+        <a href="www.github.com/TmasLove" class="animated fadeIn"><i class="fa fa-github"></i></a>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/tommy-roldan/" class="animated fadeIn"><i class="fa fa-linkedin"></i></a>
+      </li>
 
-      <!-- Me -->
-      <article id="me" class="panel">
-        <header>
-          <h1 style="font-family:'Rock Salt', cursive; font-size:30px;">Tomas Roldan</h1>
-          <p style="font-family:'Permanent Marker', arial; font-size:35px;">Full Stack Developer</p>
-        </header>
-        <a href="#work" class="jumplink pic">
-									<span class="arrow icon fa-chevron-right"><span>See my work</span></span>
-									<img src="images/me.png" alt="" />
-								</a>
-      </article>
-
-
-      <!-- About ME -->
-      <article id="about" class="panel">
-        <header>
-          <h2 style="font-family:'Permanent Marker', cursive; font-weight:bold;">About Me</h2>
-        </header>
-        <hr>
-        <div class="typewritter">
-          <p style="font-family:'Open Sans', regular; font-weight:bold;">
-            <strong>
-          I was born in <span style="color:red;">Medellin, Colombia</span>. I arrived to the States when I was 9 y/o.
-          <br>I moved around a lot but was fortunate enough to have been raised in Key Biscayne. <br>I now reside in Coconut Grove. <br><br> As of <span style="color:red;">August 2017</span>, I have graduated from <span style="color:blue;">Ironhack's Full-Time Web Development Bootcamp</span> as a <span style="color:red;">Full Stack Web Developer</span>.
-          I have a <span style="color:red;">background in Business Management</span> but have always been curious about <span style="color:red;">Programming/Security</span>.<br><br> Thanks to Ironhack, I now have a visual of the career I would like to continue to pursue.<br>          I’m constantly searching for new interesting technologies as well as expanding my own skills.
-          <br><br> If I'm not coding, I'm mostly cycling or doing some sort of physical activity. </br><br> My most recent experiences has been with the M<span style="color:gold;">E</span><span style="color:red;">A</span><span style="color:green;">N</span> stack.
-        </strong>
-          </p>
-        </div>
-
-        <br><br>
-
-        <!-- MY SKILLS -->
-        <section class="specialties" id="specialties">
-          <div class="container">
-            <h2>My Skills</h2>
-          </div>
-          <hr>
-
-
-
-          <div class="container">
-            <div class="row">
-              <div class="col-md-6 wow fadeInRight" data-wow-offset="0" data-wow-delay="0.3s">
-                <div class="skill">
-                  <div class="progress-wrap">
-                    <h3> MongoDB </h3>
-                    <div class="progress">
-                      <div class="progress-bar color1" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                        <span class="bar-width">80%</span>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="progress-wrap">
-                    <h3> Express </h3>
-                    <div class="progress">
-                      <div class="progress-bar color2" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 78%">
-                        <span class="bar-width">78%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="progress-wrap">
-                    <h3> Angular2 </h3>
-                    <div class="progress">
-                      <div class="progress-bar color3" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                        <span class="bar-width">65%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="progress-wrap">
-                    <h3>NodeJS</h3>
-                    <div class="progress">
-                      <div class="progress-bar color4" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
-                        <span class="bar-width">75%</span>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- ending skill    -->
-                </div>
-                <div class="container-logo">
-                  <ul>
-                    <li><img class="mean-stack" src="images/mean.png"></li>
-                  </ul>
-                </div>
-
-
-                <br><br>
-
-                <div class="container-other">
-                  <h2>Other Related Skills</h2>
-                </div>
-                <hr>
-
-                <div class="progress-wrap">
-                  <h3> HTML5/CSS3 </h3>
-                  <div class="progress">
-                    <div class="progress-bar color5" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
-                      <span class="bar-width">90%</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="progress-wrap">
-                  <h3> Bootstrap/SASS </h3>
-                  <div class="progress">
-                    <div class="progress-bar color6" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-                      <span class="bar-width">85%</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="progress-wrap">
-                  <h3> JavaScript/jQuery </h3>
-                  <div class="progress">
-                    <div class="progress-bar color7" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                      <span class="bar-width">60%</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="progress-wrap">
-                  <h3> Photoshop </h3>
-                  <div class="progress">
-                    <div class="progress-bar color8" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
-                      <span class="bar-width">50%</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <!-- end ^ row -->
-
-            <div class="other">
-              <ul>
-                <li><img class="other-stack" src="images/other-stack.jpg"></li>
-              </ul>
-            </div>
-
-          </div>
-          <!-- end ^ container -->
-
-
-        </section>
-      </article>
-
-
-
-
-      <!-- Work -->
-      <article id="work" class="panel">
-        <h2 style="font-family:'Permanent Marker', cursive; font-weight:bold;"> My Work </h2>
-        <br>
-        <p>
-          Below you can see the projects that I have completed within my <strong>Web Development</strong> career. <br>
-
-        </p>
-        <hr>
-        <br>
-
-
-
-        <div class="toolbar mb2 mt2">
-          <button class="btn fil-cat" href="" data-rel="all">All</button>
-          <button class="btn fil-cat" data-rel="game">Games</button>
-          <button class="btn fil-cat" data-rel="static">Static</button>
-          <button class="btn fil-cat" data-rel="multi">Multi-Page Apps</button>
-          <button class="btn fil-cat" data-rel="single">Single-Page Apps</button>
-        </div>
-
-
-        <section class="workk">
-
-          <div id="portfolio">
-            <figure class="tile scale-anm game all">
-              <h3> Brick Breaker
-              </h3>
-              <dl>
-                <dt><a href="https://tmaslove.github.io/Brick-/">JS/Canvas Game</a></dt>
-                <dd><a class="test" href="https://tmaslove.github.io/Brick-/"> A single-player JavaScript and Canvas based game that uses a ball and a paddle to destroy the bricks which will determine whether you win or lose. A second ball comes into play randomly.</a></dd>
-              </dl>
-              <img src="images/BrickBreaker.png" class="image fit" alt=""></a>
-            </figure>
-
-            <figure class="tile scale-anm multi all">
-              <h3> Follow MeMe </h3>
-              <dl>
-                <dt><a href="https://floating-hamlet-63179.herokuapp.com/"> ExpressJS/NodeJS</a></dt>
-                <dd><a class="test" href="https://floating-hamlet-63179.herokuapp.com/"> A server side web application along with a friendly user interface, that lets you generate Meme’s within and download or post it to a public feed.</a></dd>
-              </dl>
-              <img src="images/MemeGen.png" class="image fit" alt=""></a>
-            </figure>
-
-
-            <figure class="tile scale-anm single all">
-              <h3> Drinks on Demand </h3>
-              <dl>
-                <dt><a href="http://www.drinksondemand.co/"> Angular2/API</a> </dt>
-                <dd><a class="test" href="http://www.drinksondemand.co/"> A full MEAN stack app along with API integrations, that will allow you to purchase alcohol of your choice and get it delivered to you.</a></dd>
-              </dl>
-              <img src="images/DonD.png" class="image fit" alt=""></a>
-            </figure>
-
-
-            <figure class="tile scale-anm static all">
-              <h3> Roldan Construction Group </h3>
-              <dl>
-                <dt><a href="#"> Static/ExpressJS</a> </dt>
-                <dd><a class="test" href="#"> An ExpressJS website dedicated to Roldan Construction Group.</a></dd>
-              </dl>
-              <img src="images/RoldanConstGroup.png" class="image fit" alt="">
-            </figure>
-
-            <figure class="tile scale-anm static all">
-              <h3> My Portfolio </h3>
-              <dl>
-                <dt><a href="http://tomcat.codes/"> Static </a> </dt>
-                <dd><a class="test" href="http://tomcat.codes/"> HTML5/CSS3/JScript </a> </dd>
-              </dl>
-              <img src="images/portfolio.png" class="image fit" alt="">
-            </figure>
-
-            <figure class="tile scale-anm static all">
-              <h3> Fixed Latinos </h3>
-              <dl>
-                <dt><a href="#"> Static/ExpressJS</a> </dt>
-                <dd><a class="test" href="#"> An ExpressJS website dedicated to Fixed Latinos cycling Team.</a></dd>
-              </dl>
-              <img src="images/fixed-latinos.png" class="image fit" alt="">
-            </figure>
-
-
-
-          </div>
-        </section>
-      </article>
-
-
-
-
-
-      <!-- Contact -->
-      <article id="contact" class="panel">
-        <header>
-          <h2 style="font-family:'Permanent Marker', cursive; font-weight:bold;">Contact Me</h2> <br>
-          <h4 class="hi"> Say Hi 🤙🏽 or let's do 💼 </h4>
-        </header>
-        <hr>
-        <div class="container">
-          <div class="map">
-            <iframe width="420" height="320" frameborder="0" style="float:left;" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ21gpp8S32YgR-wAxYp87fic&key=AIzaSyD7R0AtWg0-sOwBEHIq7TWf8sitVVYsKNw"> Coconut Grove, FL</iframe>
-          </div>
-
-          <div class="contact-info">
-            <ul>
-              <li>
-                <i class="fa fa-home fa-2x contact"></i>
-                <a href="https://www.google.com/maps/place/Coconut+Grove,+Miami,+FL/@25.7297212,-80.2493478,14z/data=!3m1!4b1!4m5!3m4!1s0x88d9b7c4a72958db:0x277e3b9f623100fb!8m2!3d25.7307897!4d-80.2377078" targer="_blank"> Coconut Grove, FL</a>
-              </li>
-              <br>
-              <li>
-                <i class="fa fa-phone fa-2x contact"></i>
-                <a href="tel:786-602-73XX">786-602-7399</a>
-              </li>
-              <br>
-              <li>
-                <i class="fa fa-envelope fa-2x contact"></i>
-                <a hre="mailto:troldan92@gmail.com">troldan92@gmail.com</a>
-              </li>
-              <br>
-              <li>
-                <i class="fa fa-download fa-2x contact"></i>
-                <p> View my Full Resume:
-                  <a href="https://www.dropbox.com/s/i0kjhc7axkppt95/Resume.pdf?dl=0">.pdf</a>
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-      </article>
-
-    </div>
-
-    <!-- Footer -->
-    <div id="footer">
-      <ul class="copyright">
-        <li>&copy; Tomcat</li>
-        <li>Design: <a href="http://tomcat.codes">Tomcat</a></li>
-      </ul>
-    </div>
+    </ul>
 
   </div>
 
-  <!-- Scripts -->
 
-  <script src="assets/js/jquery-1.11.0.min.js"></script>
-  <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/bootstrap.min.js"></script>
-  <script src="assets/js/skel.min.js"></script>
-  <script src="assets/js/skel-viewport.min.js"></script>
-  <script src="assets/js/util.js"></script>
-  <script src="assets/js/main.js"></script>
 
-  <script type="text/javascript">
-    $(function() {
-      var selectedClass = "";
-      $(".fil-cat").click(function() {
-        selectedClass = $(this).attr("data-rel");
-        $("#portfolio").fadeTo(100, 0.1);
-        $("#portfolio figure").not("." + selectedClass).fadeOut().removeClass('scale-anm');
-        setTimeout(function() {
-          $("." + selectedClass).fadeIn().addClass('scale-anm');
-          $("#portfolio").fadeTo(300, 1);
-        }, 300);
 
-      });
-    });
-  </script>
 
+
+
+
+
+
+  <script type="text/javascript" src="js/three.min.js"></script>
+  <script src="js/projector.js"></script>
+  <script src="js/canvasRenderer.js"></script>
+  <script src="js/Bird.js"></script>
+  <script src="js/canvas.js"></script>
 </body>
-
-
-<style>
-@import url(https://fonts.googleapis.com/css?family=Bree+Serif);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-@import url(https://fonts.googleapis.com/css?family=Permanent+Marker);
-@import url(https://fonts.googleapis.com/css?family=Permanent+Marker|Rock+Salt);
-
-</style>
 </html>
+
+<style media="screen">
+  body {
+    background-color: #CAD7DE;
+  }
+</style>
