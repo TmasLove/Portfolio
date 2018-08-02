@@ -115,7 +115,11 @@ canvas {
 
 header {
   background-image: url('images/vice-city.png') !important;
+ /* missing .. ^ */
+}
 
+.midSection {
+  width: 80%;
 }
 
 .about-text {
@@ -124,6 +128,10 @@ header {
   text-align: center;
   padding: 50px;
   padding-bottom: 2em;
+}
+
+.breif {
+  text-indent: 2em;
 }
 
 #me {
@@ -159,7 +167,7 @@ header {
 /* MY WORK------------- */
 
 .grid-layout {
-  max-width: 70em;
+  max-width: 75em;
   margin: 0 auto;
   padding: 1.8em 0;
   box-shadow: 25px 30px 160px 30px grey;
@@ -174,14 +182,14 @@ header {
 }
 
 .grid-layout img {
-  width: 20em;
+  width: 21em;
   height: 20em;
   transition: 0.3s;
-  /*display: block;*/
 }
 
 .grid-layout a:hover img {
   opacity: .1;
+  border: 2px solid orangered;
 }
 
 .grid-layout a {
