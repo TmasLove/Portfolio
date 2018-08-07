@@ -107,15 +107,17 @@ canvas {
 .about-container {
   max-width: 100%;
   margin: 0 auto;
-  /* background-color: #ffdfe0; */
   text-align: center;
-  padding: 50px;
-  padding-bottom: 2em;
+  padding: 90px;
+  /* padding-bottom: 2em; */
+  background-image: url('../images/vice-city.jpg');
+  background-size: cover;
+  background-position: center;
+
 }
 
 header {
-  background-image: url('images/vice-city.png') !important;
- /* missing .. ^ */
+opacity: 1;
 }
 
 .midSection {
