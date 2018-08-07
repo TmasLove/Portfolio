@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
   <body>
     <div class = "background">
@@ -30,8 +31,8 @@
 
       <div class = "contact">
               <div class = "left">
-                  <h1 style="font-family:high-tide">Drop me a line</h1>
-                  <p>I love meeting new people! Let's get together and talk code/tech. If you have a personal project or something you need done, don't hesitate to reach out.
+                  <h1 style="font-family:high-tide">Hit me up</h1>
+                  <p class="breif">I love meeting new people! Let's get together and talk code/tech.</p> <p class="breif">If you have a personal project or something you need done, don't hesitate to reach out.
                   Follow me on one of my Social Medias!</p>
               </div>
               <div class = "right">
@@ -39,9 +40,82 @@
                           <a class="btn linkedin" href="https://www.linkedin.com/in/tommy-roldan/"><i class="fa fa-linkedin"></i></a>
                           <a class="btn instagram" href="https://instagram.com/tmcattt"><i class="fa fa-instagram"></i></a>
                           <a class="btn github" href="https://github.com/TmasLove"><i class="fa fa-github"></i></a>
-                          <a class="btn envelope-open" href="mailto:troldan92@gmail.com"><i class="fa fa-envelope-open"></i></a>
+                          <a class="btn envelope-open" data-toggle="modal" href="#myModal"><i class="fa fa-envelope-open"></i></a>
                       </div>
 
               </div>
           <a id="resume" href="https://www.dropbox.com/s/i0kjhc7axkppt95/Resume.pdf?dl=0">My Resume</a>
         </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLongTitle">Contact Me</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row clearfix">
+            <div class="col_half">
+              <label>First name</label>
+              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                <input type="text" name="first_name" placeholder="John" required />
+              </div>
+            </div>
+            <div class="col_half">
+              <label>Last name</label>
+              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                <input type="text" name="last_name" placeholder="Doe" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row clearfix">
+            <div class="col_half">
+              <label>Email</label>
+              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
+                <input type="email" name="email" placeholder="johndoe@gmail.com" required />
+              </div>
+            </div>
+            <div class="col_half">
+              <label>Phone</label>
+              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-phone"></i></span>
+                <input type="tel" name="phone" placeholder="Phone #" pattern="[0-9]{10}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row clearfix">
+            <div>
+              <label>Comments</label>
+              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+                <textarea cols="46" rows="3" name="comments"></textarea>
+              </div>
+            </div>
+          </div>
+          <input class="button" type="submit" value="Sumbit" />
+        </form>
+      </div>
+      <div class="modal-footer">
+          ...
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+          </body>
+        </html>
