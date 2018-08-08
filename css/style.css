@@ -30,8 +30,13 @@ nav a {
   -ms-animation-delay: 0.8s;
 }
 
+nav h3 {
+  font-family: fantasy;
+}
+
 nav a:hover {
   text-decoration: underline;
+  color: orangered;
 }
 
 nav li {
@@ -162,7 +167,7 @@ opacity: 1;
 
 .midContent h1 {
   margin-bottom: 1em;
-  font-family: Hightide;
+  font-family: fantasy;
   word-spacing: 0.3em;
   margin-top: 1em;
 }
@@ -170,7 +175,7 @@ opacity: 1;
 /* MY WORK------------- */
 
 .grid-layout {
-  max-width: 75em;
+  max-width: 85%;
   margin: 0 auto;
   padding: 1.8em 0;
   box-shadow: 25px 30px 160px 30px grey;
@@ -203,17 +208,22 @@ opacity: 1;
   display: block;
 }
 
-.grid-info li {
-  display: inline;
-}
 
 .description {
   display: none;
   position: absolute;
   text-align: left;
-  margin-top: 6em;
-  margin-left: 2em;
+  margin-top: 3em;
+  margin-left: 1em;
   padding: 5px;
+  width: 23%;
+}
+
+
+
+.description .language  {
+  color: yellowgreen;
+  font-size: bold;
 }
 
 .description h3 {
@@ -239,8 +249,12 @@ opacity: 1;
     padding: 5em;
 }
 
+.contact-title {
+  font-family: High-Tide;
+}
+
 .contact h1 {
-    font-family: hightide;
+    font-family: High-Tide;
     margin-bottom: 1em;
 }
 
@@ -364,10 +378,6 @@ opacity: 1;
 
 /* FORM STYLING */
 
-.modal-body {
-  margin-left: 5%;
-}
-
 .foot-container {
   margin-left: 5%;
   margin-right: 5%;
@@ -469,7 +479,7 @@ opacity: 1;
 .form_wrapper input[type="submit"]:hover, .form_wrapper input[type="submit"]:focus {
     background:#daa106;
 }
-.credit{
+.credit {
     position:relative;
     z-index:1;
     text-align:center;
@@ -478,4 +488,28 @@ opacity: 1;
 }
 .credit a{
     color:#daa106;
+}
+
+
+
+
+
+/* ---------------- phone stuff ---------------- */
+
+
+/* ---- MYWORK ---- */
+/* iPhone 6, 6S, 7 and 8 */
+/* @media only screen
+  and (min-width: 375px),
+  and (max-width: 667px),
+  and (-webkit-min-device-pixel-ratio: 2),
+  and (orientation: portrait) { */
+    /* .description {
+      width: 60%;
+    }
+
+    .description p {
+      width: 60%;
+    } */
+
 }
