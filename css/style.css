@@ -17,6 +17,12 @@ body {
   color: black;
 }
 
+#main-title {
+  color: black;
+  animation: 2s;
+  animation-name: fadeIn;
+}
+
 nav a {
   color: black;
   text-decoration: none;
@@ -148,6 +154,13 @@ opacity: 1;
   margin: 1em;
   margin-right: 5em;
   background-color: #CAD7DE;
+  animation: 2s;
+  animation-name: slideInLeft;
+}
+
+#about-header {
+  animation: 2s;
+  animation-name: fadeIn;
 }
 
 #globe img {
@@ -175,7 +188,7 @@ opacity: 1;
 /* MY WORK------------- */
 
 .grid-layout {
-  max-width: 85%;
+  max-width: 75em;
   margin: 0 auto;
   padding: 1.8em 0;
   box-shadow: 25px 30px 160px 30px grey;
@@ -251,6 +264,8 @@ opacity: 1;
 
 .contact-title {
   font-family: High-Tide;
+  animation: 2s;
+  animation-name: hinge
 }
 
 .contact h1 {
@@ -271,6 +286,10 @@ opacity: 1;
 
 .right{
     height: 10em;
+}
+
+.modal-title {
+  text-align: center;
 }
 
 /* smexy buttons on right */
@@ -369,11 +388,13 @@ opacity: 1;
     font-family: monospace;
     color: black;
     text-decoration: none;
-    animation: 2s;
+
 }
 
 #resume:hover {
-    text-decoration: underline;
+  color: white;
+  animation: 2s;
+  animation-name: swing
 }
 
 /* FORM STYLING */

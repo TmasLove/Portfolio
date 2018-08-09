@@ -44,7 +44,7 @@
                       </div>
 
               </div>
-          <a id="resume" href="https://www.dropbox.com/s/i0kjhc7axkppt95/Resume.pdf?dl=0">My Resume</a>
+          <button class="btn btn-outline-info" id="resume" href="https://www.dropbox.com/s/i0kjhc7axkppt95/Resume.pdf?dl=0">My Resume</button>
         </div>
 
 
@@ -63,18 +63,18 @@
         <div class="form_container">
           <div class="form_wrapper">
 
-            <form>
+            <form action="https://formspree.io/troldan92@gmail.com" method="POST">
               <div class="row clearfix">
                 <div class="col_half">
                   <label>First name</label>
                   <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                    <input type="text" name="first_name" placeholder="John" required />
+                    <input type="text" name="firstName" placeholder="John" required />
                   </div>
                 </div>
                 <div class="col_half">
                   <label>Last name</label>
                   <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                    <input type="text" name="last_name" placeholder="Doe" />
+                    <input type="text" name="lastName" placeholder="Doe" />
                   </div>
                 </div>
               </div>
@@ -83,7 +83,8 @@
                 <div class="col_half">
                   <label>Email</label>
                   <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
-                    <input type="email" name="email" placeholder="johndoe@gmail.com" required />
+                    <input type="email" name="_replyto" placeholder="johndoe@gmail.com" required />
+                    <input type="hidden" name="_subject" value="Contacted via Portfolio">
                   </div>
                 </div>
                 <div class="col_half">
@@ -102,7 +103,9 @@
                   </div>
                 </div>
               </div>
-              <input class="button" type="submit" value="Sumbit" />
+              <input class="button" type="submit" value="Sumbit">
+              <input type="hidden" name="_gotcha">
+              <input type="hidden" name="_next" value="http://tomcat.codes">
             </form>
           </div>
         </div>
