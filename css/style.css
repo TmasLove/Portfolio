@@ -160,7 +160,7 @@ opacity: 1;
 
 #about-header {
   animation: 2s;
-  animation-name: fadeIn;
+  animation-name: slideInRight;
 }
 
 #globe img {
@@ -388,13 +388,14 @@ opacity: 1;
     font-family: monospace;
     color: black;
     text-decoration: none;
+    width: 8em;
 
 }
 
 #resume:hover {
   color: white;
-  animation: 2s;
-  animation-name: swing
+  animation: 1s;
+  animation-name: swing;
 }
 
 /* FORM STYLING */
