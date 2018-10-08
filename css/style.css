@@ -208,11 +208,12 @@ opacity: 1;
 
 .grid-layout ul {
   max-width: 100%;
+  padding: 0;
 }
 
 .grid-layout li {
   display: inline-block;
-  margin: 25px 0 0 25px;
+  margin: 6% 0 0 4%;
   max-width: 100%;
   width: 35ch;
 }
@@ -380,6 +381,8 @@ opacity: 1;
   left: 0;
   right: 0;
 }
+
+
 .social-btns .btn {
   display: inline-block;
   background-color: #fff;
