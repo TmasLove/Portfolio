@@ -198,23 +198,25 @@ opacity: 1;
 
 .grid-layout {
   max-width: 100%;
-  width: 85%;
+  width: 92%;
   margin: 0 auto;
   box-shadow: 25px 30px 160px 30px grey;
   margin-top: 10em;
   padding-bottom: 1em;
   margin-bottom: 4em;
+  border-radius: 5px;
 }
 
 .grid-layout ul {
   max-width: 100%;
   padding: 0;
+
 }
 
 .grid-layout li {
   display: inline-block;
   margin: 6% 0 0 4%;
-  max-width: 100%;
+  max-width: 80%;
   width: 35ch;
 }
 
