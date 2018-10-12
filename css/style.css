@@ -361,6 +361,13 @@ opacity: 1;
   color: #bbb;
 }
 
+.social-btns .btn.music:before {
+  background-color: #d63250;
+}
+.social-btns .btn.music .fa {
+  color: #d63250;
+}
+
 .social-btns .btn:focus:before,
 .social-btns .btn:hover:before {
   top: -10%;
