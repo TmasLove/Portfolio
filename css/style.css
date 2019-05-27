@@ -227,8 +227,8 @@ opacity: 1;
 }
 
 .grid-layout img {
-  width: 20em;
-  height: 20em;
+  width: 100%;
+  height: auto;
   transition: 0.3s;
 }
 
