@@ -3,11 +3,14 @@ body {
 }
 
 @font-face {
-  font-family: High-Tide;
-  src: url(high-tide.ttf);
+  font-family: good-brush;
+  src: url(good-brush.otf);
 }
 
-
+@font-face {
+font-family: High-Tide;
+src: url(high-tide.ttf);
+}
 
 #main {
   font-family: High-Tide;
