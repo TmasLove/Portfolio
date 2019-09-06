@@ -592,8 +592,8 @@ ul.tab-bar {
     box-shadow: 0px 10px 30px 0px rgba(255, 255, 255, 0.17);
 }
 .contact-info {
-    padding: 0 30px 0px 0;
-}
+    padding: 0px 7px 2px 5px;
+  }
 
 h2.contact-title {
     font-size: 35px;
@@ -637,9 +637,12 @@ ul.contact-info li {
     color: #ffffff;
 }
 
+
+
 .info-right h4 {
     color: #fff;
     font-size: 18px;
+    padding-left: 8px;
 }
 .contact-page .info-left i{
 color: #FE846F;
