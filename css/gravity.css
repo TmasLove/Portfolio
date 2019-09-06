@@ -1,33 +1,14 @@
-@media (min-width: 350px) {
-  body {
-    width: auto !important;
-  }
+@media (min-width: 320px) and (max-width: 480px) {
   .display-4 {
     font-size: 3.5vw !important;
   }
-  .cont-j {
-    width: auto !important;
-  }
+
   .btn, .btn-primary, .btn-lg{
     font-size: 0.9rem !important;
   }
 }
 
-body:before {
-  content: "";
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -10;
-  background: url(photos/2452.jpg) no-repeat center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
+
 
 
 .jumbotron {
@@ -55,13 +36,30 @@ body:before {
   font-family: "Good-Brush";
 }
 
-.jumbotron, .cont-j {
+.cont-j {
   background-color: rgba(0, 0, 0, 0.8) !important;
   padding: 5em;
   border-radius: 10px;
   top: 0;
-  left: 0;
+  right: 20px;
+
+  width: min-content;
+  display: table;
+  position: relative;
+  margin: 0px auto 20px auto;
 }
+
+div.container-fluid, .cont-j h1 p {
+  color: #fff;
+  font-size: 14;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: auto;
+  word-wrap: break-word;
+}
+
+
 
 /* SHOP AND PAYPAL */
 .jumbo-heading {
@@ -444,6 +442,7 @@ ul.tab-bar {
        opacity: .5;
        width: 60px;
      }
+
 
   .tailormake-holiday h2 {
      margin-bottom: 40px;
