@@ -1,5 +1,16 @@
-@media (min-width: 576px) {
-
+@media (min-width: 350px) {
+  body {
+    width: auto !important;
+  }
+  .display-4 {
+    font-size: 3.5vw !important;
+  }
+  .cont-j {
+    width: auto !important;
+  }
+  .btn, .btn-primary, .btn-lg{
+    font-size: 0.9rem !important;
+  }
 }
 
 
@@ -10,11 +21,26 @@
   position: relative;
   background-color: rgba(0, 0, 0, 0.8) !important;
   background: url("../images/track-stand1.jpg") no-repeat center / cover;
+  background-attachment: fixed;
   color: #fff;
   text-align: center;
   margin-bottom: 0px !important;
 }
 
+
+/* PAGE HEADING */
+.display-4 {
+   font-family: "Lato", sans-serif;
+   font-weight: 100;
+   text-align: center;
+   letter-spacing: 0.5rem;
+   text-transform: uppercase;
+   margin: 4rem 0 0 0;
+ }
+
+.lead {
+  font-family: "Good-Brush";
+}
 
 .jumbotron, .cont-j {
   background-color: rgba(0, 0, 0, 0.8) !important;
@@ -24,7 +50,10 @@
   left: 0;
 }
 
-
+/* SHOP AND PAYPAL */
+.jumbo-heading {
+  font-size: 18px;
+}
 
 /* ----------NAV UNDER JUMBOTRON--------- */
 .destination-header .navigation-d {
@@ -290,14 +319,15 @@ ul.tab-bar {
    padding-top: 120px;
  }
 
-h1 {
+/* .jumbotron .display-4 h1 {
    font-family: "Lato", sans-serif;
    font-weight: 100;
    text-align: center;
    letter-spacing: 0.5rem;
    text-transform: uppercase;
    margin: 4rem 0 0 0;
- }
+ } */
+
  .list {
    background: #fff;
    display: flex;
