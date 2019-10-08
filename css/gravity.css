@@ -8,7 +8,13 @@
   }
 }
 
-
+.promote {
+  padding: 10px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  position: sticky;
+}
 
 
 .jumbotron {
@@ -97,7 +103,7 @@ ul.tab-bar {
 
  ul.tab-bar li a {
    border-bottom: 1px solid transparent;
-   color:#ee0979;
+   color:#1abc9c;
    padding: 21px 0 22px;
    text-decoration: none;
  }
@@ -106,14 +112,7 @@ ul.tab-bar {
 
 
  .about-section {
-   background: #CC95C0;  /* fallback for old browsers */
-   background: -webkit-linear-gradient(to left, #7AA1D2, #DBD4B4, #CC95C0);  /* Chrome 10-25, Safari 5.1-6 */
-   background: linear-gradient(to left, #7AA1D2, #DBD4B4, #CC95C0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-
-
-
-   padding: 5em 0em;
+   padding: 7em 0em;
  }
 
  .about-header {
@@ -121,16 +120,11 @@ ul.tab-bar {
    padding: 0em 0em 4em 0em;
  }
 
- .about-header h2 {
-   font-size: 3em;
-   font-family: "Good Brush", sans-serif;
-   color: #000;
- }
 
  .about-bottom {
-   /*-- agileits --*/
-   padding: 2em 1em;
-   background: #fff;
+    padding: 3em 1em 3em 1em;
+    background: #f3f3f3;
+    border-radius: 15px;
  }
 
 .ab-left {
@@ -423,7 +417,7 @@ ul.tab-bar {
 
  /* ----------PURCHASE PROCESS--------- */
  .tailormake-holiday {
-    background: #1c818d url("../images/biking.jpg") no-repeat center / cover;
+    background: #1c818d url("../images/skream.png") no-repeat center / cover;
     background-attachment: fixed;
     /* background: #1c818d url("https://www.hayesandjarvis.co.uk/profiles/hnj/themes/custom/hnj_theme/assets/images/tailormake_holiday@2x.jpg") no-repeat center / cover;; */
     box-shadow: inset 0 0 0 1000px rgba(29, 129, 141, 0.7);
