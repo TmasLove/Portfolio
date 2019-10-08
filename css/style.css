@@ -1,6 +1,4 @@
-body {
 
-}
 
 @font-face {
   font-family: good-brush;
@@ -199,91 +197,80 @@ opacity: 1;
 
 /* MY WORK------------- */
 
-.grid-layout {
-  max-width: 100%;
-  width: 92%;
-  margin: 0 auto;
-  box-shadow: 25px 30px 160px 30px grey;
-  margin-top: 10em;
-  padding-bottom: 1em;
-  margin-bottom: 4em;
-  border-radius: 5px;
+#myBtnContainer {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 15px;
 }
 
-.grid-layout ul {
-  max-width: 100%;
-  padding: 0;
 
+
+
+/* Center website */
+.main {
+  max-width: 1000px;
+  margin: auto;
 }
 
-.grid-layout li {
-  display: inline-block;
-  margin: 6% 0 0 4%;
-  max-width: 80%;
-  width: 35ch;
+h1 {
+  font-size: 50px;
+  word-break: break-all;
 }
 
-.grid-layout li:hover {
-  animation: 1s;
-  animation-name: pulse;
-
+.row {
+  margin: 8px -16px;
 }
 
-.grid-layout img {
-  width: 100%;
-  transition: 0.3s;
+/* Add padding BETWEEN each column (if you want) */
+.row,
+.row > .column {
+  padding: 8px;
 }
 
-.grid-layout a:hover img {
-  opacity: .1;
-  border: 2px solid orangered;
+/* Create three equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33.33%;
+  display: none; /* Hide columns by default */
 }
 
-.grid-layout a {
-  -webkit-animation-delay: 1.2s;
-  -moz-animation-delay: 1.2s;
-  -o-animation-delay: 1.2s;
-  -ms-animation-delay: 1.2s;
+/* Clear floats after rows */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Content */
+.content {
+  background-color: white;
+  padding: 10px;
+}
+
+/* The "show" class is added to the filtered elements */
+.show {
   display: block;
 }
 
-
-.description {
-  display: none;
-  position: absolute;
-  text-align: left;
-  margin-top: 3em;
-  padding: 10px;
-  max-width: 100%;
+/* Style the buttons */
+.btn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: white;
+  cursor: pointer;
 }
 
-
-
-.description .language  {
-  color: green;
-  font-size: bold;
-  font-style: italic;
+/* Add a grey background color on mouse-over */
+.btn:hover {
+  background-color: #ddd;
 }
 
-.description h3 {
-  font-family: monospace;
-  font-size: 1.5em;
-  color: darkmagenta;
-  font-style: oblique;
+/* Add a dark background color to the active button */
+.btn.active {
+  background-color: #666;
+   color: white;
 }
-
-.description p {
-  font-family: monospace;
-  font-size: 1em;
-  color: black;
-  max-width: 100%;
-  width: 80%;
-}
-
-.box:hover .description {
-  display: inline-block;
-}
-
 
 /* CONTACT------------- */
 
@@ -548,28 +535,4 @@ opacity: 1;
 }
 .credit a{
     color:#daa106;
-}
-
-
-
-
-
-/* ---------------- phone stuff ---------------- */
-
-
-/* ---- MYWORK ---- */
-/* iPhone 6, 6S, 7 and 8 */
-/* @media only screen
-  and (min-width: 375px),
-  and (max-width: 667px),
-  and (-webkit-min-device-pixel-ratio: 2),
-  and (orientation: portrait) { */
-    /* .description {
-      width: 60%;
-    }
-
-    .description p {
-      width: 60%;
-    } */
-
 }
