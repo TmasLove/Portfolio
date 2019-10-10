@@ -1,10 +1,23 @@
 @media (min-width: 320px) and (max-width: 480px) {
   .display-4 {
-    font-size: 3.5vw !important;
+    font-size: 8vw !important;
   }
 
-  .btn, .btn-primary, .btn-lg{
+  .btn, .btn-primary, .btn-lg {
     font-size: 0.9rem !important;
+  }
+  .tailormake-columns {
+    width: 330px;
+  }
+  .tailormake-columns>div {
+    padding: 0 105px;
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .cont-j {
+    top: 0;
+    right: 90px !important;
   }
 }
 
@@ -48,7 +61,6 @@
   border-radius: 10px;
   top: 0;
   right: 20px;
-
   width: min-content;
   display: table;
   position: relative;
