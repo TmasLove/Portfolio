@@ -233,6 +233,7 @@ h1 {
 .card {
   width: 22rem;
   text-align: center;
+  margin: 0 0 10px 10px;
 }
 
 /* The "show" class is added to the filtered elements */
