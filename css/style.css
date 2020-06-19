@@ -154,6 +154,11 @@ opacity: 1;
   padding: 50px;
   padding-bottom: 2em;
   display: flex;
+  margin-left: center;
+}
+
+.about-text img {
+  width: 30%;
 }
 
 .breif {
@@ -169,6 +174,8 @@ opacity: 1;
   animation: 2s;
   animation-name: slideInLeft;
 }
+
+
 
 #about-header {
   animation: 2s;
