@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tommy Roldan's Tools">
+  <meta property="og:title" content="Tommy Roldan | Tools">
+  <meta property="og:url" content="https://tommyroldan.com/tools/">
+  <title>Tools | Tommy Roldan</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:    #ff4500;   /* orangered – matches portfolio */
+      --bg:        #f7f7f7;
+      --card-bg:   #ffffff;
+      --text:      #111111;
+      --muted:     #666666;
+      --border:    #e0e0e0;
+      --locked:    #cccccc;
+      --radius:    10px;
+      --shadow:    0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', monospace, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── Header / Nav ──────────────────────────────────────── */
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+    }
+
+    header a.brand {
+      font-family: monospace;
+      font-size: 1.1rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    header a.brand:hover { color: var(--accent); }
+
+    header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-top: 0.5rem;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 0.4rem;
+      font-family: monospace;
+    }
+
+    /* ─── Grid ──────────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 2.5rem auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    /* ─── Tool Card ─────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: transform 0.18s, box-shadow 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+
+    .card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.65rem;
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: var(--muted);
+    }
+    .card-badge.new { background: #e8f5e9; color: #388e3c; }
+
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+      font-family: monospace;
+    }
+
+    /* ─── Unlock Button ─────────────────────────────────────── */
+    .btn-unlock {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.6rem 1.1rem;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: monospace;
+      cursor: pointer;
+      transition: background 0.18s;
+      text-decoration: none;
+      width: fit-content;
+    }
+    .btn-unlock:hover { background: var(--accent); }
+    .btn-unlock i { font-size: 0.8rem; }
+
+    /* ─── Passcode Modal ─────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: min(380px, 90vw);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      animation: slideUp 0.22s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    .modal input[type="password"] {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .modal input[type="password"]:focus { border-color: var(--accent); }
+    .modal input.error { border-color: #e53e3e; animation: shake 0.3s; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25%       { transform: translateX(-6px); }
+      75%       { transform: translateX(6px); }
+    }
+
+    .modal-error {
+      font-size: 0.8rem;
+      color: #e53e3e;
+      font-family: monospace;
+      min-height: 1.1em;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel {
+      padding: 0.55rem 1rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-cancel:hover { background: var(--bg); }
+
+    .btn-confirm {
+      padding: 0.55rem 1.1rem;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .btn-confirm:hover { background: var(--accent); }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ─── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      header { padding: 2rem 1rem 1rem; }
+      .grid { margin-top: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header>
+    <a class="brand" href="/">← tommyroldan.com</a>
+    <h1>Tools</h1>
+    <p>Practical utilities, built to solve real problems.</p>
+  </header>
+
+  <!-- ── Tool Cards ──────────────────────────────────────────── -->
+  <div class="grid">
+
+    <!-- Card: PowerPoint Speech Tool -->
+    <div class="card">
+      <span class="card-badge new">New</span>
+      <div class="card-icon">🎙️</div>
+      <h2>PowerPoint Speech Tool</h2>
+      <p>
+        Upload a .pptx file and have it read aloud slide by slide
+        using your browser's built-in voices. Pick language, speed,
+        and navigate freely — no server required.
+      </p>
+      <button class="btn-unlock" data-tool="ppt-speech" data-passcode="company123">
+        <i class="fa fa-lock"></i> Unlock Tool
+      </button>
+    </div>
+
+    <!-- Add future tool cards here following the same pattern -->
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    <a href="/">tommyroldan.com</a> &nbsp;/&nbsp; tools
+  </footer>
+
+  <!-- ── Passcode Modal ──────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h3 id="modal-title"><i class="fa fa-lock"></i> &nbsp;Enter Passcode</h3>
+      <p>This tool is passcode-protected. Enter the code to continue.</p>
+      <input type="password" id="passcode-input" placeholder="Passcode" autocomplete="off" maxlength="64">
+      <div class="modal-error" id="modal-error" aria-live="polite"></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="modal-cancel">Cancel</button>
+        <button class="btn-confirm" id="modal-confirm">Unlock <i class="fa fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Tool card passcode system.
+     *
+     * Each card's [Unlock Tool] button carries two data attributes:
+     *   data-tool      – subdirectory name under /tools/ (e.g. "ppt-speech")
+     *   data-passcode  – the required passcode for that tool
+     *
+     * On success the user is redirected to /tools/<tool>/.
+     * sessionStorage remembers successful unlocks so users aren't re-prompted
+     * within the same browser session.
+     */
+
+    const modal       = document.getElementById('modal');
+    const input       = document.getElementById('passcode-input');
+    const errorEl     = document.getElementById('modal-error');
+    const confirmBtn  = document.getElementById('modal-confirm');
+    const cancelBtn   = document.getElementById('modal-cancel');
+
+    let pendingTool     = null;
+    let pendingPasscode = null;
+
+    // ── Open modal ───────────────────────────────────────────────
+    function openModal(toolName, passcode) {
+      pendingTool     = toolName;
+      pendingPasscode = passcode;
+      input.value     = '';
+      errorEl.textContent = '';
+      input.classList.remove('error');
+      modal.classList.add('active');
+      requestAnimationFrame(() => input.focus());
+    }
+
+    // ── Close modal ──────────────────────────────────────────────
+    function closeModal() {
+      modal.classList.remove('active');
+      pendingTool     = null;
+      pendingPasscode = null;
+    }
+
+    // ── Validate passcode ────────────────────────────────────────
+    function attemptUnlock() {
+      const entered = input.value.trim();
+
+      if (!entered) {
+        showError('Please enter a passcode.');
+        return;
+      }
+
+      if (entered === pendingPasscode) {
+        // Remember in session so user isn't re-prompted this session
+        sessionStorage.setItem('unlocked_' + pendingTool, '1');
+        window.location.href = '/tools/' + pendingTool + '/';
+      } else {
+        showError('Incorrect passcode. Please try again.');
+        input.value = '';
+        input.classList.add('error');
+        input.addEventListener('animationend', () => input.classList.remove('error'), { once: true });
+        input.focus();
+      }
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+    }
+
+    // ── Wire up buttons ──────────────────────────────────────────
+    document.querySelectorAll('[data-tool]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tool     = btn.dataset.tool;
+        const passcode = btn.dataset.passcode;
+
+        // Skip modal if already unlocked this session
+        if (sessionStorage.getItem('unlocked_' + tool) === '1') {
+          window.location.href = '/tools/' + tool + '/';
+          return;
+        }
+
+        openModal(tool, passcode);
+      });
+    });
+
+    confirmBtn.addEventListener('click', attemptUnlock);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Enter key submits
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') attemptUnlock();
+    });
+
+    // Click outside modal to close
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Escape key closes
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+    });
+  </script>
+
+</body>
+</html>
