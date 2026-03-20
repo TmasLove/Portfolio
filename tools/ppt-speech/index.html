@@ -4,147 +4,184 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="PowerPoint Speech Tool – read your slides aloud in the browser">
+  <meta name="description" content="PowerPoint Speech Tool – AI-powered presentation reader with 200+ voices and chat analysis">
   <title>PPT Speech | Tommy Roldan Tools</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- JSZip – parses .pptx files client-side (no server needed) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- JSZip for .pptx parsing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
-          integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Google Identity Services (for Google Slides OAuth) -->
+  <script src="https://accounts.google.com/gsi/client" async></script>
 
   <style>
-    /* ─── Design Tokens ─────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════
+       DESIGN TOKENS — Neo-Brutalism (matches portfolio)
+    ══════════════════════════════════════════════════════ */
     :root {
-      --accent:    #ff4500;
-      --bg:        #f7f7f7;
-      --panel:     #ffffff;
-      --sidebar-w: 260px;
-      --text:      #111111;
-      --muted:     #666666;
-      --border:    #e0e0e0;
-      --radius:    8px;
-      --shadow:    0 2px 12px rgba(0,0,0,0.07);
-      --active-bg: #fff3ef;
+      --cream:   #FFFDF5;
+      --red:     #FF3B3B;
+      --yellow:  #FFD93D;
+      --purple:  #7B2FFF;
+      --green:   #22c55e;
+      --black:   #0D0D0D;
+      --white:   #FFFFFF;
+      --muted:   #666666;
+      --border:  3px solid #0D0D0D;
+      --border2: 2px solid #0D0D0D;
+      --shadow:  5px 5px 0px #0D0D0D;
+      --shadow-sm: 3px 3px 0px #0D0D0D;
+      --font-h:  'Archivo', sans-serif;
+      --font-b:  'Space Grotesk', sans-serif;
+      --sidebar-w: 240px;
+      --controls-h: 70px;
+      --nav-h: 54px;
     }
 
-    /* ─── Reset ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', monospace, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--black);
       height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* ─── Top Bar ────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════
+       TOP BAR
+    ══════════════════════════════════════════════════════ */
     .topbar {
+      height: var(--nav-h);
+      background: var(--black);
+      border-bottom: var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.75rem 1.25rem;
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
+      padding: 0 1rem;
       flex-shrink: 0;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      overflow: hidden;
     }
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-
-    .topbar a.back {
-      font-family: monospace;
-      font-size: 0.82rem;
-      color: var(--muted);
+    .topbar-back {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.5);
       text-decoration: none;
       white-space: nowrap;
+      transition: color 0.15s;
     }
-    .topbar a.back:hover { color: var(--accent); }
+    .topbar-back:hover { color: var(--yellow); }
 
-    .topbar h1 {
+    .topbar-divider {
+      width: 2px; height: 20px;
+      background: rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-family: var(--font-h);
+      font-weight: 900;
       font-size: 1rem;
-      font-weight: 600;
+      color: var(--yellow);
+      letter-spacing: -0.01em;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    /* Upload button */
-    .btn-upload {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 1rem;
-      background: var(--text);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: background 0.18s;
-      white-space: nowrap;
-    }
-    .btn-upload:hover { background: var(--accent); }
+    .topbar-spacer { flex: 1; }
 
-    /* Download button */
-    .btn-download {
+    /* Top bar buttons */
+    .tb-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.5rem 1rem;
+      gap: 0.35rem;
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.4rem 0.75rem;
+      border: var(--border2);
       background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
       cursor: pointer;
-      transition: all 0.18s;
-      text-decoration: none;
+      transition: all 0.15s;
       white-space: nowrap;
+      text-decoration: none;
     }
-    .btn-download:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
-    .btn-download[hidden] { display: none; }
+    .tb-btn:hover {
+      background: var(--yellow);
+      color: var(--black);
+      border-color: var(--yellow);
+    }
+    .tb-btn.active {
+      background: var(--yellow);
+      color: var(--black);
+      border-color: var(--yellow);
+    }
+    .tb-btn.danger:hover {
+      background: var(--red);
+      border-color: var(--red);
+      color: var(--white);
+    }
+    .tb-btn svg { flex-shrink: 0; }
 
     input[type="file"] { display: none; }
 
-    /* ─── Main Layout ────────────────────────────────────────── */
-    .app {
+    /* ══════════════════════════════════════════════════════
+       MAIN APP LAYOUT
+    ══════════════════════════════════════════════════════ */
+    .app-layout {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
 
-    /* ─── Sidebar (slide list) ───────────────────────────────── */
+    /* ══════════════════════════════════════════════════════
+       SIDEBAR
+    ══════════════════════════════════════════════════════ */
     .sidebar {
       width: var(--sidebar-w);
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      flex-shrink: 0;
+      border-right: var(--border);
+      background: var(--white);
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
     }
 
-    .sidebar-header {
-      padding: 0.75rem 1rem;
-      font-family: monospace;
-      font-size: 0.72rem;
+    .sidebar-hdr {
+      padding: 0.6rem 0.85rem;
+      border-bottom: var(--border2);
+      font-size: 0.65rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--muted);
-      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-shrink: 0;
+    }
+    .slide-count-badge {
+      background: var(--black);
+      color: var(--white);
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
     }
 
     .slide-list {
@@ -152,857 +189,2184 @@
       overflow-y: auto;
       flex: 1;
     }
-
     .slide-item {
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: flex-start;
-      gap: 0.6rem;
+      gap: 0.5rem;
+      padding: 0.65rem 0.85rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
       transition: background 0.12s;
-      font-size: 0.82rem;
-      line-height: 1.4;
     }
-    .slide-item:hover { background: var(--bg); }
+    .slide-item:hover { background: var(--cream); }
     .slide-item.active {
-      background: var(--active-bg);
-      border-left: 3px solid var(--accent);
+      background: #fff8e6;
+      border-left: 3px solid var(--yellow);
     }
     .slide-num {
-      font-family: monospace;
-      font-size: 0.72rem;
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.65rem;
       color: var(--muted);
-      flex-shrink: 0;
+      min-width: 1.4rem;
       padding-top: 1px;
-      min-width: 1.5rem;
     }
-    .slide-title {
-      color: var(--text);
+    .slide-item.active .slide-num { color: var(--black); }
+    .slide-preview {
+      font-size: 0.78rem;
+      line-height: 1.35;
+      color: var(--black);
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
+    /* Speaking indicator */
+    .slide-item.speaking-now .slide-num::after {
+      content: '▶';
+      color: var(--red);
+      font-size: 0.55rem;
+      margin-left: 2px;
+    }
 
-    /* ─── Content Area ───────────────────────────────────────── */
-    .content {
+    /* ══════════════════════════════════════════════════════
+       CONTENT AREA
+    ══════════════════════════════════════════════════════ */
+    .content-area {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* Empty state / drop zone */
+    /* Empty state */
     .empty-state {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      color: var(--muted);
-      text-align: center;
+      gap: 1.25rem;
       padding: 2rem;
+      text-align: center;
     }
-    .empty-state i { font-size: 3rem; opacity: 0.3; }
-    .empty-state h2 { font-size: 1.1rem; color: var(--text); }
-    .empty-state p  { font-family: monospace; font-size: 0.82rem; max-width: 360px; line-height: 1.6; }
-    .empty-state .browser-note {
-      margin-top: 0.5rem;
+    .empty-icon {
+      width: 72px; height: 72px;
+      background: var(--yellow);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .empty-state h2 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+    .empty-state p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.65;
+    }
+    .empty-state .hint {
       font-size: 0.75rem;
-      opacity: 0.7;
+      color: var(--muted);
+      background: var(--white);
+      border: var(--border2);
+      padding: 0.5rem 1rem;
+      box-shadow: var(--shadow-sm);
     }
 
-    /* Slide display */
-    .slide-display {
+    /* Slide viewer (shown when slides loaded) */
+    .slide-viewer {
+      display: none;
       flex: 1;
-      overflow: hidden;
-      display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
+    .slide-viewer.visible { display: flex; }
 
-    .slide-content {
+    .slide-content-wrap {
       flex: 1;
       overflow-y: auto;
       padding: 2rem 2.5rem;
     }
 
-    .slide-content h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      line-height: 1.3;
+    /* Slide number chip */
+    .slide-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--yellow);
+      border: var(--border2);
+      padding: 0.2rem 0.6rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 0.85rem;
     }
 
-    .slide-body {
+    .slide-heading {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    .slide-body-text {
       font-size: 1rem;
-      line-height: 1.8;
+      line-height: 1.85;
       color: #333;
-      font-family: 'Inter', sans-serif;
       white-space: pre-wrap;
     }
-
-    /* Word-by-word highlight */
-    .slide-body .word {
+    .word {
       display: inline;
-      padding: 0 1px;
       border-radius: 2px;
       transition: background 0.05s;
     }
-    .slide-body .word.speaking {
-      background: #ffe082;
-    }
+    .word.speaking { background: #FFE082; }
 
-    /* ─── Controls Bar ───────────────────────────────────────── */
-    .controls {
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      padding: 0.85rem 1.25rem;
+    /* ══════════════════════════════════════════════════════
+       AI CHAT PANEL
+    ══════════════════════════════════════════════════════ */
+    .chat-panel {
+      display: none;
+      flex-direction: column;
+      border-top: var(--border);
+      background: var(--white);
+      height: 360px;
+      flex-shrink: 0;
+    }
+    .chat-panel.open { display: flex; }
+
+    .chat-header {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-bottom: var(--border2);
+      flex-shrink: 0;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .chat-title {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .ai-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--purple);
+      color: var(--white);
+      padding: 0.15rem 0.45rem;
+      border: 2px solid var(--black);
+    }
+
+    /* Quick action chips */
+    .quick-actions {
+      display: flex;
+      gap: 0.35rem;
       flex-wrap: wrap;
       flex-shrink: 0;
     }
-
-    /* Transport buttons */
-    .transport {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .ctrl-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
+    .quick-btn {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.28rem 0.6rem;
+      border: var(--border2);
+      background: var(--cream);
+      color: var(--black);
       cursor: pointer;
+      transition: all 0.12s;
+      box-shadow: 2px 2px 0 var(--black);
+    }
+    .quick-btn:hover {
+      background: var(--yellow);
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+
+    .chat-close-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      transition: all 0.15s;
+      padding: 0.25rem;
+      margin-left: auto;
+      transition: color 0.15s;
     }
-    .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .ctrl-btn.play-pause {
-      width: 44px;
-      height: 44px;
-      background: var(--text);
-      color: #fff;
-      border-color: var(--text);
-      font-size: 1rem;
-    }
-    .ctrl-btn.play-pause:hover { background: var(--accent); border-color: var(--accent); }
+    .chat-close-btn:hover { color: var(--red); }
 
-    /* Slide counter */
-    .slide-counter {
+    /* Chat messages */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 90%;
+    }
+    .chat-msg.user   { flex-direction: row-reverse; align-self: flex-end; }
+    .chat-msg.assistant { align-self: flex-start; }
+
+    .msg-avatar {
+      width: 28px; height: 28px;
+      flex-shrink: 0;
+      border: var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .msg-avatar.user-av { background: var(--yellow); }
+    .msg-avatar.ai-av   { background: var(--purple); color: var(--white); }
+
+    .msg-bubble {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      padding: 0.65rem 0.9rem;
+      border: var(--border2);
+    }
+    .chat-msg.user .msg-bubble {
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-msg.assistant .msg-bubble {
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+    /* Simple markdown */
+    .msg-bubble strong { font-weight: 700; }
+    .msg-bubble em     { font-style: italic; }
+    .msg-bubble code   {
       font-family: monospace;
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.06);
+      padding: 0.1em 0.3em;
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex; gap: 4px; align-items: center; padding: 0.1rem 0;
+    }
+    .typing-indicator span {
+      width: 6px; height: 6px;
+      background: var(--purple);
+      border-radius: 50%;
+      animation: typingDot 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40%           { transform: scale(1); opacity: 1; }
+    }
+
+    /* Chat input row */
+    .chat-input-row {
+      display: flex;
+      border-top: var(--border2);
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 0.65rem 0.85rem;
+      font-family: var(--font-b);
+      font-size: 0.88rem;
+      border: none;
+      background: var(--cream);
+      color: var(--black);
+      outline: none;
+      resize: none;
+      min-height: 42px;
+      max-height: 90px;
+    }
+    .chat-send-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 50px;
+      background: var(--black);
+      border: none;
+      border-left: var(--border2);
+      color: var(--white);
+      cursor: pointer;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .chat-send-btn:hover { background: var(--red); }
+    .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ══════════════════════════════════════════════════════
+       CONTROLS BAR
+    ══════════════════════════════════════════════════════ */
+    .controls-bar {
+      height: var(--controls-h);
+      border-top: var(--border);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    /* Transport */
+    .transport { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+    .ctrl-btn {
+      width: 36px; height: 36px;
+      border: var(--border2);
+      background: var(--white);
+      color: var(--black);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.12s;
+      box-shadow: var(--shadow-sm);
+    }
+    .ctrl-btn:hover {
+      background: var(--yellow);
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 var(--black);
+    }
+    .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
+    .ctrl-btn.play-btn {
+      width: 42px; height: 42px;
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+    .ctrl-btn.play-btn:hover { background: var(--red); border-color: var(--red); }
+
+    .slide-counter {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.78rem;
       white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .ctrl-divider {
+      width: 2px; height: 28px;
+      background: var(--border);
+      background: rgba(0,0,0,0.1);
+      flex-shrink: 0;
     }
 
     /* Voice selector */
     .voice-group {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex: 1;
-      min-width: 180px;
+      min-width: 140px;
+      max-width: 280px;
     }
-
-    .voice-group label {
-      font-family: monospace;
-      font-size: 0.75rem;
+    .ctrl-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--muted);
       white-space: nowrap;
+      flex-shrink: 0;
     }
-
     select {
+      font-family: var(--font-b);
+      font-size: 0.78rem;
+      padding: 0.3rem 0.5rem;
+      border: var(--border2);
+      background: var(--cream);
+      color: var(--black);
+      cursor: pointer;
+      outline: none;
       flex: 1;
-      padding: 0.4rem 0.6rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.78rem;
-      background: var(--panel);
-      color: var(--text);
-      cursor: pointer;
-      max-width: 260px;
+      max-width: 220px;
     }
-    select:focus { outline: none; border-color: var(--accent); }
+    select:focus { border-color: var(--black); box-shadow: var(--shadow-sm); }
 
-    /* Rate control */
+    /* Rate */
     .rate-group {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      white-space: nowrap;
+      display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0;
     }
-    .rate-group label {
-      font-family: monospace;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-    .rate-group input[type="range"] {
-      width: 90px;
-      accent-color: var(--accent);
+    input[type="range"] {
+      width: 80px;
+      accent-color: var(--black);
       cursor: pointer;
     }
-    .rate-val {
-      font-family: monospace;
-      font-size: 0.78rem;
-      color: var(--text);
-      min-width: 2.2rem;
+    .rate-display {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.72rem;
+      min-width: 2.4rem;
     }
 
-    /* Progress bar */
-    .progress-wrap {
-      width: 100%;
-      order: -1; /* top of controls */
-    }
+    /* Progress micro-bar (above controls) */
     .progress-bar {
+      position: absolute;
+      bottom: var(--controls-h);
+      left: 0; right: 0;
       height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
+      background: rgba(0,0,0,0.07);
     }
     .progress-fill {
       height: 100%;
-      background: var(--accent);
-      border-radius: 2px;
+      background: var(--yellow);
+      border-right: 2px solid var(--black);
       transition: width 0.3s;
-      width: 0%;
     }
 
-    /* ─── Toast ──────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════
+       MODALS (shared base)
+    ══════════════════════════════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(13,13,13,0.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      background: var(--white);
+      border: var(--border);
+      box-shadow: 10px 10px 0 var(--black);
+      width: min(520px, 100%);
+      max-height: 90dvh;
+      overflow-y: auto;
+      animation: modalIn 0.2s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.25rem;
+      border-bottom: var(--border2);
+      background: var(--black);
+    }
+    .modal-hdr h2 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: var(--yellow);
+      letter-spacing: -0.02em;
+    }
+    .modal-close {
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.6); cursor: pointer;
+      display: flex; align-items: center; padding: 0.25rem;
+      transition: color 0.15s;
+    }
+    .modal-close:hover { color: var(--red); }
+
+    .modal-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* Settings sections */
+    .settings-section {
+      border: var(--border2);
+      background: var(--cream);
+      overflow: hidden;
+    }
+    .settings-section-hdr {
+      background: var(--black);
+      padding: 0.5rem 0.85rem;
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--yellow);
+    }
+    .settings-section-body { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.85rem; }
+
+    .field { display: flex; flex-direction: column; gap: 0.3rem; }
+    label {
+      font-family: var(--font-b);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .field-hint { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+    .field-hint a { color: var(--purple); }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="url"] {
+      font-family: var(--font-b);
+      font-size: 0.88rem;
+      padding: 0.55rem 0.75rem;
+      border: var(--border2);
+      background: var(--white);
+      color: var(--black);
+      outline: none;
+      transition: box-shadow 0.15s;
+      width: 100%;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="url"]:focus {
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    select.wide { max-width: 100%; width: 100%; }
+
+    .radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .radio-opt {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      padding: 0.4rem 0.75rem;
+      border: var(--border2);
+      background: var(--white);
+      transition: all 0.12s;
+    }
+    .radio-opt.selected {
+      background: var(--black);
+      color: var(--white);
+    }
+    .radio-opt input { display: none; }
+
+    .modal-actions {
+      display: flex; gap: 0.6rem; justify-content: flex-end;
+      padding-top: 0.5rem;
+    }
+
+    .btn-save {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.85rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.6rem 1.5rem;
+      background: var(--black); color: var(--white);
+      border: var(--border); box-shadow: var(--shadow-sm);
+      cursor: pointer; transition: all 0.12s;
+    }
+    .btn-save:hover {
+      background: var(--red);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+
+    .btn-secondary {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.85rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.6rem 1.25rem;
+      background: var(--cream); color: var(--black);
+      border: var(--border); box-shadow: var(--shadow-sm);
+      cursor: pointer; transition: all 0.12s;
+    }
+    .btn-secondary:hover {
+      background: var(--yellow);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+
+    /* Test voice button */
+    .btn-test {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.4rem 0.85rem;
+      background: var(--purple); color: var(--white);
+      border: var(--border2); box-shadow: var(--shadow-sm);
+      cursor: pointer; transition: all 0.12s;
+      width: fit-content;
+    }
+    .btn-test:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--black); }
+
+    /* Google Slides modal */
+    .gslides-input-row {
+      display: flex; gap: 0.5rem;
+    }
+    .gslides-input-row input { flex: 1; }
+    .btn-import {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0 1rem;
+      background: var(--black); color: var(--white);
+      border: var(--border); box-shadow: var(--shadow-sm);
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.12s;
+    }
+    .btn-import:hover { background: var(--red); }
+
+    .google-sign-in-area { text-align: center; padding: 0.5rem 0; }
+    .google-sign-out-btn {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.72rem;
+      text-transform: uppercase; padding: 0.4rem 0.85rem;
+      border: var(--border2); background: transparent; color: var(--red);
+      cursor: pointer; transition: all 0.12s;
+    }
+    .google-sign-out-btn:hover { background: var(--red); color: var(--white); }
+
+    /* ══════════════════════════════════════════════════════
+       TOAST
+    ══════════════════════════════════════════════════════ */
     .toast {
       position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      background: #222;
-      color: #fff;
-      font-family: monospace;
+      bottom: 1.5rem; right: 1.5rem;
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-b);
       font-size: 0.82rem;
-      padding: 0.65rem 1.1rem;
-      border-radius: 6px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      padding: 0.6rem 1.1rem;
+      border: var(--border2);
+      box-shadow: var(--shadow);
       z-index: 9999;
       opacity: 0;
       transform: translateY(8px);
       transition: opacity 0.2s, transform 0.2s;
       pointer-events: none;
+      max-width: 320px;
     }
     .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: var(--green); }
+    .toast.error   { border-color: var(--red); }
 
-    /* ─── Responsive ─────────────────────────────────────────── */
-    @media (max-width: 600px) {
-      .sidebar { width: 180px; }
-      .slide-content { padding: 1.2rem; }
-      .controls { gap: 0.6rem; }
-      .voice-group { min-width: 120px; }
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      :root { --sidebar-w: 180px; }
+      .slide-content-wrap { padding: 1.25rem; }
+      .tb-btn span { display: none; }
+    }
+    @media (max-width: 480px) {
+      .sidebar { display: none; }
+      .chat-panel { height: 300px; }
     }
 
-    @media (max-width: 440px) {
-      .sidebar { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── Top Bar ────────────────────────────────────────────── -->
+  <!-- ══════════════════════════════════════════════════════
+       TOP BAR
+  ══════════════════════════════════════════════════════ -->
   <div class="topbar">
-    <div class="topbar-left">
-      <a class="back" href="/tools/">← Tools</a>
-      <h1>🎙️ PowerPoint Speech</h1>
-    </div>
-    <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
-      <label class="btn-upload" for="file-input">
-        <i class="fa fa-upload"></i> Upload .pptx
-      </label>
-      <input type="file" id="file-input" accept=".pptx">
-      <a id="download-btn" class="btn-download" hidden>
-        <i class="fa fa-download"></i> Download
-      </a>
-    </div>
+    <a class="topbar-back" href="/tools/">← Tools</a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">🎙️ PPT Speech</span>
+    <div class="topbar-spacer"></div>
+
+    <!-- Upload -->
+    <label class="tb-btn" for="file-input" title="Upload .pptx file">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span>Upload .pptx</span>
+    </label>
+    <input type="file" id="file-input" accept=".pptx">
+
+    <!-- Google Slides -->
+    <button class="tb-btn" id="btn-gslides" title="Import from Google Slides">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>Google Slides</span>
+    </button>
+
+    <!-- AI Chat toggle -->
+    <button class="tb-btn" id="btn-chat-toggle" title="Toggle AI Chat">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>AI Chat</span>
+    </button>
+
+    <!-- Download -->
+    <a id="btn-download" class="tb-btn" style="display:none" title="Download original file">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span>Download</span>
+    </a>
+
+    <!-- Settings -->
+    <button class="tb-btn" id="btn-settings" title="Settings & API Keys">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
   </div>
 
-  <!-- ── App Layout ─────────────────────────────────────────── -->
-  <div class="app">
+  <!-- ══════════════════════════════════════════════════════
+       APP LAYOUT
+  ══════════════════════════════════════════════════════ -->
+  <div class="app-layout">
 
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-header">Slides</div>
-      <ul class="slide-list" id="slide-list">
-        <!-- Populated by JS -->
-      </ul>
+      <div class="sidebar-hdr">
+        Slides
+        <span class="slide-count-badge" id="slide-count">0</span>
+      </div>
+      <ul class="slide-list" id="slide-list"></ul>
     </aside>
 
-    <!-- Main Content -->
-    <div class="content" id="content">
+    <!-- Content -->
+    <div class="content-area">
 
-      <!-- Empty state (shown before any file is loaded) -->
+      <!-- Empty state -->
       <div class="empty-state" id="empty-state">
-        <i class="fa fa-file-powerpoint-o"></i>
-        <h2>Upload a PowerPoint file to begin</h2>
+        <div class="empty-icon">📊</div>
+        <h2>Upload a presentation to begin</h2>
         <p>
-          Click <strong>Upload .pptx</strong> above to load your presentation.
-          Your file stays in the browser — nothing is sent to any server.
+          Drop a <strong>.pptx</strong> file or import from <strong>Google Slides</strong>.<br>
+          Everything runs in your browser — nothing is uploaded to any server.
         </p>
-        <p class="browser-note">
-          Best experience in <strong>Chrome</strong> or <strong>Edge</strong>.<br>
-          Firefox supports speech but has fewer voices.
-        </p>
+        <div class="hint">
+          Best in <strong>Chrome</strong> or <strong>Edge</strong> &nbsp;·&nbsp;
+          Configure AI voices &amp; chat in <strong>Settings</strong>
+        </div>
       </div>
 
-      <!-- Slide viewer (shown after file is loaded) -->
-      <div class="slide-display" id="slide-display" style="display:none;">
-        <div class="slide-content">
-          <h2 id="slide-heading">Slide 1</h2>
-          <div class="slide-body" id="slide-body"></div>
+      <!-- Slide viewer -->
+      <div class="slide-viewer" id="slide-viewer">
+
+        <!-- Slide content -->
+        <div class="slide-content-wrap" id="slide-content-wrap">
+          <div class="slide-chip" id="slide-chip">Slide 1 of 1</div>
+          <h2 class="slide-heading" id="slide-heading">Slide Title</h2>
+          <div class="slide-body-text" id="slide-body"></div>
         </div>
 
-        <!-- Controls Bar -->
-        <div class="controls">
-          <!-- Progress -->
-          <div class="progress-wrap">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progress-fill"></div>
+        <!-- AI Chat Panel (collapsible) -->
+        <div class="chat-panel" id="chat-panel">
+          <div class="chat-header">
+            <span class="chat-title">
+              AI Analysis
+              <span class="ai-badge" id="chat-model-badge">Claude</span>
+            </span>
+            <div class="quick-actions">
+              <button class="quick-btn" data-prompt="Summarize this slide in 2-3 sentences.">Summarize Slide</button>
+              <button class="quick-btn" data-prompt="Summarize the entire presentation in a concise overview.">Full Summary</button>
+              <button class="quick-btn" data-prompt="Extract the 5 most important key points from this presentation.">Key Points</button>
+              <button class="quick-btn" data-prompt="Rewrite the current slide's content to be clearer, more concise, and more impactful.">Rewrite</button>
             </div>
-          </div>
-
-          <!-- Transport -->
-          <div class="transport">
-            <button class="ctrl-btn" id="btn-prev" title="Previous slide (← Arrow)" disabled>
-              <i class="fa fa-step-backward"></i>
-            </button>
-            <button class="ctrl-btn play-pause" id="btn-play" title="Play / Pause (Space)" disabled>
-              <i class="fa fa-play" id="play-icon"></i>
-            </button>
-            <button class="ctrl-btn" id="btn-next" title="Next slide (→ Arrow)" disabled>
-              <i class="fa fa-step-forward"></i>
+            <button class="chat-close-btn" id="chat-close-btn" title="Close chat">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-
-          <span class="slide-counter" id="slide-counter">0 / 0</span>
-
-          <!-- Voice selector -->
-          <div class="voice-group">
-            <label for="voice-select">Voice</label>
-            <select id="voice-select">
-              <option value="">Loading voices…</option>
-            </select>
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages injected here -->
           </div>
-
-          <!-- Rate control -->
-          <div class="rate-group">
-            <label for="rate-input">Speed</label>
-            <input type="range" id="rate-input" min="0.5" max="2" step="0.1" value="1">
-            <span class="rate-val" id="rate-val">1.0×</span>
+          <div class="chat-input-row">
+            <textarea
+              class="chat-input"
+              id="chat-input"
+              placeholder="Ask anything about this presentation…"
+              rows="1"
+              maxlength="2000"></textarea>
+            <button class="chat-send-btn" id="chat-send-btn" title="Send (Enter)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
           </div>
         </div>
+
+      </div>
+
+      <!-- Progress bar (absolute, above controls) -->
+      <div class="progress-bar" style="position:relative;">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
       </div>
 
     </div>
   </div>
 
-  <!-- Toast notification -->
+  <!-- ══════════════════════════════════════════════════════
+       CONTROLS BAR
+  ══════════════════════════════════════════════════════ -->
+  <div class="controls-bar">
+
+    <!-- Transport -->
+    <div class="transport">
+      <button class="ctrl-btn" id="btn-prev" title="Previous slide (←)" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </button>
+      <button class="ctrl-btn play-btn" id="btn-play" title="Play/Pause (Space)" disabled>
+        <svg id="play-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <button class="ctrl-btn" id="btn-next" title="Next slide (→)" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </button>
+    </div>
+
+    <span class="slide-counter" id="slide-counter">– / –</span>
+
+    <div class="ctrl-divider"></div>
+
+    <!-- Voice selector -->
+    <div class="voice-group">
+      <span class="ctrl-label">Voice</span>
+      <select id="voice-select" title="Select voice">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+
+    <div class="ctrl-divider"></div>
+
+    <!-- Speed -->
+    <div class="rate-group">
+      <span class="ctrl-label">Speed</span>
+      <input type="range" id="rate-input" min="0.5" max="2" step="0.1" value="1">
+      <span class="rate-display" id="rate-display">1.0×</span>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SETTINGS MODAL
+  ══════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-label="Settings">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h2>⚙️ Settings &amp; API Keys</h2>
+        <button class="modal-close" id="settings-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- TTS Engine -->
+        <div class="settings-section">
+          <div class="settings-section-hdr">🔊 Text-to-Speech Engine</div>
+          <div class="settings-section-body">
+            <div class="field">
+              <label>TTS Provider</label>
+              <div class="radio-group" id="tts-mode-group">
+                <label class="radio-opt selected" data-value="browser">
+                  <input type="radio" name="tts_mode" value="browser" checked>
+                  Browser (Free)
+                </label>
+                <label class="radio-opt" data-value="elevenlabs">
+                  <input type="radio" name="tts_mode" value="elevenlabs">
+                  ElevenLabs AI (200+ voices)
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <label for="el-key">ElevenLabs API Key</label>
+              <input type="password" id="el-key" placeholder="xi-api-key …" autocomplete="off">
+              <span class="field-hint">
+                Get your key at <a href="https://elevenlabs.io" target="_blank">elevenlabs.io</a>.
+                Free tier: 10,000 chars/month. Voices load automatically once key is saved.
+              </span>
+            </div>
+            <div class="field">
+              <label for="el-model">ElevenLabs Model</label>
+              <select id="el-model" class="wide">
+                <option value="eleven_multilingual_v2">Multilingual v2 (29 languages) – Recommended</option>
+                <option value="eleven_v3">v3 (70+ languages) – Best quality</option>
+                <option value="eleven_flash_v2_5">Flash v2.5 (32 languages) – Fastest</option>
+                <option value="eleven_monolingual_v1">Monolingual v1 (English only)</option>
+              </select>
+            </div>
+            <button class="btn-test" id="btn-test-voice">▶ Test Selected Voice</button>
+          </div>
+        </div>
+
+        <!-- AI Chat -->
+        <div class="settings-section">
+          <div class="settings-section-hdr">🤖 AI Chat &amp; Analysis</div>
+          <div class="settings-section-body">
+            <div class="field">
+              <label for="ai-provider">AI Provider</label>
+              <select id="ai-provider" class="wide">
+                <option value="anthropic">Anthropic (Claude) – Direct browser support ✅</option>
+                <option value="openai">OpenAI (GPT) – Requires CORS proxy</option>
+                <option value="gemini">Google Gemini – Direct browser support ✅</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ai-model-select">Model</label>
+              <select id="ai-model-select" class="wide">
+                <!-- Populated by JS based on provider -->
+              </select>
+            </div>
+            <div class="field" id="anthropic-key-field">
+              <label for="anthropic-key">Anthropic API Key</label>
+              <input type="password" id="anthropic-key" placeholder="sk-ant-api…" autocomplete="off">
+              <span class="field-hint">
+                Get your key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>.
+              </span>
+            </div>
+            <div class="field" id="openai-key-field" style="display:none">
+              <label for="openai-key">OpenAI API Key</label>
+              <input type="password" id="openai-key" placeholder="sk-proj-…" autocomplete="off">
+              <span class="field-hint">
+                OpenAI blocks direct browser CORS. Optionally provide a CORS proxy URL below.
+              </span>
+            </div>
+            <div class="field" id="openai-proxy-field" style="display:none">
+              <label for="openai-proxy">CORS Proxy URL (optional)</label>
+              <input type="url" id="openai-proxy" placeholder="https://your-proxy.com/openai">
+              <span class="field-hint">Leave blank to try direct (may fail). Proxy must forward to api.openai.com.</span>
+            </div>
+            <div class="field" id="gemini-key-field" style="display:none">
+              <label for="gemini-key">Google Gemini API Key</label>
+              <input type="password" id="gemini-key" placeholder="AIza…" autocomplete="off">
+              <span class="field-hint">
+                Get your key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Slides -->
+        <div class="settings-section">
+          <div class="settings-section-hdr">📊 Google Slides Integration</div>
+          <div class="settings-section-body">
+            <div class="field">
+              <label for="google-client-id">Google OAuth Client ID</label>
+              <input type="text" id="google-client-id" placeholder="123456.apps.googleusercontent.com">
+              <span class="field-hint">
+                Create at <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> →
+                APIs &amp; Services → Credentials → OAuth 2.0 Client ID (Web application).
+                Authorised JS origin: <code>https://tommyroldan.com</code>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" id="settings-cancel">Cancel</button>
+          <button class="btn-save" id="settings-save">Save Settings</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       GOOGLE SLIDES IMPORT MODAL
+  ══════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="gslides-modal" role="dialog" aria-modal="true" aria-label="Import from Google Slides">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h2>📊 Import from Google Slides</h2>
+        <button class="modal-close" id="gslides-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Auth status -->
+        <div id="gslides-auth-section">
+          <div class="field">
+            <label>Google Account</label>
+            <div id="gslides-auth-status" style="font-size:0.85rem; color:var(--muted); padding:0.4rem 0;">
+              Not signed in
+            </div>
+            <div id="google-signin-btn-container" class="google-sign-in-area"></div>
+          </div>
+        </div>
+
+        <!-- Public URL import (works without auth) -->
+        <div class="settings-section">
+          <div class="settings-section-hdr">Public Presentation URL</div>
+          <div class="settings-section-body">
+            <div class="field">
+              <label for="gslides-url">Google Slides URL</label>
+              <div class="gslides-input-row">
+                <input type="url" id="gslides-url" placeholder="https://docs.google.com/presentation/d/…">
+                <button class="btn-import" id="btn-import-public">Import</button>
+              </div>
+              <span class="field-hint">
+                The presentation must be <strong>publicly accessible</strong> (Anyone with link → View).
+                A Google API key must be set in Settings → Google section for private imports.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signed-in import -->
+        <div class="settings-section" id="gslides-private-section" style="display:none">
+          <div class="settings-section-hdr">Your Presentations (Signed In)</div>
+          <div class="settings-section-body">
+            <div id="gslides-list" style="font-size:0.85rem; color:var(--muted);">
+              Sign in with Google above to see your recent presentations.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
+  <!-- ══════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════ -->
   <script>
-    'use strict';
+  'use strict';
 
-    /* ────────────────────────────────────────────────────────────
-       State
-    ──────────────────────────────────────────────────────────── */
-    let slides       = [];   // Array of { title, body } objects
-    let currentSlide = 0;
-    let utterance    = null;
-    let speaking     = false;
-    let paused       = false;
-    let pptxBlob     = null; // Original file blob for download
+  /* ──────────────────────────────────────────────────────
+     SECTION 1: CONSTANTS & STATIC DATA
+  ────────────────────────────────────────────────────── */
 
-    /* ────────────────────────────────────────────────────────────
-       DOM References
-    ──────────────────────────────────────────────────────────── */
-    const fileInput     = document.getElementById('file-input');
-    const slideList     = document.getElementById('slide-list');
-    const emptyState    = document.getElementById('empty-state');
-    const slideDisplay  = document.getElementById('slide-display');
-    const slideHeading  = document.getElementById('slide-heading');
-    const slideBody     = document.getElementById('slide-body');
-    const slideCounter  = document.getElementById('slide-counter');
-    const progressFill  = document.getElementById('progress-fill');
-    const btnPlay       = document.getElementById('btn-play');
-    const btnPrev       = document.getElementById('btn-prev');
-    const btnNext       = document.getElementById('btn-next');
-    const playIcon      = document.getElementById('play-icon');
-    const voiceSelect   = document.getElementById('voice-select');
-    const rateInput     = document.getElementById('rate-input');
-    const rateVal       = document.getElementById('rate-val');
-    const downloadBtn   = document.getElementById('download-btn');
-    const toastEl       = document.getElementById('toast');
+  /** Curated ElevenLabs voice library (IDs verified from public voice library) */
+  const EL_VOICES_DEFAULT = [
+    // English – American
+    { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel',   lang: 'en', accent: 'American',   gender: 'F', desc: 'Warm narrator' },
+    { id: 'AZnzlk1XvdvUeBnXmlld', name: 'Domi',     lang: 'en', accent: 'American',   gender: 'F', desc: 'Strong, confident' },
+    { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella',    lang: 'en', accent: 'American',   gender: 'F', desc: 'Soft, friendly' },
+    { id: 'MF3mGyEYCl7XYWbV9V6O', name: 'Elli',     lang: 'en', accent: 'American',   gender: 'F', desc: 'Upbeat, young' },
+    { id: 'LcfcDJNUP1GQjkzn1xUU', name: 'Emily',    lang: 'en', accent: 'American',   gender: 'F', desc: 'Calm, meditative' },
+    { id: 'XrExE9yKIg1WjnnlVkGX', name: 'Matilda',  lang: 'en', accent: 'American',   gender: 'F', desc: 'Warm, children' },
+    { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni',   lang: 'en', accent: 'American',   gender: 'M', desc: 'Well-rounded' },
+    { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam',     lang: 'en', accent: 'American',   gender: 'M', desc: 'Deep, narrative' },
+    { id: 'TxGEqnHWrfWFTfGW9XjX', name: 'Josh',     lang: 'en', accent: 'American',   gender: 'M', desc: 'Young, dynamic' },
+    { id: 'VR6AewLTigWG4xSOukaG', name: 'Arnold',   lang: 'en', accent: 'American',   gender: 'M', desc: 'Crisp, confident' },
+    { id: 'yoZ06aMxZJJ28mfd3POQ', name: 'Sam',      lang: 'en', accent: 'American',   gender: 'M', desc: 'Raspy, authoritative' },
+    { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum',   lang: 'en', accent: 'American',   gender: 'M', desc: 'Masculine, intense' },
+    { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam',     lang: 'en', accent: 'American',   gender: 'M', desc: 'Articulate' },
+    // English – British
+    { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel',   lang: 'en', accent: 'British',    gender: 'M', desc: 'Authoritative' },
+    { id: 'ThT5KcBeYPX3keUQqHPh', name: 'Dorothy',  lang: 'en', accent: 'British',    gender: 'F', desc: 'Pleasant, crisp' },
+    { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George',   lang: 'en', accent: 'British',    gender: 'M', desc: 'Warm, narration' },
+    { id: 'Yko7PKHZNXotIFUBG7I9', name: 'Matthew',  lang: 'en', accent: 'British',    gender: 'M', desc: 'Measured, calm' },
+    // English – Australian
+    { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie',  lang: 'en', accent: 'Australian', gender: 'M', desc: 'Casual, friendly' },
+    { id: 'ZQe5CZNOzWyzPSCn5a3c', name: 'James',    lang: 'en', accent: 'Australian', gender: 'M', desc: 'Calm, steady' },
+    // English – Irish
+    { id: 'bVMeCyTHy58xNoL34h29', name: 'Jeremy',   lang: 'en', accent: 'Irish',      gender: 'M', desc: 'Expressive' },
+    // Multilingual (auto-detects language)
+    { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', lang: 'multi', accent: 'Swedish', gender: 'F', desc: 'Multilingual' },
+    { id: 'zcAOhNBS3c14rBihAFp1', name: 'Giovanni',  lang: 'multi', accent: 'Italian', gender: 'M', desc: 'Multilingual' },
+    { id: 'CYw3kZ02Hs0563khs1Fj', name: 'Dave',      lang: 'multi', accent: 'British', gender: 'M', desc: 'Multilingual' },
+  ];
 
-    /* ────────────────────────────────────────────────────────────
-       Toast helper
-    ──────────────────────────────────────────────────────────── */
-    let toastTimer;
-    function showToast(msg, duration = 3000) {
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), duration);
+  /** AI models by provider */
+  const AI_MODELS = {
+    anthropic: [
+      { id: 'claude-opus-4-5',      label: 'Claude Opus 4.5 — Most capable' },
+      { id: 'claude-sonnet-4-5',    label: 'claude-sonnet-4-5 — Balanced ✅ Recommended' },
+      { id: 'claude-haiku-3-5',     label: 'Claude Haiku 3.5 — Fastest' },
+    ],
+    openai: [
+      { id: 'gpt-4.1',        label: 'GPT-4.1 — Latest' },
+      { id: 'gpt-4o',         label: 'GPT-4o — Multimodal' },
+      { id: 'gpt-4o-mini',    label: 'GPT-4o Mini — Fast & cheap' },
+    ],
+    gemini: [
+      { id: 'gemini-2.0-flash',   label: 'Gemini 2.0 Flash — Fast ✅ Recommended' },
+      { id: 'gemini-1.5-pro',     label: 'Gemini 1.5 Pro — Most capable' },
+      { id: 'gemini-1.5-flash',   label: 'Gemini 1.5 Flash — Efficient' },
+    ],
+  };
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 2: STATE
+  ────────────────────────────────────────────────────── */
+  let slides        = [];      // [{title, body}]
+  let currentSlide  = 0;
+  let speaking      = false;
+  let paused        = false;
+
+  // TTS state
+  let ttsMode       = 'browser';       // 'browser' | 'elevenlabs'
+  let elVoices      = [...EL_VOICES_DEFAULT];
+  let currentElVoiceId = '';
+  let audioEl       = null;            // <audio> element for ElevenLabs
+  let audioCache    = new Map();       // key → blob URL
+  let currentUtterance = null;         // Web Speech utterance
+
+  // AI chat state
+  let chatHistory   = [];              // [{role, content}]
+  let aiStreaming   = false;
+
+  // Google Slides state
+  let googleAccessToken = null;
+  let googleTokenClient = null;
+
+  // Settings (from localStorage)
+  let cfg = {};
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 3: DOM REFS
+  ────────────────────────────────────────────────────── */
+  const $ = id => document.getElementById(id);
+
+  const fileInput       = $('file-input');
+  const btnDownload     = $('btn-download');
+  const btnPlay         = $('btn-play');
+  const btnPrev         = $('btn-prev');
+  const btnNext         = $('btn-next');
+  const playIconEl      = $('play-icon');
+  const voiceSelect     = $('voice-select');
+  const rateInput       = $('rate-input');
+  const rateDisplay     = $('rate-display');
+  const slideList       = $('slide-list');
+  const slideCount      = $('slide-count');
+  const slideCounter    = $('slide-counter');
+  const slideChip       = $('slide-chip');
+  const slideHeading    = $('slide-heading');
+  const slideBody       = $('slide-body');
+  const progressFill    = $('progress-fill');
+  const emptyState      = $('empty-state');
+  const slideViewer     = $('slide-viewer');
+  const chatPanel       = $('chat-panel');
+  const chatMessages    = $('chat-messages');
+  const chatInput       = $('chat-input');
+  const chatSendBtn     = $('chat-send-btn');
+  const chatModelBadge  = $('chat-model-badge');
+  const toastEl         = $('toast');
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 4: TOAST
+  ────────────────────────────────────────────────────── */
+  let toastTimer;
+  function showToast(msg, type = '', duration = 4000) {
+    toastEl.textContent  = msg;
+    toastEl.className    = `toast show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), duration);
+  }
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 5: SETTINGS (localStorage)
+  ────────────────────────────────────────────────────── */
+  const LS_KEY = 'tr_pptspeech_cfg';
+
+  function loadSettings() {
+    try { cfg = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }
+    catch { cfg = {}; }
+
+    ttsMode = cfg.ttsMode || 'browser';
+    $('el-key').value           = cfg.elKey       || '';
+    $('el-model').value         = cfg.elModel     || 'eleven_multilingual_v2';
+    $('ai-provider').value      = cfg.aiProvider  || 'anthropic';
+    $('anthropic-key').value    = cfg.anthropicKey|| '';
+    $('openai-key').value       = cfg.openaiKey   || '';
+    $('openai-proxy').value     = cfg.openaiProxy || '';
+    $('gemini-key').value       = cfg.geminiKey   || '';
+    $('google-client-id').value = cfg.googleClientId || '';
+
+    // TTS radio
+    document.querySelectorAll('#tts-mode-group .radio-opt').forEach(opt => {
+      opt.classList.toggle('selected', opt.dataset.value === ttsMode);
+    });
+
+    // Model select
+    updateAiProviderUI();
+  }
+
+  function saveSettings() {
+    const ttsVal = document.querySelector('#tts-mode-group .radio-opt.selected')?.dataset.value || 'browser';
+    cfg = {
+      ttsMode:       ttsVal,
+      elKey:         $('el-key').value.trim(),
+      elModel:       $('el-model').value,
+      aiProvider:    $('ai-provider').value,
+      aiModel:       $('ai-model-select').value,
+      anthropicKey:  $('anthropic-key').value.trim(),
+      openaiKey:     $('openai-key').value.trim(),
+      openaiProxy:   $('openai-proxy').value.trim(),
+      geminiKey:     $('gemini-key').value.trim(),
+      googleClientId:$('google-client-id').value.trim(),
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+    ttsMode = cfg.ttsMode;
+
+    // Refresh voice list if ElevenLabs key provided
+    if (ttsMode === 'elevenlabs' && cfg.elKey) {
+      fetchElVoices(cfg.elKey).then(() => populateVoiceSelect()).catch(() => {});
     }
+    populateVoiceSelect();
+    updateAiModelBadge();
+  }
 
-    /* ────────────────────────────────────────────────────────────
-       File Upload & PPTX Parsing
-    ──────────────────────────────────────────────────────────── */
-    fileInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+  function updateAiProviderUI() {
+    const provider = $('ai-provider').value;
+    $('anthropic-key-field').style.display = provider === 'anthropic' ? '' : 'none';
+    $('openai-key-field').style.display    = provider === 'openai'    ? '' : 'none';
+    $('openai-proxy-field').style.display  = provider === 'openai'    ? '' : 'none';
+    $('gemini-key-field').style.display    = provider === 'gemini'    ? '' : 'none';
 
-      if (!file.name.toLowerCase().endsWith('.pptx')) {
-        showToast('Please upload a .pptx file.');
-        fileInput.value = '';
-        return;
-      }
+    // Populate model dropdown
+    const modelSel = $('ai-model-select');
+    modelSel.innerHTML = '';
+    (AI_MODELS[provider] || []).forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.label;
+      if (cfg.aiModel === m.id) opt.selected = true;
+      modelSel.appendChild(opt);
+    });
+  }
 
-      // Store blob for download
-      pptxBlob = file;
-      downloadBtn.href    = URL.createObjectURL(file);
-      downloadBtn.download = file.name;
-      downloadBtn.hidden  = false;
+  function updateAiModelBadge() {
+    const provider = cfg.aiProvider || 'anthropic';
+    const labels = { anthropic: 'Claude', openai: 'GPT', gemini: 'Gemini' };
+    chatModelBadge.textContent = labels[provider] || 'AI';
+  }
 
-      try {
-        slides = await parsePptx(file);
-      } catch (err) {
-        showToast('Could not parse the .pptx file. Is it a valid PowerPoint?');
-        console.error(err);
-        return;
-      }
+  /* TTS mode radio buttons */
+  document.querySelectorAll('#tts-mode-group .radio-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#tts-mode-group .radio-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
 
-      if (slides.length === 0) {
-        showToast('No slides found in this presentation.');
-        return;
-      }
+  /* Provider change */
+  $('ai-provider').addEventListener('change', updateAiProviderUI);
 
+  /* Settings open/close */
+  $('btn-settings').addEventListener('click', () => {
+    loadSettings(); // refresh inputs
+    $('settings-modal').classList.add('active');
+  });
+  $('settings-close').addEventListener('click', () => $('settings-modal').classList.remove('active'));
+  $('settings-cancel').addEventListener('click', () => $('settings-modal').classList.remove('active'));
+  $('settings-save').addEventListener('click', () => {
+    saveSettings();
+    $('settings-modal').classList.remove('active');
+    showToast('Settings saved ✓', 'success');
+  });
+  $('settings-modal').addEventListener('click', e => {
+    if (e.target === $('settings-modal')) $('settings-modal').classList.remove('active');
+  });
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 6: PPTX PARSING
+  ────────────────────────────────────────────────────── */
+  fileInput.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.pptx')) {
+      showToast('Please upload a .pptx file.', 'error'); fileInput.value = ''; return;
+    }
+    await loadPresentation(file, file.name);
+    fileInput.value = '';
+  });
+
+  async function loadPresentation(fileOrBlob, filename) {
+    try {
+      const parsed = await parsePptx(fileOrBlob);
+      if (!parsed.length) { showToast('No slides found in this presentation.', 'error'); return; }
       stopSpeech();
+      audioCache.clear();
+      slides = parsed;
       currentSlide = 0;
+      chatHistory = [];
+      chatMessages.innerHTML = '';
       renderSidebar();
       showSlide(0);
       emptyState.style.display   = 'none';
-      slideDisplay.style.display = 'flex';
-      btnPlay.disabled = false;
-      btnPrev.disabled = false;
-      btnNext.disabled = false;
-      showToast(`Loaded ${slides.length} slide${slides.length > 1 ? 's' : ''}.`);
+      slideViewer.classList.add('visible');
+      [btnPlay, btnPrev, btnNext].forEach(b => b.disabled = false);
+      // Setup download
+      const url = URL.createObjectURL(fileOrBlob);
+      btnDownload.href     = url;
+      btnDownload.download = filename || 'presentation.pptx';
+      btnDownload.style.display = '';
+      showToast(`Loaded ${slides.length} slide${slides.length !== 1 ? 's' : ''} ✓`, 'success');
+    } catch (err) {
+      showToast('Could not parse the file. Is it a valid .pptx?', 'error');
+      console.error(err);
+    }
+  }
+
+  async function parsePptx(file) {
+    const zip        = await JSZip.loadAsync(file);
+    const slideFiles = [];
+    zip.forEach((path, entry) => {
+      if (/^ppt\/slides\/slide\d+\.xml$/i.test(path)) slideFiles.push({ path, entry });
     });
+    slideFiles.sort((a, b) => {
+      const na = parseInt(a.path.match(/slide(\d+)/)[1], 10);
+      const nb = parseInt(b.path.match(/slide(\d+)/)[1], 10);
+      return na - nb;
+    });
+    const result = [];
+    for (const { entry } of slideFiles) {
+      const xml = await entry.async('string');
+      result.push(extractTextFromXml(xml));
+    }
+    return result;
+  }
 
-    /**
-     * parsePptx – uses JSZip to open the .pptx archive and extracts
-     * text content from each slide XML file (ppt/slides/slide*.xml).
-     *
-     * .pptx is a ZIP containing XML. Slide text lives inside
-     * <a:t> elements within <p:sp> (shape) tags.
-     */
-    async function parsePptx(file) {
-      const zip        = await JSZip.loadAsync(file);
-      const slideFiles = [];
+  function extractTextFromXml(xml) {
+    const doc  = new DOMParser().parseFromString(xml, 'application/xml');
+    const paras = [];
+    doc.querySelectorAll('p').forEach(p => {
+      let line = '';
+      p.querySelectorAll('t').forEach(t => { line += t.textContent; });
+      const trimmed = line.trim();
+      if (trimmed) paras.push(trimmed);
+    });
+    return { title: paras[0] || '(No title)', body: paras.slice(1).join('\n') };
+  }
 
-      // Collect all slide files, sorted numerically
-      zip.forEach((relativePath, zipEntry) => {
-        if (/^ppt\/slides\/slide\d+\.xml$/i.test(relativePath)) {
-          slideFiles.push({ path: relativePath, entry: zipEntry });
+  /* ──────────────────────────────────────────────────────
+     SECTION 7: GOOGLE SLIDES IMPORT
+  ────────────────────────────────────────────────────── */
+  $('btn-gslides').addEventListener('click', openGSlidesModal);
+  $('gslides-close').addEventListener('click', () => $('gslides-modal').classList.remove('active'));
+  $('gslides-modal').addEventListener('click', e => {
+    if (e.target === $('gslides-modal')) $('gslides-modal').classList.remove('active');
+  });
+
+  function openGSlidesModal() {
+    $('gslides-modal').classList.add('active');
+    if (googleAccessToken) {
+      $('gslides-auth-status').textContent = '✓ Signed in with Google';
+      $('gslides-private-section').style.display = '';
+    } else {
+      initGoogleSignIn();
+    }
+  }
+
+  function initGoogleSignIn() {
+    const clientId = cfg.googleClientId || (JSON.parse(localStorage.getItem(LS_KEY) || '{}').googleClientId);
+    if (!clientId) {
+      $('gslides-auth-status').textContent = 'No Google Client ID configured. Set it in Settings → Google Slides.';
+      return;
+    }
+    // Render the Google Sign-In button using GIS
+    try {
+      google.accounts.id.initialize({
+        client_id: clientId,
+        callback: () => {},
+      });
+      googleTokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'https://www.googleapis.com/auth/presentations.readonly https://www.googleapis.com/auth/drive.metadata.readonly',
+        callback: resp => {
+          if (resp.error) { showToast('Google auth error: ' + resp.error, 'error'); return; }
+          googleAccessToken = resp.access_token;
+          $('gslides-auth-status').textContent = '✓ Signed in with Google';
+          $('gslides-private-section').style.display = '';
+          document.getElementById('google-signin-btn-container').innerHTML = `<button class="google-sign-out-btn" id="google-sign-out-btn">Sign Out</button>`;
+          document.getElementById('google-sign-out-btn')?.addEventListener('click', () => {
+            googleAccessToken = null;
+            $('gslides-auth-status').textContent = 'Not signed in';
+            $('gslides-private-section').style.display = 'none';
+            document.getElementById('google-signin-btn-container').innerHTML = '';
+            initGoogleSignIn();
+          });
         }
       });
+      $('google-signin-btn-container').innerHTML = '';
+      const signinBtn = document.createElement('button');
+      signinBtn.className = 'btn-save';
+      signinBtn.textContent = '🔑 Sign in with Google';
+      signinBtn.style.marginTop = '0.5rem';
+      signinBtn.addEventListener('click', () => googleTokenClient.requestAccessToken());
+      $('google-signin-btn-container').appendChild(signinBtn);
+    } catch (e) {
+      $('gslides-auth-status').textContent = 'Google API not loaded yet. Try again in a moment.';
+    }
+  }
 
-      // Sort by slide number
-      slideFiles.sort((a, b) => {
-        const numA = parseInt(a.path.match(/slide(\d+)/)[1], 10);
-        const numB = parseInt(b.path.match(/slide(\d+)/)[1], 10);
-        return numA - numB;
-      });
+  /** Import a public Google Slides presentation by URL */
+  $('btn-import-public').addEventListener('click', async () => {
+    const url = $('gslides-url').value.trim();
+    const idMatch = url.match(/\/presentation\/d\/([a-zA-Z0-9_-]+)/);
+    if (!idMatch) { showToast('Invalid Google Slides URL.', 'error'); return; }
+    const presentationId = idMatch[1];
+    await importGoogleSlides(presentationId);
+  });
 
-      const result = [];
-      for (const { entry } of slideFiles) {
-        const xml  = await entry.async('string');
-        const text = extractTextFromXml(xml);
-        result.push(text);
+  async function importGoogleSlides(presentationId) {
+    $('gslides-modal').classList.remove('active');
+    showToast('Importing from Google Slides…');
+    try {
+      const headers = {};
+      if (googleAccessToken) {
+        headers['Authorization'] = `Bearer ${googleAccessToken}`;
       }
-
-      return result;
-    }
-
-    /**
-     * extractTextFromXml – parses a slide's XML and groups text runs
-     * into paragraphs. The first non-empty paragraph becomes the title.
-     */
-    function extractTextFromXml(xml) {
-      const parser  = new DOMParser();
-      const doc     = parser.parseFromString(xml, 'application/xml');
-
-      // Gather all <a:p> paragraph elements
-      const paragraphs = [];
-      doc.querySelectorAll('p').forEach(pEl => {
-        // Collect text from all <a:t> runs in this paragraph
-        let line = '';
-        pEl.querySelectorAll('t').forEach(tEl => {
-          line += tEl.textContent;
-        });
-        const trimmed = line.trim();
-        if (trimmed) paragraphs.push(trimmed);
-      });
-
-      const title = paragraphs[0] || '(No title)';
-      const body  = paragraphs.slice(1).join('\n');
-      return { title, body };
-    }
-
-    /* ────────────────────────────────────────────────────────────
-       Sidebar Rendering
-    ──────────────────────────────────────────────────────────── */
-    function renderSidebar() {
-      slideList.innerHTML = '';
-      slides.forEach((slide, i) => {
-        const li = document.createElement('li');
-        li.className = 'slide-item' + (i === currentSlide ? ' active' : '');
-        li.innerHTML = `
-          <span class="slide-num">${i + 1}</span>
-          <span class="slide-title">${escapeHtml(slide.title)}</span>
-        `;
-        li.addEventListener('click', () => {
-          stopSpeech();
-          showSlide(i);
-        });
-        slideList.appendChild(li);
-      });
-    }
-
-    /* ────────────────────────────────────────────────────────────
-       Slide Navigation
-    ──────────────────────────────────────────────────────────── */
-    function showSlide(index) {
-      if (index < 0 || index >= slides.length) return;
+      const resp = await fetch(
+        `https://slides.googleapis.com/v1/presentations/${presentationId}`,
+        { headers }
+      );
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || `HTTP ${resp.status}`);
+      }
+      const presentation = await resp.json();
+      slides = parseGoogleSlides(presentation);
+      if (!slides.length) { showToast('No slides found.', 'error'); return; }
       stopSpeech();
-      currentSlide = index;
-
-      const slide = slides[index];
-
-      // Heading
-      slideHeading.textContent = `Slide ${index + 1}: ${slide.title}`;
-
-      // Body – wrap each word in a <span> for highlighting
-      const words = slide.body.split(/(\s+)/); // preserve whitespace
-      slideBody.innerHTML = words.map((token, i) => {
-        if (/^\s+$/.test(token)) return token; // whitespace passthrough
-        return `<span class="word" data-idx="${i}">${escapeHtml(token)}</span>`;
-      }).join('');
-
-      // Counter & progress
-      slideCounter.textContent = `${index + 1} / ${slides.length}`;
-      updateProgress();
-
-      // Sidebar active state
-      document.querySelectorAll('.slide-item').forEach((el, i) => {
-        el.classList.toggle('active', i === index);
-      });
-
-      // Scroll sidebar item into view
-      const activeItem = slideList.children[index];
-      if (activeItem) activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-
-      // Scroll content to top
-      document.querySelector('.slide-content').scrollTop = 0;
+      audioCache.clear();
+      currentSlide = 0;
+      chatHistory  = [];
+      chatMessages.innerHTML = '';
+      renderSidebar();
+      showSlide(0);
+      emptyState.style.display = 'none';
+      slideViewer.classList.add('visible');
+      [btnPlay, btnPrev, btnNext].forEach(b => b.disabled = false);
+      btnDownload.style.display = 'none'; // no PPTX to download
+      showToast(`Imported ${slides.length} slides from Google Slides ✓`, 'success');
+    } catch (e) {
+      showToast('Import failed: ' + e.message + '. Make sure the presentation is public or you are signed in.', 'error');
     }
+  }
 
-    function updateProgress() {
-      const pct = slides.length > 1
-        ? (currentSlide / (slides.length - 1)) * 100
-        : 100;
-      progressFill.style.width = pct + '%';
-    }
-
-    /* ────────────────────────────────────────────────────────────
-       Text-to-Speech
-    ──────────────────────────────────────────────────────────── */
-
-    /** Build full text for current slide (title + body) */
-    function currentSlideText() {
-      const slide = slides[currentSlide];
-      if (!slide) return '';
-      const parts = [slide.title];
-      if (slide.body.trim()) parts.push(slide.body);
-      return parts.join('. ');
-    }
-
-    function speak() {
-      if (!window.speechSynthesis) {
-        showToast('Speech synthesis is not supported in this browser.');
-        return;
-      }
-
-      const text = currentSlideText();
-      if (!text) return;
-
-      utterance = new SpeechSynthesisUtterance(text);
-
-      // Apply selected voice
-      const selectedVoice = getSelectedVoice();
-      if (selectedVoice) utterance.voice = selectedVoice;
-
-      // Apply rate
-      utterance.rate = parseFloat(rateInput.value);
-
-      // Word boundary – highlight spoken word
-      utterance.addEventListener('boundary', (e) => {
-        if (e.name !== 'word') return;
-        document.querySelectorAll('.word.speaking').forEach(el => el.classList.remove('speaking'));
-        // Find the word span at or just after the character index
-        const spans = slideBody.querySelectorAll('.word');
-        let charCount = 0;
-        // text for TTS starts with title + '. ' then body
-        const prefix = slides[currentSlide].title + '. ';
-        const bodyOffset = prefix.length;
-        const bodyText = slides[currentSlide].body;
-
-        // Map charIndex (in full utterance text) to word spans in body
-        const bodyCharIdx = e.charIndex - bodyOffset;
-        if (bodyCharIdx < 0) return; // still in title
-
-        let accumulated = 0;
-        for (const span of spans) {
-          const w = span.textContent;
-          if (accumulated <= bodyCharIdx && bodyCharIdx < accumulated + w.length) {
-            span.classList.add('speaking');
-            span.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            break;
-          }
-          accumulated += w.length;
-          // account for whitespace between words (approx)
-          const next = span.nextSibling;
-          if (next && next.nodeType === Node.TEXT_NODE) {
-            accumulated += next.textContent.length;
-          }
-        }
-      });
-
-      utterance.addEventListener('end', () => {
-        document.querySelectorAll('.word.speaking').forEach(el => el.classList.remove('speaking'));
-        speaking = false;
-        paused   = false;
-        setPlayIcon(false);
-
-        // Auto-advance to next slide
-        if (currentSlide < slides.length - 1) {
-          setTimeout(() => {
-            showSlide(currentSlide + 1);
-            speak();
-          }, 500);
-        }
-      });
-
-      utterance.addEventListener('error', (e) => {
-        if (e.error !== 'interrupted') {
-          showToast('Speech error: ' + e.error);
-        }
-        speaking = false;
-        paused   = false;
-        setPlayIcon(false);
-      });
-
-      window.speechSynthesis.speak(utterance);
-      speaking = true;
-      paused   = false;
-      setPlayIcon(true);
-    }
-
-    function pauseSpeech() {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.pause();
-        paused  = true;
-        speaking = false;
-        setPlayIcon(false);
-      }
-    }
-
-    function resumeSpeech() {
-      if (paused) {
-        window.speechSynthesis.resume();
-        paused  = false;
-        speaking = true;
-        setPlayIcon(true);
-      }
-    }
-
-    function stopSpeech() {
-      window.speechSynthesis.cancel();
-      document.querySelectorAll('.word.speaking').forEach(el => el.classList.remove('speaking'));
-      speaking = false;
-      paused   = false;
-      setPlayIcon(false);
-    }
-
-    function setPlayIcon(isPlaying) {
-      playIcon.className = isPlaying ? 'fa fa-pause' : 'fa fa-play';
-    }
-
-    /* ────────────────────────────────────────────────────────────
-       Voice Population
-    ──────────────────────────────────────────────────────────── */
-    function populateVoices() {
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) return;
-
-      voiceSelect.innerHTML = '';
-
-      // Group by language
-      const byLang = {};
-      voices.forEach((v, i) => {
-        const lang = v.lang || 'Unknown';
-        if (!byLang[lang]) byLang[lang] = [];
-        byLang[lang].push({ voice: v, index: i });
-      });
-
-      // Sort languages
-      Object.keys(byLang).sort().forEach(lang => {
-        const group = document.createElement('optgroup');
-        group.label = lang;
-        byLang[lang].forEach(({ voice, index }) => {
-          const opt = document.createElement('option');
-          opt.value = index;
-          opt.textContent = voice.name + (voice.default ? ' (default)' : '');
-          group.appendChild(opt);
+  function parseGoogleSlides(presentation) {
+    return (presentation.slides || []).map(slide => {
+      const texts = [];
+      (slide.pageElements || []).forEach(el => {
+        const content = el.shape?.text?.textElements || [];
+        content.forEach(te => {
+          const text = te.textRun?.content?.trim();
+          if (text) texts.push(text);
         });
-        voiceSelect.appendChild(group);
       });
-
-      // Pre-select a sensible default (first English voice or browser default)
-      const englishIdx = voices.findIndex(v => v.lang.startsWith('en') && v.default);
-      const fallbackIdx = voices.findIndex(v => v.lang.startsWith('en'));
-      const preferred = englishIdx >= 0 ? englishIdx : (fallbackIdx >= 0 ? fallbackIdx : 0);
-      voiceSelect.value = preferred;
-    }
-
-    function getSelectedVoice() {
-      const idx = parseInt(voiceSelect.value, 10);
-      const voices = window.speechSynthesis.getVoices();
-      return isNaN(idx) ? null : voices[idx] || null;
-    }
-
-    // Voices load asynchronously in some browsers
-    window.speechSynthesis.addEventListener('voiceschanged', populateVoices);
-    populateVoices(); // attempt immediate population
-
-    /* ────────────────────────────────────────────────────────────
-       Transport Button Handlers
-    ──────────────────────────────────────────────────────────── */
-    btnPlay.addEventListener('click', () => {
-      if (!slides.length) return;
-
-      if (speaking) {
-        pauseSpeech();
-      } else if (paused) {
-        resumeSpeech();
-      } else {
-        speak();
-      }
+      const title = texts[0] || '(No title)';
+      const body  = texts.slice(1).join('\n');
+      return { title, body };
     });
+  }
 
-    btnPrev.addEventListener('click', () => {
-      if (currentSlide > 0) {
-        showSlide(currentSlide - 1);
+  /* ──────────────────────────────────────────────────────
+     SECTION 8: ELEVENLABS TTS
+  ────────────────────────────────────────────────────── */
+  async function fetchElVoices(apiKey) {
+    try {
+      const resp = await fetch('https://api.elevenlabs.io/v1/voices', {
+        headers: { 'xi-api-key': apiKey }
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      elVoices = data.voices.map(v => ({
+        id:     v.voice_id,
+        name:   v.name,
+        lang:   v.labels?.language  || 'en',
+        accent: v.labels?.accent    || '',
+        gender: v.labels?.gender?.[0]?.toUpperCase() || '',
+        desc:   v.labels?.description || v.description || '',
+      }));
+      showToast(`Loaded ${elVoices.length} ElevenLabs voices ✓`, 'success');
+    } catch (e) {
+      showToast('Could not load ElevenLabs voices: ' + e.message, 'error');
+      elVoices = [...EL_VOICES_DEFAULT];
+    }
+  }
+
+  async function generateElSpeech(text, voiceId) {
+    const apiKey = cfg.elKey;
+    if (!apiKey) { showToast('Add your ElevenLabs API key in Settings.', 'error'); return null; }
+
+    const cacheKey = `${voiceId}::${text.substring(0, 80)}`;
+    if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
+
+    try {
+      const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+        method: 'POST',
+        headers: {
+          'Accept':       'audio/mpeg',
+          'Content-Type': 'application/json',
+          'xi-api-key':   apiKey,
+        },
+        body: JSON.stringify({
+          text,
+          model_id: cfg.elModel || 'eleven_multilingual_v2',
+          voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+        }),
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail?.message || `HTTP ${resp.status}`);
       }
-    });
+      const blob    = await resp.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      audioCache.set(cacheKey, blobUrl);
+      return blobUrl;
+    } catch (e) {
+      showToast('ElevenLabs error: ' + e.message, 'error');
+      return null;
+    }
+  }
 
-    btnNext.addEventListener('click', () => {
+  /* ──────────────────────────────────────────────────────
+     SECTION 9: VOICE SELECT POPULATION
+  ────────────────────────────────────────────────────── */
+  function populateVoiceSelect() {
+    voiceSelect.innerHTML = '';
+    if (ttsMode === 'elevenlabs') {
+      populateElVoices();
+    } else {
+      populateBrowserVoices();
+    }
+  }
+
+  function populateElVoices() {
+    // Group by language/accent
+    const groups = {};
+    elVoices.forEach(v => {
+      const key = v.lang === 'multi' ? '🌍 Multilingual' : `🇺🇸 English (${v.accent || v.lang})`;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(v);
+    });
+    Object.keys(groups).sort().forEach(grp => {
+      const og = document.createElement('optgroup');
+      og.label = grp;
+      groups[grp].forEach(v => {
+        const opt       = document.createElement('option');
+        opt.value       = v.id;
+        opt.textContent = `${v.name} (${v.gender || '?'}) – ${v.desc || ''}`.trim();
+        if (v.id === currentElVoiceId) opt.selected = true;
+        og.appendChild(opt);
+      });
+      voiceSelect.appendChild(og);
+    });
+    if (!currentElVoiceId && elVoices.length) {
+      currentElVoiceId = elVoices[0].id;
+      voiceSelect.value = currentElVoiceId;
+    }
+  }
+
+  function populateBrowserVoices() {
+    const voices = window.speechSynthesis?.getVoices() || [];
+    if (!voices.length) {
+      const opt = document.createElement('option');
+      opt.textContent = 'Loading browser voices…';
+      voiceSelect.appendChild(opt);
+      return;
+    }
+    const byLang = {};
+    voices.forEach((v, i) => {
+      const lang = v.lang || 'Unknown';
+      if (!byLang[lang]) byLang[lang] = [];
+      byLang[lang].push({ v, i });
+    });
+    Object.keys(byLang).sort().forEach(lang => {
+      const og = document.createElement('optgroup');
+      og.label = lang;
+      byLang[lang].forEach(({ v, i }) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = v.name + (v.default ? ' ✓' : '');
+        og.appendChild(opt);
+      });
+      voiceSelect.appendChild(og);
+    });
+    // Pre-select English default
+    const allVoices = window.speechSynthesis.getVoices();
+    const defIdx = allVoices.findIndex(v => v.default && v.lang.startsWith('en'));
+    const engIdx = allVoices.findIndex(v => v.lang.startsWith('en'));
+    const idx = defIdx >= 0 ? defIdx : (engIdx >= 0 ? engIdx : 0);
+    voiceSelect.value = idx;
+  }
+
+  voiceSelect.addEventListener('change', () => {
+    if (ttsMode === 'elevenlabs') {
+      currentElVoiceId = voiceSelect.value;
+    }
+    if (speaking || paused) {
+      stopSpeech(); speak();
+    }
+  });
+
+  if (window.speechSynthesis) {
+    window.speechSynthesis.addEventListener('voiceschanged', () => {
+      if (ttsMode === 'browser') populateBrowserVoices();
+    });
+  }
+
+  /* Test voice button */
+  $('btn-test-voice').addEventListener('click', async () => {
+    const testText = 'Hello, this is a test of the selected voice.';
+    const voiceMode = document.querySelector('#tts-mode-group .radio-opt.selected')?.dataset.value || 'browser';
+    if (voiceMode === 'elevenlabs') {
+      const key = $('el-key').value.trim();
+      if (!key) { showToast('Enter your ElevenLabs API key first.', 'error'); return; }
+      const vid = voiceSelect.value;
+      if (!vid) { showToast('Select a voice first.', 'error'); return; }
+      $('btn-test-voice').textContent = '⏳ Generating…';
+      const tmpCfg = { ...cfg, elKey: key, elModel: $('el-model').value };
+      const savedCfg = cfg;
+      cfg = tmpCfg;
+      const url = await generateElSpeech(testText, vid);
+      cfg = savedCfg;
+      $('btn-test-voice').textContent = '▶ Test Selected Voice';
+      if (url) { new Audio(url).play(); }
+    } else {
+      const utter = new SpeechSynthesisUtterance(testText);
+      window.speechSynthesis.speak(utter);
+    }
+  });
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 10: PLAYBACK CONTROL
+  ────────────────────────────────────────────────────── */
+  function slideText(index) {
+    const s = slides[index];
+    if (!s) return '';
+    return [s.title, s.body].filter(Boolean).join('. ');
+  }
+
+  async function speak() {
+    if (!slides.length) return;
+    const text = slideText(currentSlide);
+    if (!text) return;
+
+    if (ttsMode === 'elevenlabs') {
+      await speakElevenLabs(text);
+    } else {
+      speakBrowser(text);
+    }
+  }
+
+  async function speakElevenLabs(text) {
+    if (!cfg.elKey) {
+      showToast('Add your ElevenLabs API key in Settings to use AI voices.', 'error');
+      return;
+    }
+    const voiceId = voiceSelect.value || (elVoices[0]?.id || '');
+    if (!voiceId) { showToast('Select a voice.', 'error'); return; }
+
+    // Show loading state
+    setPlayIcon(true);
+    btnPlay.innerHTML = '<span class="spinner"></span>';
+
+    const blobUrl = await generateElSpeech(text, voiceId);
+    if (!blobUrl) { setPlayIcon(false); btnPlay.innerHTML = playIconSvg(false); return; }
+
+    if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+    audioEl = new Audio(blobUrl);
+    audioEl.playbackRate = parseFloat(rateInput.value);
+
+    audioEl.addEventListener('ended', () => {
+      speaking = false; paused = false;
+      setPlayIcon(false);
+      markSlideSpeaking(currentSlide, false);
+      // Auto-advance
       if (currentSlide < slides.length - 1) {
-        showSlide(currentSlide + 1);
+        setTimeout(() => { showSlide(currentSlide + 1); speak(); }, 400);
       }
     });
-
-    /* ────────────────────────────────────────────────────────────
-       Rate Control
-    ──────────────────────────────────────────────────────────── */
-    rateInput.addEventListener('input', () => {
-      const val = parseFloat(rateInput.value);
-      rateVal.textContent = val.toFixed(1) + '×';
-      // If speaking, restart with new rate
-      if (speaking || paused) {
-        stopSpeech();
-        speak();
-      }
+    audioEl.addEventListener('error', () => {
+      speaking = false; paused = false;
+      setPlayIcon(false);
+      showToast('Audio playback error.', 'error');
     });
 
-    /* ────────────────────────────────────────────────────────────
-       Voice Change Handler
-    ──────────────────────────────────────────────────────────── */
-    voiceSelect.addEventListener('change', () => {
-      if (speaking || paused) {
-        stopSpeech();
-        speak();
+    audioEl.play();
+    speaking = true; paused = false;
+    setPlayIcon(true);
+    markSlideSpeaking(currentSlide, true);
+  }
+
+  function speakBrowser(text) {
+    if (!window.speechSynthesis) { showToast('Speech synthesis not supported.', 'error'); return; }
+
+    const utter = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const idx    = parseInt(voiceSelect.value, 10);
+    if (!isNaN(idx) && voices[idx]) utter.voice = voices[idx];
+    utter.rate = parseFloat(rateInput.value);
+
+    utter.addEventListener('boundary', e => highlightWord(e));
+    utter.addEventListener('end',  () => {
+      clearHighlights();
+      speaking = false; paused = false;
+      setPlayIcon(false);
+      markSlideSpeaking(currentSlide, false);
+      if (currentSlide < slides.length - 1) {
+        setTimeout(() => { showSlide(currentSlide + 1); speak(); }, 400);
       }
     });
-
-    /* ────────────────────────────────────────────────────────────
-       Keyboard Controls
-    ──────────────────────────────────────────────────────────── */
-    document.addEventListener('keydown', (e) => {
-      // Don't hijack when typing in an input
-      if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-      if (!slides.length) return;
-
-      switch (e.key) {
-        case ' ':
-          e.preventDefault();
-          btnPlay.click();
-          break;
-        case 'ArrowRight':
-        case 'ArrowDown':
-          e.preventDefault();
-          stopSpeech();
-          if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
-          break;
-        case 'ArrowLeft':
-        case 'ArrowUp':
-          e.preventDefault();
-          stopSpeech();
-          if (currentSlide > 0) showSlide(currentSlide - 1);
-          break;
-        case 'Home':
-          e.preventDefault();
-          stopSpeech();
-          showSlide(0);
-          break;
-        case 'End':
-          e.preventDefault();
-          stopSpeech();
-          showSlide(slides.length - 1);
-          break;
-      }
+    utter.addEventListener('error', e => {
+      if (e.error !== 'interrupted') showToast('Speech error: ' + e.error, 'error');
+      speaking = false; paused = false; setPlayIcon(false);
     });
 
-    /* ────────────────────────────────────────────────────────────
-       Utility
-    ──────────────────────────────────────────────────────────── */
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+    window.speechSynthesis.speak(utter);
+    currentUtterance = utter;
+    speaking = true; paused = false;
+    setPlayIcon(true);
+    markSlideSpeaking(currentSlide, true);
+  }
+
+  function pauseSpeech() {
+    if (ttsMode === 'elevenlabs' && audioEl) {
+      audioEl.pause(); paused = true; speaking = false; setPlayIcon(false);
+    } else if (window.speechSynthesis?.speaking) {
+      window.speechSynthesis.pause(); paused = true; speaking = false; setPlayIcon(false);
+    }
+  }
+
+  function resumeSpeech() {
+    if (ttsMode === 'elevenlabs' && audioEl && paused) {
+      audioEl.play(); paused = false; speaking = true; setPlayIcon(true);
+    } else if (paused) {
+      window.speechSynthesis.resume(); paused = false; speaking = true; setPlayIcon(true);
+    }
+  }
+
+  function stopSpeech() {
+    if (audioEl) { audioEl.pause(); audioEl.src = ''; audioEl = null; }
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    clearHighlights();
+    speaking = false; paused = false;
+    setPlayIcon(false);
+    slides.forEach((_, i) => markSlideSpeaking(i, false));
+  }
+
+  /* Transport buttons */
+  btnPlay.addEventListener('click', () => {
+    if (!slides.length) return;
+    if (speaking)      pauseSpeech();
+    else if (paused)   resumeSpeech();
+    else               speak();
+  });
+  btnPrev.addEventListener('click', () => { if (currentSlide > 0) { stopSpeech(); showSlide(currentSlide - 1); } });
+  btnNext.addEventListener('click', () => { if (currentSlide < slides.length - 1) { stopSpeech(); showSlide(currentSlide + 1); } });
+
+  /* Rate */
+  rateInput.addEventListener('input', () => {
+    const v = parseFloat(rateInput.value);
+    rateDisplay.textContent = v.toFixed(1) + '×';
+    if (audioEl) audioEl.playbackRate = v;
+    if (speaking || paused) { stopSpeech(); speak(); }
+  });
+
+  /* SVG helpers */
+  function playIconSvg(isPaused) {
+    return isPaused
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+      : `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+  }
+
+  function setPlayIcon(isPlaying) {
+    btnPlay.innerHTML = playIconSvg(isPlaying);
+  }
+
+  /* Word highlight (browser TTS) */
+  function highlightWord(e) {
+    if (e.name !== 'word') return;
+    clearHighlights();
+    const prefix = slides[currentSlide].title + '. ';
+    const bodyIdx = e.charIndex - prefix.length;
+    if (bodyIdx < 0) return;
+    let acc = 0;
+    for (const span of slideBody.querySelectorAll('.word')) {
+      const w = span.textContent;
+      if (acc <= bodyIdx && bodyIdx < acc + w.length) {
+        span.classList.add('speaking');
+        span.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        break;
+      }
+      acc += w.length;
+      const next = span.nextSibling;
+      if (next?.nodeType === Node.TEXT_NODE) acc += next.textContent.length;
+    }
+  }
+  function clearHighlights() {
+    slideBody.querySelectorAll('.word.speaking').forEach(el => el.classList.remove('speaking'));
+  }
+
+  function markSlideSpeaking(index, isSpeaking) {
+    const item = slideList.children[index];
+    if (item) item.classList.toggle('speaking-now', isSpeaking);
+  }
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 11: SLIDE RENDERING
+  ────────────────────────────────────────────────────── */
+  function renderSidebar() {
+    slideList.innerHTML = '';
+    slideCount.textContent = slides.length;
+    slides.forEach((slide, i) => {
+      const li = document.createElement('li');
+      li.className = 'slide-item' + (i === currentSlide ? ' active' : '');
+      li.innerHTML = `
+        <span class="slide-num">${i + 1}</span>
+        <span class="slide-preview">${escHtml(slide.title)}</span>`;
+      li.addEventListener('click', () => { stopSpeech(); showSlide(i); });
+      slideList.appendChild(li);
+    });
+  }
+
+  function showSlide(index) {
+    if (index < 0 || index >= slides.length) return;
+    currentSlide = index;
+    const slide  = slides[index];
+
+    slideChip.textContent    = `Slide ${index + 1} of ${slides.length}`;
+    slideHeading.textContent = `${index + 1}. ${slide.title}`;
+
+    // Word-tokenised body
+    const tokens = slide.body.split(/(\s+)/);
+    slideBody.innerHTML = tokens.map(t =>
+      /^\s+$/.test(t) ? t : `<span class="word">${escHtml(t)}</span>`
+    ).join('');
+
+    slideCounter.textContent = `${index + 1} / ${slides.length}`;
+    const pct = slides.length > 1 ? (index / (slides.length - 1)) * 100 : 100;
+    progressFill.style.width = pct + '%';
+
+    // Sidebar active
+    document.querySelectorAll('.slide-item').forEach((el, i) => el.classList.toggle('active', i === index));
+    slideList.children[index]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    $('slide-content-wrap').scrollTop = 0;
+  }
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 12: AI CHAT
+  ────────────────────────────────────────────────────── */
+  /* Chat toggle */
+  $('btn-chat-toggle').addEventListener('click', () => {
+    const isOpen = chatPanel.classList.toggle('open');
+    $('btn-chat-toggle').classList.toggle('active', isOpen);
+    if (isOpen && !slides.length) {
+      appendMsg('assistant', 'Upload a presentation first, then I can help you analyse it.');
+    }
+    if (isOpen && chatMessages.children.length === 0 && slides.length) {
+      appendMsg('assistant', `Hi! I've loaded **${slides.length} slides**. Ask me anything — I can summarise, extract key points, rewrite content, or answer questions about your presentation.`);
+    }
+  });
+  $('chat-close-btn').addEventListener('click', () => {
+    chatPanel.classList.remove('open');
+    $('btn-chat-toggle').classList.remove('active');
+  });
+
+  /* Quick action chips */
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!slides.length) { showToast('Upload a presentation first.', 'error'); return; }
+      sendChatMessage(btn.dataset.prompt);
+    });
+  });
+
+  /* Send on Enter (Shift+Enter = newline) */
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleChatSend(); }
+  });
+  chatSendBtn.addEventListener('click', handleChatSend);
+
+  function handleChatSend() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    chatInput.value = '';
+    sendChatMessage(text);
+  }
+
+  async function sendChatMessage(userText) {
+    if (aiStreaming) return;
+    if (!slides.length) { appendMsg('assistant', 'Please upload a presentation first.'); return; }
+
+    const provider = cfg.aiProvider || 'anthropic';
+
+    // Check API key
+    const keyField = { anthropic: cfg.anthropicKey, openai: cfg.openaiKey, gemini: cfg.geminiKey };
+    if (!keyField[provider]) {
+      appendMsg('assistant', `⚠️ No **${provider}** API key configured. Go to **Settings** → AI Chat to add your key.`);
+      chatPanel.classList.add('open');
+      $('btn-chat-toggle').classList.add('active');
+      return;
     }
 
-    /* ────────────────────────────────────────────────────────────
-       Guard against page unload while speaking
-    ──────────────────────────────────────────────────────────── */
-    window.addEventListener('beforeunload', () => {
-      window.speechSynthesis.cancel();
+    // Add user message
+    appendMsg('user', userText);
+    chatHistory.push({ role: 'user', content: userText });
+
+    // Build presentation context
+    const presentationContext = slides.map((s, i) =>
+      `Slide ${i + 1}: ${s.title}${s.body ? '\n' + s.body : ''}`
+    ).join('\n\n');
+
+    const systemPrompt = `You are an expert presentation analyst and writer. You have been given a PowerPoint presentation to analyze.
+
+FULL PRESENTATION (${slides.length} slides):
+${presentationContext}
+
+CURRENT SLIDE (${currentSlide + 1}):
+Title: ${slides[currentSlide]?.title}
+Content: ${slides[currentSlide]?.body || '(no body text)'}
+
+Help the user understand, analyze, summarize, rewrite, or improve this presentation. Be concise and actionable. Use markdown formatting (bold, bullets) where helpful.`;
+
+    // Show typing indicator
+    const typingId = appendTyping();
+    aiStreaming = true;
+    chatSendBtn.disabled = true;
+
+    try {
+      let fullResponse = '';
+      const model = cfg.aiModel || AI_MODELS[provider][0]?.id;
+
+      if (provider === 'anthropic') {
+        fullResponse = await streamAnthropic(systemPrompt, chatHistory, model, cfg.anthropicKey, chunk => {
+          removeTyping(typingId);
+          updateStreamingMsg(chunk);
+        });
+      } else if (provider === 'gemini') {
+        fullResponse = await streamGemini(systemPrompt, chatHistory, model, cfg.geminiKey, chunk => {
+          removeTyping(typingId);
+          updateStreamingMsg(chunk);
+        });
+      } else if (provider === 'openai') {
+        fullResponse = await streamOpenAI(systemPrompt, chatHistory, model, cfg.openaiKey, cfg.openaiProxy, chunk => {
+          removeTyping(typingId);
+          updateStreamingMsg(chunk);
+        });
+      }
+
+      finaliseStreamingMsg(fullResponse);
+      chatHistory.push({ role: 'assistant', content: fullResponse });
+    } catch (e) {
+      removeTyping(typingId);
+      appendMsg('assistant', `⚠️ Error: ${e.message}. Check your API key and try again.`);
+    } finally {
+      aiStreaming = false;
+      chatSendBtn.disabled = false;
+    }
+  }
+
+  /* ── Anthropic streaming ── */
+  async function streamAnthropic(system, history, model, apiKey, onChunk) {
+    const messages = history.map(m => ({ role: m.role === 'system' ? 'user' : m.role, content: m.content }));
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({ model, max_tokens: 2048, system, messages, stream: true }),
     });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+    const reader = resp.body.getReader();
+    const dec    = new TextDecoder();
+    let full = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      for (const line of dec.decode(value).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const parsed = JSON.parse(line.slice(6));
+          if (parsed.type === 'content_block_delta') {
+            const chunk = parsed.delta?.text || '';
+            full += chunk; onChunk(full);
+          }
+        } catch {}
+      }
+    }
+    return full;
+  }
+
+  /* ── OpenAI streaming ── */
+  async function streamOpenAI(system, history, model, apiKey, proxy, onChunk) {
+    const base = proxy || 'https://api.openai.com';
+    const messages = [{ role: 'system', content: system }, ...history];
+    const resp = await fetch(`${base}/v1/chat/completions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({ model, messages, stream: true }),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+    const reader = resp.body.getReader();
+    const dec    = new TextDecoder();
+    let full = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      for (const line of dec.decode(value).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6);
+        if (data === '[DONE]') return full;
+        try {
+          const chunk = JSON.parse(data).choices[0]?.delta?.content || '';
+          full += chunk; onChunk(full);
+        } catch {}
+      }
+    }
+    return full;
+  }
+
+  /* ── Google Gemini streaming ── */
+  async function streamGemini(system, history, model, apiKey, onChunk) {
+    const contents = [
+      { role: 'user', parts: [{ text: system }] },
+      { role: 'model', parts: [{ text: 'Understood. I am ready to help with this presentation.' }] },
+      ...history.map(m => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      })),
+    ];
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?key=${apiKey}&alt=sse`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents }),
+      }
+    );
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${resp.status}`);
+    }
+    const reader = resp.body.getReader();
+    const dec    = new TextDecoder();
+    let full = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      for (const line of dec.decode(value).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        try {
+          const chunk = JSON.parse(line.slice(6)).candidates?.[0]?.content?.parts?.[0]?.text || '';
+          full += chunk; onChunk(full);
+        } catch {}
+      }
+    }
+    return full;
+  }
+
+  /* ── Chat UI helpers ── */
+  let streamingMsgEl = null;
+
+  function appendMsg(role, text) {
+    const div = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    div.innerHTML = `
+      <div class="msg-avatar ${role === 'user' ? 'user-av' : 'ai-av'}">${role === 'user' ? 'You' : 'AI'}</div>
+      <div class="msg-bubble">${renderMarkdown(text)}</div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  function appendTyping() {
+    const id = 'typing-' + Date.now();
+    const div = document.createElement('div');
+    div.id = id;
+    div.className = 'chat-msg assistant';
+    div.innerHTML = `
+      <div class="msg-avatar ai-av">AI</div>
+      <div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return id;
+  }
+
+  function removeTyping(id) {
+    document.getElementById(id)?.remove();
+  }
+
+  function updateStreamingMsg(fullText) {
+    if (!streamingMsgEl) {
+      streamingMsgEl = appendMsg('assistant', fullText);
+    } else {
+      streamingMsgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(fullText);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
+
+  function finaliseStreamingMsg(fullText) {
+    if (streamingMsgEl) {
+      streamingMsgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(fullText);
+      streamingMsgEl = null;
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  /** Very lightweight markdown renderer (bold, code, newlines) */
+  function renderMarkdown(text) {
+    return escHtml(text)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/^- (.*)/gm, '• $1')
+      .replace(/\n/g, '<br>');
+  }
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 13: KEYBOARD SHORTCUTS
+  ────────────────────────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    if (!slides.length) return;
+    switch (e.key) {
+      case ' ':       e.preventDefault(); btnPlay.click(); break;
+      case 'ArrowRight':
+      case 'ArrowDown':  e.preventDefault(); stopSpeech(); showSlide(currentSlide + 1); break;
+      case 'ArrowLeft':
+      case 'ArrowUp':    e.preventDefault(); stopSpeech(); showSlide(currentSlide - 1); break;
+      case 'Home':    e.preventDefault(); stopSpeech(); showSlide(0); break;
+      case 'End':     e.preventDefault(); stopSpeech(); showSlide(slides.length - 1); break;
+    }
+  });
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 14: UTILITY
+  ────────────────────────────────────────────────────── */
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ──────────────────────────────────────────────────────
+     SECTION 15: INIT
+  ────────────────────────────────────────────────────── */
+  function init() {
+    loadSettings();
+    populateVoiceSelect();
+    updateAiModelBadge();
+
+    // If ElevenLabs key already saved, fetch voices
+    if (cfg.elKey && cfg.ttsMode === 'elevenlabs') {
+      fetchElVoices(cfg.elKey).then(() => populateVoiceSelect()).catch(() => {});
+    }
+
+    // Rate display init
+    rateDisplay.textContent = parseFloat(rateInput.value).toFixed(1) + '×';
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (audioEl) audioEl.pause();
+  });
+
+  init();
   </script>
 
 </body>
