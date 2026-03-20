@@ -1,139 +1,426 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Me</title>
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Tommy Roldan – Let's build something together">
+  <title>Contact | Tommy Roldan</title>
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-      gtag('config', 'UA-107761621-1');
-    </script>
-  </head>
-  <body>
-    <div class="background">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'UA-107761621-1');
+  </script>
 
-      <div class="about-container">
+  <style>
+    :root {
+      --cream:  #FFFDF5;
+      --red:    #FF3B3B;
+      --yellow: #FFD93D;
+      --purple: #7B2FFF;
+      --black:  #0D0D0D;
+      --white:  #FFFFFF;
+      --border: 3px solid #0D0D0D;
+      --shadow: 6px 6px 0px #0D0D0D;
+      --font-h: 'Archivo', sans-serif;
+      --font-b: 'Space Grotesk', sans-serif;
+    }
 
-        <!-- Start of header -->
-        <header>
-          <nav>
-            <h3 class="animated rotateIn">Contact Me</h3>
-            <a href="index.html" class="animated bounceInRight" id="main">Tommy Roldan</a>
-            <ul>
-              <li><a class="animated  fadeIn" href="about.html">About</a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated  fadeIn" href="work.html"><i class="fa fa-briefcase"></i></a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated  fadeIn" href="GRVT.html"><i class="fa fa-bicycle"></i></a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated fadeIn" href="contact.html">Contact</a></li>
-            </ul>
-          </nav>
-        </header>
-      </div>  <!-- End of header -->
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--black);
+      overflow-x: hidden;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
 
-      <div class="contact">
-              <div class="left">
-                  <h1 class="contact-title">Hit me up</h1>
-                  <p class="breif">I love meeting new people! Let's grab a beer and chat.</p> <p class="breif">If you have a personal project or something you need done, don't hesitate to reach out.</p>
-                  <p class="breif">Follow me on one of my Socials!</p>
-              </div>
-              <div class="right">
-                      <div class="social-btns">
-                          <a class="btn linkedin" href="https://www.linkedin.com/in/tommy-roldan/"><i class="fa fa-linkedin"></i></a>
-                          <a class="btn instagram" href="https://instagram.com/tomcat.png"><i class="fa fa-instagram"></i></a>
-                          <a class="btn linkedin" href="https://www.strava.com/athletes/14197229"><i class="fa fa-bicycle" aria-hidden="true"></i></a>
-                          <a class="btn envelope-open" data-toggle="modal" href="#myModal"><i class="fa fa-envelope-open"></i></a>
-                      </div>
+    /* ─── Navigation ─────────────────────────────────────────── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; background: var(--cream);
+      border-bottom: var(--border); position: sticky; top: 0; z-index: 100;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .nav-brand {
+      font-family: var(--font-h); font-weight: 900; font-size: 1.3rem;
+      text-decoration: none; color: var(--black); background: var(--yellow);
+      border: var(--border); padding: 0.3rem 0.75rem;
+      box-shadow: 3px 3px 0 var(--black); transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nav-brand:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
+    .nav-links { display: flex; list-style: none; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.82rem;
+      text-decoration: none; color: var(--black); text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.35rem 0.75rem;
+      border: 2px solid transparent; transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      border-color: var(--black); background: var(--red); color: var(--white);
+    }
 
-              </div>
-          <a class="btn btn-outline-info" target="_blank" id="resume" href="http://bit.ly/miResume">My Resume</a>
-        </div>
+    /* ─── Main ───────────────────────────────────────────────── */
+    main { flex: 1; }
 
+    /* ─── Hero Band ──────────────────────────────────────────── */
+    .contact-hero {
+      background: var(--purple);
+      border-bottom: var(--border);
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-hero::before {
+      content: 'TALK';
+      position: absolute; right: -0.02em; top: -0.1em;
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(5rem, 22vw, 18rem);
+      color: rgba(255,255,255,0.07); letter-spacing: -0.04em;
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .contact-hero h1 {
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      color: var(--white); letter-spacing: -0.03em;
+      text-transform: uppercase; line-height: 0.9;
+      opacity: 0; animation: slideUp 0.6s 0.1s ease forwards;
+    }
+    .contact-hero h1 span {
+      color: var(--yellow);
+    }
+    .contact-hero p {
+      color: rgba(255,255,255,0.8); font-size: 1rem;
+      margin-top: 0.8rem; font-weight: 500;
+      max-width: 480px;
+      opacity: 0; animation: slideUp 0.6s 0.25s ease forwards;
+    }
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="myModalLongTitle">Contact Me</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+    /* ─── Two Column Layout ──────────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      gap: 3rem;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; padding: 2rem 1rem; gap: 2rem; }
+    }
 
-        <div class="form_container">
-          <div class="form_wrapper">
+    /* ─── Reveal ─────────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-            <form action="https://formspree.io/troldan92@gmail.com" method="POST">
-              <div class="row clearfix">
-                <div class="col_half">
-                  <label>First name</label>
-                  <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                    <input type="text" name="firstName" placeholder="John" required />
-                  </div>
-                </div>
-                <div class="col_half">
-                  <label>Last name</label>
-                  <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                    <input type="text" name="lastName" placeholder="Doe" />
-                  </div>
-                </div>
-              </div>
+    /* ─── Section Tags ───────────────────────────────────────── */
+    .section-tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      background: var(--yellow); color: var(--black);
+      border: 2px solid var(--black); padding: 0.2rem 0.6rem;
+      margin-bottom: 1rem;
+    }
 
-              <div class="row clearfix">
-                <div class="col_half">
-                  <label>Email</label>
-                  <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
-                    <input type="email" name="_replyto" placeholder="johndoe@gmail.com" required />
-                    <input type="hidden" name="_subject" value="Contacted via Portfolio">
-                  </div>
-                </div>
-                <div class="col_half">
-                  <label>Phone</label>
-                  <div class="input_field"> <span><i aria-hidden="true" class="fa fa-phone"></i></span>
-                    <input type="tel" name="phone" placeholder="Phone #" pattern="[0-9]{10}" />
-                  </div>
-                </div>
-              </div>
+    /* ─── Social Column ──────────────────────────────────────── */
+    .social-col { display: flex; flex-direction: column; gap: 1.5rem; }
 
-              <div class="row clearfix">
-                <div>
-                  <label>Comments</label>
-                  <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
-                    <textarea cols="46" rows="3" name="comments"></textarea>
-                  </div>
-                </div>
-              </div>
-              <input class="button" type="submit" value="Sumbit">
-              <input type="hidden" name="_gotcha">
-              <input type="hidden" name="_next" value="http://tomcat.codes">
-            </form>
-          </div>
-        </div>
-      </div>
+    .social-col h2 {
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.02em;
+    }
+    .social-col p { font-size: 0.95rem; line-height: 1.7; color: #444; }
+
+    .social-tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .social-tile {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 1rem;
+      background: var(--white);
+      border: var(--border);
+      box-shadow: 4px 4px 0 var(--black);
+      text-decoration: none;
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+      cursor: pointer;
+    }
+    .social-tile:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--black);
+    }
+    .social-tile.linkedin:hover  { background: #0A66C2; color: var(--white); }
+    .social-tile.instagram:hover { background: #E1306C; color: var(--white); }
+    .social-tile.strava:hover    { background: #FC4C02; color: var(--white); }
+    .social-tile.music:hover     { background: var(--purple); color: var(--white); }
+
+    .social-tile svg { flex-shrink: 0; }
+
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      color: var(--white);
+      background: var(--black);
+      padding: 0.85rem 1.75rem;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+      width: fit-content;
+    }
+    .resume-btn:hover {
+      background: var(--red);
+      transform: translate(3px, 3px);
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    /* ─── Form Column ─────────────────────────────────────────── */
+    .form-col h2 {
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.02em; margin-bottom: 1.5rem;
+    }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .field { display: flex; flex-direction: column; gap: 0.3rem; }
+
+    label {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      font-family: var(--font-b);
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--white);
+      border: var(--border);
+      color: var(--black);
+      outline: none;
+      transition: box-shadow 0.15s;
+      width: 100%;
+    }
+    input:focus, textarea:focus {
+      box-shadow: 4px 4px 0 var(--black);
+    }
+    textarea { resize: vertical; min-height: 120px; }
+
+    .submit-btn {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.85rem 2rem;
+      background: var(--red);
+      color: var(--white);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+    .submit-btn:hover {
+      transform: translate(3px, 3px);
+      box-shadow: 3px 3px 0 var(--black);
+    }
+    .submit-btn:active {
+      transform: translate(6px, 6px);
+      box-shadow: 0px 0px 0 var(--black);
+    }
+
+    /* ─── Footer Band ─────────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    footer p {
+      font-family: var(--font-b);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+    }
+    footer a { color: var(--yellow); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ─── Keyframes ──────────────────────────────────────────── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .contact-hero { padding: 2rem 1rem; }
+      .social-tiles { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ────────────────────────────────────────── -->
+  <nav>
+    <a href="index.html" class="nav-brand">TR</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="GRVT.html">GRVT</a></li>
+      <li><a href="tools/">Tools</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- ── Hero Band ─────────────────────────────────────────── -->
+    <div class="contact-hero">
+      <h1>Let's<br><span>Talk.</span></h1>
+      <p>I love meeting new people. Got a project, a beer, or an idea? Hit me up.</p>
     </div>
-  </div>
-</div>
 
+    <!-- ── Grid ──────────────────────────────────────────────── -->
+    <div class="contact-grid">
 
+      <!-- Social Column -->
+      <div class="social-col reveal">
+        <div>
+          <span class="section-tag">Find Me Here</span>
+          <h2>Follow Along</h2>
+          <p>Whether it's bikes, code, or coffee — let's connect on one of my socials.</p>
+        </div>
 
+        <div class="social-tiles">
+          <a class="social-tile linkedin" href="https://www.linkedin.com/in/tommy-roldan/" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a class="social-tile instagram" href="https://instagram.com/tomcat.png" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+          </a>
+          <a class="social-tile strava" href="https://www.strava.com/athletes/14197229" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>
+            Strava
+          </a>
+          <a class="social-tile music" href="https://itunes.apple.com/profile/tmizle" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5v-6l5 3z"/></svg>
+            Apple Music
+          </a>
+        </div>
 
+        <a class="resume-btn" href="http://bit.ly/miResume" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          View My Resume →
+        </a>
+      </div>
 
+      <!-- Form Column -->
+      <div class="form-col reveal" style="transition-delay: 0.15s;">
+        <span class="section-tag">Drop a Message</span>
+        <h2>Send Me a Note</h2>
 
+        <form
+          class="contact-form"
+          action="https://formspree.io/troldan92@gmail.com"
+          method="POST">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-          </body>
-        </html>
+          <input type="hidden" name="_subject" value="Contact via Portfolio">
+          <input type="hidden" name="_next"    value="https://tommyroldan.com">
+          <input type="hidden" name="_gotcha">
+
+          <div class="form-row">
+            <div class="field">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" placeholder="John" required autocomplete="given-name">
+            </div>
+            <div class="field">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="_replyto" placeholder="johndoe@gmail.com" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="(305) 000-0000" autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="comments">Message *</label>
+            <textarea id="comments" name="comments" placeholder="Tell me about your project, question, or just say hi..." required></textarea>
+          </div>
+
+          <button class="submit-btn" type="submit">Send Message →</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    <p>© 2025 Tommy Roldan. Built with intention.</p>
+    <p><a href="index.html">tommyroldan.com</a></p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -1,158 +1,491 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Work</title>
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tommy Roldan – Projects & Work">
+  <title>Work | Tommy Roldan</title>
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-      gtag('config', 'UA-107761621-1');
-    </script>
-  </head>
-  <body>
-    <div class="background">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'UA-107761621-1');
+  </script>
 
-      <div class="about-container">
+  <style>
+    :root {
+      --cream:  #FFFDF5;
+      --red:    #FF3B3B;
+      --yellow: #FFD93D;
+      --purple: #7B2FFF;
+      --black:  #0D0D0D;
+      --white:  #FFFFFF;
+      --border: 3px solid #0D0D0D;
+      --shadow: 6px 6px 0px #0D0D0D;
+      --font-h: 'Archivo', sans-serif;
+      --font-b: 'Space Grotesk', sans-serif;
+    }
 
-        <!-- Start of header -->
-        <header>
-          <nav>
-            <h3 class="animated rotateIn">My Work</h3>
-            <a href="index.html" class="animated bounceInRight" id="main">Tommy Roldan</a>
-            <ul>
-              <li><a class="animated  fadeIn" href="about.html">About</a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated  fadeIn" href="work.html"><i class="fa fa-briefcase"></i></a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated  fadeIn" href="GRVT.html"><i class="fa fa-bicycle"></i></a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated fadeIn" href="contact.html">Contact</a></li>
-            </ul>
-          </nav>
-        </header>
-      </div>  <!-- End of header -->
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--black);
+      overflow-x: hidden;
+    }
 
-      <div id="myBtnContainer">
-        <button class="btn active" onclick="filterSelection('all')"> Show all</button>
-        <button class="btn" onclick="filterSelection('web')"> Web Design</button>
-        <button class="btn" onclick="filterSelection('gfx')"> Graphic Design</button>
+    /* ─── Navigation ─────────────────────────────────────────── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; background: var(--cream);
+      border-bottom: var(--border); position: sticky; top: 0; z-index: 100;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .nav-brand {
+      font-family: var(--font-h); font-weight: 900; font-size: 1.3rem;
+      text-decoration: none; color: var(--black); background: var(--yellow);
+      border: var(--border); padding: 0.3rem 0.75rem;
+      box-shadow: 3px 3px 0 var(--black); transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nav-brand:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
+    .nav-links { display: flex; list-style: none; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.82rem;
+      text-decoration: none; color: var(--black); text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.35rem 0.75rem;
+      border: 2px solid transparent; transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      border-color: var(--black); background: var(--red); color: var(--white);
+    }
+
+    /* ─── Page Header ─────────────────────────────────────────── */
+    .page-header {
+      background: var(--yellow);
+      border-bottom: var(--border);
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: 'WORK';
+      position: absolute; right: -0.02em; top: -0.15em;
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(5rem, 20vw, 16rem);
+      color: rgba(0,0,0,0.06); letter-spacing: -0.04em;
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .page-header h1 {
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      color: var(--black); letter-spacing: -0.03em;
+      text-transform: uppercase; line-height: 0.95;
+      opacity: 0; animation: slideUp 0.6s 0.1s ease forwards;
+    }
+    .page-header p {
+      color: rgba(0,0,0,0.65); font-size: 1rem;
+      margin-top: 0.75rem; font-weight: 500;
+      opacity: 0; animation: slideUp 0.6s 0.25s ease forwards;
+    }
+
+    /* ─── Filter Bar ─────────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1.5rem 2rem;
+      border-bottom: var(--border);
+      flex-wrap: wrap;
+      background: var(--cream);
+    }
+    .filter-btn {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.5rem 1.1rem;
+      border: var(--border);
+      background: var(--white);
+      color: var(--black);
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--black);
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+    }
+    .filter-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+    .filter-btn.active {
+      background: var(--black);
+      color: var(--white);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+
+    /* ─── Project Grid ───────────────────────────────────────── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2.5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      .projects-grid { padding: 1.5rem 1rem; gap: 1.5rem; }
+    }
+
+    /* ─── Project Card ───────────────────────────────────────── */
+    .project-card {
+      background: var(--white);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: default;
+      opacity: 0;
+      animation: cardIn 0.5s ease forwards;
+    }
+    .project-card:nth-child(1) { animation-delay: 0.05s; }
+    .project-card:nth-child(2) { animation-delay: 0.10s; }
+    .project-card:nth-child(3) { animation-delay: 0.15s; }
+    .project-card:nth-child(4) { animation-delay: 0.20s; }
+    .project-card:nth-child(5) { animation-delay: 0.25s; }
+    .project-card:nth-child(6) { animation-delay: 0.30s; }
+    .project-card:nth-child(7) { animation-delay: 0.35s; }
+    .project-card:nth-child(8) { animation-delay: 0.40s; }
+    .project-card:nth-child(9) { animation-delay: 0.45s; }
+
+    .project-card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 9px 9px 0 var(--black);
+    }
+
+    .project-card.hide {
+      display: none;
+    }
+
+    .card-img {
+      overflow: hidden;
+      border-bottom: var(--border);
+      aspect-ratio: 16/9;
+      background: #eee;
+      position: relative;
+    }
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .card-img img { transform: scale(1.04); }
+
+    /* No-image placeholder */
+    .card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 2rem;
+      letter-spacing: -0.04em;
+      color: var(--white);
+    }
+
+    .card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      flex: 1;
+    }
+
+    .card-cat {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.2rem 0.55rem;
+      border: 2px solid var(--black);
+      background: var(--yellow);
+      color: var(--black);
+      width: fit-content;
+    }
+    .card-cat.gfx { background: var(--purple); color: var(--white); border-color: var(--black); }
+
+    .card-body h3 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .card-body p {
+      font-size: 0.85rem;
+      color: #444;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      color: var(--white);
+      background: var(--black);
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--black);
+      box-shadow: 3px 3px 0 var(--red);
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+      width: fit-content;
+      margin-top: auto;
+    }
+    .card-link:hover {
+      background: var(--red);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--red);
+    }
+
+    /* ─── Empty state ────────────────────────────────────────── */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: #aaa;
+    }
+
+    /* ─── Keyframes ──────────────────────────────────────────── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .page-header { padding: 2rem 1rem; }
+      .filter-bar { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ────────────────────────────────────────── -->
+  <nav>
+    <a href="index.html" class="nav-brand">TR</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="work.html" class="active">Work</a></li>
+      <li><a href="GRVT.html">GRVT</a></li>
+      <li><a href="tools/">Tools</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page Header ───────────────────────────────────────── -->
+  <div class="page-header">
+    <h1>My<br>Work</h1>
+    <p>Web projects, apps &amp; graphic design — things I built or designed.</p>
+  </div>
+
+  <!-- ── Filter Bar ────────────────────────────────────────── -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Projects</button>
+    <button class="filter-btn" data-filter="web">Web Design</button>
+    <button class="filter-btn" data-filter="gfx">Graphic Design</button>
+  </div>
+
+  <!-- ── Project Grid ──────────────────────────────────────── -->
+  <div class="projects-grid" id="projects-grid">
+
+    <!-- GRVT -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/GRVT.png" alt="GRVT" loading="lazy">
       </div>
-
-
-      <!-- Portfolio Gallery Grid -->
-      <div class="container">
-      <div class="row" style="bottom-padding: 15px;">
-        <div class="card web">
-          <img class="card-img-top" src="images/GRVT.png" alt="GRVT" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">GRVT</h4>
-            <p class="card-text">1 page website dedicated to the GRVT brand.</p>
-
-            <a class="btn btn-primary" href="https://tommyroldan.com/GRVT.html"/>Visit</a>
-          </div>
-        </div>
-        <div class="card web">
-          <img class="card-img-top" src="images/gravity-cycles.png" alt="GRVT" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Gravity Cycles</h4>
-            <p class="card-text">Custom Shopify Website that made GRVT designs available to the public.</p>
-          </div>
-        </div>
-        <div class="card web">
-          <img class="card-img-top" src="images/vcmetalcorp.png" alt="VC" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">V&C Metal Supply Corp</h4>
-            <p class="card-text">Website re-design for V&C Metal Supply Corp</p>
-            <a class="btn btn-primary" href="http://www.vcmetalcorp.com">Visit</a>
-          </div>
-        </div>
-        <div class="card web">
-          <img class="card-img-top" src="images/fixed-latinos.png" alt="Latinos" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Fixed Latinos</h4>
-            <p class="card-text">Application for Fixed Latinos cycling Team.</p>
-            <a class="" href=""></a>
-          </div>
-        </div>
-
-        <div class="card web">
-          <img class="card-img-top" src="images/BrickBreaker.png" alt="BrickBreaker" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Brick Breaker v1.0</h4>
-            <p class="card-text">JS/Canvas game dedicated to breaking bricks with a ball while a random RGBA ball appears.</p>
-
-            <a class="btn btn-primary" href="https://tmaslove.github.io/Brick-/">Play!</a>
-          </div>
-        </div>
-        <div class="card web">
-          <img class="card-img-top" src="images/MemeGen.png" alt="Meme" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Follow MeMe</h4>
-            <p class="card-text">Application to Create, Download and Post Meme's to an anonymous wall; feed.</p>
-
-            <a class="btn btn-primary" href="https://floating-hamlet-63179.herokuapp.com">Create MeMe's</a>
-          </div>
-        </div>
-
-        <div class="card web">
-          <img class="card-img-top" src="images/DonD.png" alt="DoD" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Drinks on Demand</h4>
-            <p class="card-text">Alcohol Delivery Application</p>
-
-            <a class="btn btn-primary" href="https://drinksondemand.herokuapp.com">Visit</a>
-          </div>
-        </div>
-        <div class="card gfx">
-          <img class="card-img-top" src="images/gfx/tropical-sun.png" alt="sun" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Tropical Sun Design</h4>
-            <p class="card-text">Inspired by the Tropical atmosphere in Miami, I designed this Tropical Retro Sun and now sell it online!</p>
-
-            <a class="btn btn-primary" href="https://tommyroldan.com/GRVT.html">Check it out!</a>
-          </div>
-        </div>
-        <div class="card gfx">
-          <img class="card-img-top" src="images/gfx/rick-triangle.png" alt="rick" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">Cycling Rick</h4>
-            <p class="card-text">Inspired by Cycling, I decided to modify a Rick from Rick and Morty and do something interesting. It's a work in progress.</p>
-            <a class="" href=""></a>
-          </div>
-        </div>
-        <div class="card gfx" style="height: 300px;">
-          <img class="card-img-top" src="images/gfx/gvrt-logo.png" alt="logo" style="width:100%;">
-          <div class="card-body">
-            <h4 class="card-title">GRVT Logo</h4>
-            <p class="card-text">Logo dedicated to the GRVT brand.</p>
-            <a class="" href=""></a>
-          </div>
-        </div>
-      <!-- END GRID --->
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>GRVT</h3>
+        <p>One-page website dedicated to the GRVT cycling brand. Clean, fast, and on-brand.</p>
+        <a class="card-link" href="https://tommyroldan.com/GRVT.html">Visit →</a>
       </div>
-    </div>
-    <!-- container ends -->
+    </article>
 
+    <!-- Gravity Cycles -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/gravity-cycles.png" alt="Gravity Cycles" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>Gravity Cycles</h3>
+        <p>Custom Shopify website that made GRVT designs available to the public.</p>
+      </div>
+    </article>
 
-<style>
-body {
-  background-color: #f1f1f1;
-  font-family: Arial;
-}
-</style>
+    <!-- V&C Metal Supply -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/vcmetalcorp.png" alt="V&C Metal Supply" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>V&amp;C Metal Supply Corp</h3>
+        <p>Full website redesign for V&amp;C Metal Supply Corp — cleaner, faster, modern.</p>
+        <a class="card-link" href="http://www.vcmetalcorp.com" target="_blank">Visit →</a>
+      </div>
+    </article>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script src="js/sifter.js"></script>
-  </body>
+    <!-- Fixed Latinos -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/fixed-latinos.png" alt="Fixed Latinos" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>Fixed Latinos</h3>
+        <p>Application for the Fixed Latinos cycling team — community, routes &amp; events.</p>
+      </div>
+    </article>
+
+    <!-- Brick Breaker -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/BrickBreaker.png" alt="Brick Breaker" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>Brick Breaker v1.0</h3>
+        <p>A JS/Canvas game — break bricks with a ball while random RGBA balls appear for chaos.</p>
+        <a class="card-link" href="https://tmaslove.github.io/Brick-/" target="_blank">Play! →</a>
+      </div>
+    </article>
+
+    <!-- Follow MeMe -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/MemeGen.png" alt="Follow MeMe" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>Follow MeMe</h3>
+        <p>Create, download &amp; post memes to an anonymous public feed. MEAN stack.</p>
+        <a class="card-link" href="https://floating-hamlet-63179.herokuapp.com" target="_blank">Create →</a>
+      </div>
+    </article>
+
+    <!-- Drinks on Demand -->
+    <article class="project-card" data-cat="web">
+      <div class="card-img">
+        <img src="images/DonD.png" alt="Drinks on Demand" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat">Web</span>
+        <h3>Drinks on Demand</h3>
+        <p>Alcohol delivery application — search, order, delivered. Full MEAN stack build.</p>
+        <a class="card-link" href="https://drinksondemand.herokuapp.com" target="_blank">Visit →</a>
+      </div>
+    </article>
+
+    <!-- Tropical Sun -->
+    <article class="project-card" data-cat="gfx">
+      <div class="card-img">
+        <img src="images/gfx/tropical-sun.png" alt="Tropical Sun Design" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat gfx">Graphic</span>
+        <h3>Tropical Sun Design</h3>
+        <p>Inspired by Miami's tropical atmosphere — a retro sun design now sold online.</p>
+        <a class="card-link" href="https://tommyroldan.com/GRVT.html">Check it out →</a>
+      </div>
+    </article>
+
+    <!-- Cycling Rick -->
+    <article class="project-card" data-cat="gfx">
+      <div class="card-img">
+        <img src="images/gfx/rick-triangle.png" alt="Cycling Rick" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat gfx">Graphic</span>
+        <h3>Cycling Rick</h3>
+        <p>A Rick &amp; Morty-inspired design mashup with cycling culture. Work in progress.</p>
+      </div>
+    </article>
+
+    <!-- GRVT Logo -->
+    <article class="project-card" data-cat="gfx">
+      <div class="card-img">
+        <img src="images/gfx/gvrt-logo.png" alt="GRVT Logo" loading="lazy">
+      </div>
+      <div class="card-body">
+        <span class="card-cat gfx">Graphic</span>
+        <h3>GRVT Logo</h3>
+        <p>Logo design for the GRVT cycling brand — clean, bold, and built to last.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <script>
+    // ── Filter Logic ───────────────────────────────────────────
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards      = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // Update active state
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Show/hide cards with a tiny stagger
+        let visible = 0;
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.cat === filter;
+          if (match) {
+            card.classList.remove('hide');
+            card.style.animationDelay = `${visible * 0.06}s`;
+            card.style.animation = 'none';
+            // Force reflow for re-animation
+            void card.offsetWidth;
+            card.style.animation = `cardIn 0.4s ${visible * 0.06}s ease forwards`;
+            card.style.opacity = '0';
+            visible++;
+          } else {
+            card.classList.add('hide');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
 </html>

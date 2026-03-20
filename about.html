@@ -1,85 +1,440 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Tommy Roldan – Developer, Cyclist, Creative from Miami">
+  <title>About | Tommy Roldan</title>
 
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-      gtag('config', 'UA-107761621-1');
-    </script>
-  </head>
-  <body>
-    <div class="background">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'UA-107761621-1');
+  </script>
 
-      <div class="about-container">
+  <style>
+    :root {
+      --cream:  #FFFDF5;
+      --red:    #FF3B3B;
+      --yellow: #FFD93D;
+      --purple: #7B2FFF;
+      --black:  #0D0D0D;
+      --white:  #FFFFFF;
+      --border: 3px solid #0D0D0D;
+      --shadow: 6px 6px 0px #0D0D0D;
+      --font-h: 'Archivo', sans-serif;
+      --font-b: 'Space Grotesk', sans-serif;
+    }
 
-        <!-- Start of header -->
-        <header>
-          <nav>
-            <h3 class="animated rotateIn">About Me</h3>
-            <a href="index.html" class="animated bounceInRight" id="main">Tommy Roldan</a>
-            <ul>
-              <li><a class="animated  fadeIn" href="about.html">About</a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated  fadeIn" href="work.html"><i class="fa fa-briefcase"></i></a></li><span class="animated fadeIn">/</span>
-              <li><a class="animated fadeIn" href="contact.html">Contact</a></li>
-            </ul>
-          </nav>
-        </header>
-      </div>  <!-- End of header -->
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-      <div class="about-text">
-        <div class="midSection">
-          <div class="midContent">
-            <img id="me" src="images/tomcat.jpeg" alt="">
-            <h1 id="about-header">Hello and Welcome</h1>
-            <p><b>Welcome to my Page.</b>
-              If you know me personally, you'll probably know I'm a bit on the shy side but with a little chatter, I'm sure we'll have something in common. Although I dislike talking about myself, I hope this breif 'about me' suffices.</p>
-              <span id=""><img src=""></span>
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--black);
+      overflow-x: hidden;
+    }
 
-              <p>Born in Medellin, Colombia and lucky to be raised in a small, private island, right off the East coast called Key Biscayne.
-                Raised with Entrepreneural parents, I followed their steps to which led me to study Business Management.<br>
-                I quickly learned that even though I love to hustle, sell and start businesses, that career wasn't the path for me. From an early age, I was obsessed with trying to become some sort of CyberSec graduate. Although I had no experience what so ever, I was determined to learn and was fascinated! I dabbled with all the Hats.
-                It's safe to say that, without that curiousity, I probably would've never jumped into Web Developement.<br>
+    /* ─── Navigation ─────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: var(--cream);
+      border-bottom: var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .nav-brand {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.3rem;
+      text-decoration: none;
+      color: var(--black);
+      background: var(--yellow);
+      border: var(--border);
+      padding: 0.3rem 0.75rem;
+      box-shadow: 3px 3px 0 var(--black);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nav-brand:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
+    .nav-links { display: flex; list-style: none; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.82rem;
+      text-decoration: none; color: var(--black); text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.35rem 0.75rem;
+      border: 2px solid transparent; transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      border-color: var(--black); background: var(--red); color: var(--white);
+    }
 
-                <p>A couple of years later, I joined this amazing bootcamp that really expanded my understanding of coding.
-                Ironhack was a life changing experience. Within 10 weeks of code being rammed down my noggin, I was able to learn the MEAN stack among other amazing technologies.</p>
+    /* ─── Page Header ─────────────────────────────────────────── */
+    .page-header {
+      background: var(--red);
+      border-bottom: var(--border);
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: 'ABOUT';
+      position: absolute;
+      right: -0.02em;
+      top: -0.15em;
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(5rem, 18vw, 14rem);
+      color: rgba(255,255,255,0.08);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .page-header h1 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      color: var(--white);
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      line-height: 0.95;
+      opacity: 0;
+      animation: slideUp 0.6s 0.1s ease forwards;
+    }
+    .page-header p {
+      color: rgba(255,255,255,0.85);
+      font-size: 1rem;
+      margin-top: 0.75rem;
+      font-weight: 500;
+      opacity: 0;
+      animation: slideUp 0.6s 0.25s ease forwards;
+    }
 
-                <p class="breif">Ironhack and trying to become a Web developer was an amazing and unforgetable experience. It taught me many things that I'll always use. I have taken a break from coding/Web Developement and joined a wonderful bicycle family, Women owned store as a Sales Associate.<br>
-                  Yes yes yes, I'm aware at what I said above, but my passion for Cycling has landed me in an amazing position. I'm currently loving what I do, the people that I work with are amazing and so far it's been a great ride.<br>
-                   If you are ever in Miami, FL and are interested in a quality experience and purchase, join us at Mack Cycle and Fitness in South Miami :) <br></p>
+    /* ─── Main Layout ─────────────────────────────────────────── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; padding: 2rem 1rem; gap: 2rem; }
+    }
 
-                <p>As for the future?<br> Who knows!</p>
-                <p> If you are into cycling, drop me a message or join my one or both of my Strava clubs - <bold><a href="https://www.strava.com/clubs/fixedlatinos">Fixed Latinos</a></bold>, <bold><a href="https://www.strava.com/clubs/GRVT">GRVT</a></bold>.<br> Below you can view my <a href="www.strava.com">Strava</a> activity </p>
-              </p>
-          </div>
+    /* ─── Photo Card ──────────────────────────────────────────── */
+    .photo-col {
+      position: sticky;
+      top: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .photo-wrapper {
+      border: var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: rotate(-1.5deg);
+      transition: transform 0.3s;
+    }
+    .photo-wrapper:hover { transform: rotate(0deg); }
+    .photo-wrapper img {
+      width: 100%;
+      display: block;
+      filter: saturate(1.1);
+    }
+
+    .info-card {
+      background: var(--white);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .info-card .label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red);
+    }
+    .info-card .value {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .info-row { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    /* ─── Bio Section ─────────────────────────────────────────── */
+    .bio-col { display: flex; flex-direction: column; gap: 2rem; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Section labels */
+    .section-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: var(--yellow);
+      color: var(--black);
+      border: 2px solid var(--black);
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .bio-block h2 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .bio-block p {
+      font-size: 0.98rem;
+      line-height: 1.8;
+      color: #333;
+      margin-bottom: 0.85rem;
+    }
+    .bio-block p:last-child { margin-bottom: 0; }
+
+    .bio-block a {
+      color: var(--red);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid var(--red);
+      transition: background 0.15s, color 0.15s;
+    }
+    .bio-block a:hover { background: var(--red); color: var(--white); }
+
+    /* ─── Skills Tags ─────────────────────────────────────────── */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .skill-tag {
+      font-family: var(--font-b);
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.8rem;
+      border: 2px solid var(--black);
+      background: var(--white);
+      box-shadow: 3px 3px 0 var(--black);
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+      cursor: default;
+    }
+    .skill-tag:hover {
+      background: var(--yellow);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--black);
+    }
+    .skill-tag.red   { background: var(--red);    color: var(--white); }
+    .skill-tag.purple { background: var(--purple); color: var(--white); }
+
+    /* ─── Strava Section ─────────────────────────────────────── */
+    .strava-section {
+      background: var(--black);
+      border-top: var(--border);
+      padding: 3rem 2rem;
+    }
+    .strava-section h2 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .strava-embed {
+      max-width: 900px;
+      margin: 0 auto;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .strava-embed iframe { display: block; width: 100%; }
+
+    /* ─── Keyframes ──────────────────────────────────────────── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .page-header { padding: 2rem 1rem; }
+      .strava-section { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ────────────────────────────────────────── -->
+  <nav>
+    <a href="index.html" class="nav-brand">TR</a>
+    <ul class="nav-links">
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="GRVT.html">GRVT</a></li>
+      <li><a href="tools/">Tools</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page Header ───────────────────────────────────────── -->
+  <div class="page-header">
+    <h1>Hello &<br>Welcome</h1>
+    <p>Developer · Cyclist · Miami Native · Always Curious</p>
+  </div>
+
+  <!-- ── Content Grid ───────────────────────────────────────── -->
+  <div class="content-grid">
+
+    <!-- Left: Photo + Info -->
+    <aside class="photo-col">
+      <div class="photo-wrapper">
+        <img src="images/tomcat.jpeg" alt="Tommy Roldan" loading="lazy">
+      </div>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">Based in</span>
+          <span class="value">Miami, FL 🌴</span>
+        </div>
+        <div class="info-row" style="margin-top:0.5rem;">
+          <span class="label">Born in</span>
+          <span class="value">Medellín, Colombia</span>
+        </div>
+        <div class="info-row" style="margin-top:0.5rem;">
+          <span class="label">Focus</span>
+          <span class="value">Web Development</span>
+        </div>
+        <div class="info-row" style="margin-top:0.5rem;">
+          <span class="label">Passion</span>
+          <span class="value">Cycling &amp; Tech</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Bio -->
+    <div class="bio-col">
+
+      <div class="bio-block reveal">
+        <span class="section-tag">Origin Story</span>
+        <h2>From Medellín to Key Biscayne</h2>
+        <p>
+          Born in Medellín, Colombia and lucky to be raised on a small, private island just off the East Coast of Miami called Key Biscayne. Raised by entrepreneurial parents, I naturally followed their steps into Business Management.
+        </p>
+        <p>
+          I quickly learned that even though I love to hustle, sell, and start businesses, that career path wasn't quite right for me. From an early age, I was obsessed with CyberSec — no experience whatsoever, but pure determination. That curiosity with all the hats eventually pulled me into Web Development.
+        </p>
+      </div>
+
+      <div class="bio-block reveal">
+        <span class="section-tag">The Bootcamp</span>
+        <h2>10 Weeks That Changed Everything</h2>
+        <p>
+          I joined the incredible bootcamp at <strong>Ironhack</strong> — a life-changing experience. Within 10 intense weeks of code being rammed into my brain, I learned the MEAN stack and a whole lot more. It taught me that the best way to learn is to be thrown in the deep end.
+        </p>
+      </div>
+
+      <div class="bio-block reveal">
+        <span class="section-tag">Right Now</span>
+        <h2>Riding &amp; Building</h2>
+        <p>
+          My passion for cycling landed me in an amazing position at <strong>Mack Cycle & Fitness</strong> in South Miami — a women-owned store where I work as a Sales Associate. The people are incredible and every day is genuinely a great ride.
+        </p>
+        <p>
+          If you're ever in Miami and want a quality cycling experience, come find us. And if you're into cycling, join my Strava clubs:
+          <a href="https://www.strava.com/clubs/fixedlatinos" target="_blank">Fixed Latinos</a> &amp;
+          <a href="https://www.strava.com/clubs/GRVT" target="_blank">GRVT</a>.
+        </p>
+      </div>
+
+      <div class="bio-block reveal">
+        <span class="section-tag">Skills</span>
+        <h2>What I Work With</h2>
+        <div class="skills-grid">
+          <span class="skill-tag red">HTML / CSS</span>
+          <span class="skill-tag red">JavaScript</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Express</span>
+          <span class="skill-tag">MongoDB</span>
+          <span class="skill-tag">Angular</span>
+          <span class="skill-tag purple">React</span>
+          <span class="skill-tag purple">Git / GitHub</span>
+          <span class="skill-tag">Shopify</span>
+          <span class="skill-tag">Graphic Design</span>
+          <span class="skill-tag">CyberSec Basics</span>
+          <span class="skill-tag">Always Learning</span>
         </div>
       </div>
 
-<!-- Strava section -->
-<section class="strava-sec" style="background-color: #CAD7DE;padding-top:12px;padding-bottom:5px;">
-      <div class="container">
-        <div class="mid" align="center">
-          <h1 id="about-header" style="padding-bottom:8px;">My Cycling Routes</h1>
-          <iframe  height='454' width='80%' frameborder='0' allowtransparency='true' scrolling='no' src='https://www.strava.com/athletes/14197229/latest-rides/ecaa8e761943078dbf00544b2b0b4bf6abab9e60'></iframe>
-        </div>
-      </div>
-</section>
+    </div>
+  </div>
 
+  <!-- ── Strava Section ─────────────────────────────────────── -->
+  <section class="strava-section">
+    <h2>My Cycling Routes</h2>
+    <div class="strava-embed">
+      <iframe
+        height="454"
+        frameborder="0"
+        allowtransparency="true"
+        scrolling="no"
+        src="https://www.strava.com/athletes/14197229/latest-rides/ecaa8e761943078dbf00544b2b0b4bf6abab9e60"
+        title="Tommy Roldan Strava Rides"
+        loading="lazy">
+      </iframe>
+    </div>
+  </section>
 
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        </body>
-      </html>
+  <script>
+    // Scroll-reveal observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
