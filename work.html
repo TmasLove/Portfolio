@@ -319,11 +319,38 @@
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All Projects</button>
     <button class="filter-btn" data-filter="web">Web Design</button>
+    <button class="filter-btn" data-filter="tool">Tools</button>
     <button class="filter-btn" data-filter="gfx">Graphic Design</button>
   </div>
 
   <!-- ── Project Grid ──────────────────────────────────────── -->
   <div class="projects-grid" id="projects-grid">
+
+    <!-- Local Legend Predictor -->
+    <article class="project-card" data-cat="tool">
+      <div class="card-img" style="background:#1a1a2e;">
+        <div class="card-img-placeholder">🚴</div>
+      </div>
+      <div class="card-body">
+        <span class="card-cat" style="background:var(--red);color:var(--white);">Tool</span>
+        <h3>Local Legend Predictor</h3>
+        <p>Connect your Strava and see how many more efforts you need to claim the Local Legend title on your top segments. Generates a shareable card for Instagram.</p>
+        <a class="card-link" href="https://local-legend-predictor.onrender.com" target="_blank" rel="noopener">Launch →</a>
+      </div>
+    </article>
+
+    <!-- PPT Speech Tool -->
+    <article class="project-card" data-cat="tool">
+      <div class="card-img" style="background:#0D0D0D;">
+        <div class="card-img-placeholder">🎙️</div>
+      </div>
+      <div class="card-body">
+        <span class="card-cat" style="background:var(--red);color:var(--white);">Tool</span>
+        <h3>PowerPoint Speech Tool</h3>
+        <p>Upload any .pptx and have it read aloud slide-by-slide using your browser's built-in voices. Choose language, speed, and navigate freely — zero server, zero upload.</p>
+        <a class="card-link" href="/tools" target="_blank" rel="noopener">Try it →</a>
+      </div>
+    </article>
 
     <!-- GRVT -->
     <article class="project-card" data-cat="web">
