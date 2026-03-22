@@ -527,7 +527,7 @@
 
       if (entered === pendingPasscode) {
         sessionStorage.setItem('unlocked_' + pendingTool, '1');
-        window.location.href = '/tools/' + pendingTool + '/';
+        window.location.href = '/' + pendingTool + '/';
       } else {
         showError('Incorrect passcode — try again.');
         input.value = '';
