@@ -364,14 +364,7 @@
         <span class="section-tag">Drop a Message</span>
         <h2>Send Me a Note</h2>
 
-        <form
-          class="contact-form"
-          action="https://formspree.io/troldan92@gmail.com"
-          method="POST">
-
-          <input type="hidden" name="_subject" value="Contact via Portfolio">
-          <input type="hidden" name="_next"    value="https://tommyroldan.com">
-          <input type="hidden" name="_gotcha">
+        <form class="contact-form" id="contact-form" onsubmit="sendMail(event)">
 
           <div class="form-row">
             <div class="field">
@@ -420,6 +413,26 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    function sendMail(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const phone     = document.getElementById('phone').value.trim();
+      const message   = document.getElementById('comments').value.trim();
+
+      const name    = [firstName, lastName].filter(Boolean).join(' ');
+      const subject = encodeURIComponent('Message from ' + name + ' via tommyroldan.com');
+      const body    = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Email: ' + email + '\n' +
+        (phone ? 'Phone: ' + phone + '\n' : '') +
+        '\nMessage:\n' + message
+      );
+
+      window.location.href = 'mailto:troldan92@gmail.com?subject=' + subject + '&body=' + body;
+    }
   </script>
 
 </body>
