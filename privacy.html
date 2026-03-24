@@ -1,0 +1,527 @@
+---
+permalink: /privacy
+---
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Privacy Policy – Tommy Roldan Tools">
+  <meta property="og:title" content="Privacy Policy | Tommy Roldan">
+  <meta property="og:url" content="https://tommyroldan.com/privacy">
+  <title>Privacy Policy | Tommy Roldan</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-107761621-1');
+  </script>
+
+  <style>
+    :root {
+      --cream:  #FFFDF5;
+      --red:    #FF3B3B;
+      --yellow: #FFD93D;
+      --purple: #7B2FFF;
+      --black:  #0D0D0D;
+      --white:  #FFFFFF;
+      --border: 3px solid #0D0D0D;
+      --shadow: 6px 6px 0px #0D0D0D;
+      --font-h: 'Archivo', sans-serif;
+      --font-b: 'Space Grotesk', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--black);
+      overflow-x: hidden;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Navigation ─────────────────────────────────────────── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2rem; background: var(--cream);
+      border-bottom: var(--border); position: sticky; top: 0; z-index: 100;
+      flex-wrap: wrap; gap: 0.75rem;
+    }
+    .nav-brand {
+      font-family: var(--font-h); font-weight: 900; font-size: 1.3rem;
+      text-decoration: none; color: var(--black); background: var(--yellow);
+      border: var(--border); padding: 0.3rem 0.75rem;
+      box-shadow: 3px 3px 0 var(--black); transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nav-brand:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
+    .nav-links { display: flex; list-style: none; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    .nav-links a {
+      font-family: var(--font-b); font-weight: 700; font-size: 0.82rem;
+      text-decoration: none; color: var(--black); text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.35rem 0.75rem;
+      border: 2px solid transparent; transition: all 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      border-color: var(--black); background: var(--red); color: var(--white);
+    }
+    .nav-toggle {
+      display: none; background: none; border: var(--border); cursor: pointer;
+      padding: 0.35rem 0.55rem; box-shadow: 2px 2px 0 var(--black);
+      flex-direction: column; gap: 5px; align-items: center; justify-content: center;
+      min-width: 44px; min-height: 44px;
+    }
+    .nav-toggle span { display: block; width: 20px; height: 2px; background: var(--black); transition: transform 0.2s, opacity 0.2s; }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── Page Header ─────────────────────────────────────────── */
+    .page-header {
+      background: var(--black); border-bottom: var(--border);
+      padding: 3rem 2rem 2.5rem; position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: 'PRIVACY';
+      position: absolute; right: -0.02em; top: -0.15em;
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(4rem, 18vw, 14rem);
+      color: rgba(255,255,255,0.05); letter-spacing: -0.04em;
+      line-height: 1; pointer-events: none; user-select: none;
+    }
+    .page-header h1 {
+      font-family: var(--font-h); font-weight: 900;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      color: var(--yellow); letter-spacing: -0.03em;
+      text-transform: uppercase; line-height: 0.95;
+    }
+    .page-header p {
+      color: rgba(255,255,255,0.65); font-size: 1rem;
+      margin-top: 0.75rem; font-weight: 500;
+    }
+
+    /* ─── Content ─────────────────────────────────────────────── */
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      flex: 1;
+    }
+
+    .updated {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: var(--yellow);
+      border: var(--border);
+      padding: 0.2rem 0.65rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 3px 3px 0 var(--black);
+    }
+
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section h2 {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      border-bottom: var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section h2 .section-num {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      font-size: 0.75rem;
+      padding: 0.1rem 0.45rem;
+      margin-right: 0.5rem;
+      border: 2px solid var(--black);
+      vertical-align: middle;
+    }
+
+    .section p {
+      font-size: 0.93rem;
+      line-height: 1.75;
+      color: #333;
+      margin-bottom: 0.85rem;
+    }
+
+    .section ul {
+      list-style: none;
+      margin: 0.5rem 0 0.85rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .section ul li {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #333;
+      padding-left: 1.4rem;
+      position: relative;
+    }
+
+    .section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .callout {
+      background: var(--white);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+    }
+
+    .callout.strava  { border-left: 6px solid #FC4C02; }
+    .callout.garmin  { border-left: 6px solid #00B4D8; }
+    .callout.yellow  { border-left: 6px solid var(--yellow); }
+
+    .callout-label {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .callout-label.strava { color: #FC4C02; }
+    .callout-label.garmin { color: #00B4D8; }
+    .callout-label.yellow { color: #856404; }
+
+    .callout p {
+      font-size: 0.88rem !important;
+      color: #444 !important;
+      margin-bottom: 0 !important;
+    }
+
+    a { color: var(--purple); font-weight: 600; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: var(--black); border-top: var(--border);
+      padding: 1.25rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    footer p { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    footer a { color: var(--yellow); text-decoration: none; font-weight: 700; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ─── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0.9rem 1rem; }
+      .nav-toggle { display: inline-flex; }
+      .nav-links {
+        display: none; flex-direction: column; width: 100%;
+        border-top: var(--border); margin-top: 0.25rem;
+        padding-top: 0.5rem; gap: 0.15rem;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: 0.65rem 0.75rem; width: 100%; }
+      .content { padding: 2rem 1rem 4rem; }
+      .page-header { padding: 2rem 1rem 1.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ────────────────────────────────────────── -->
+  <nav>
+    <a href="/" class="nav-brand">TR</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/work.html">Work</a></li>
+      <li><a href="/tools">Tools</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Page Header ───────────────────────────────────────── -->
+  <div class="page-header">
+    <h1>Privacy<br>Policy</h1>
+    <p>How your data is collected, used, and protected across all Tommy Roldan tools.</p>
+  </div>
+
+  <!-- ── Content ───────────────────────────────────────────── -->
+  <div class="content">
+
+    <span class="updated">Last updated: March 2026</span>
+
+    <!-- 1. Overview -->
+    <div class="section">
+      <h2><span class="section-num">01</span> Overview</h2>
+      <p>
+        This Privacy Policy applies to all web tools and applications available at
+        <strong>tommyroldan.com</strong> and its sub-paths (collectively, "the Tools").
+        These tools are built and maintained by Tommy Roldan as personal software projects.
+      </p>
+      <p>
+        Some tools connect to third-party fitness platforms — specifically
+        <strong>Strava</strong> and <strong>Garmin</strong> — via their official APIs.
+        This policy explains exactly what data is accessed, how it is used, and how you
+        can revoke access at any time.
+      </p>
+    </div>
+
+    <!-- 2. Strava -->
+    <div class="section">
+      <h2><span class="section-num">02</span> Strava API — Data Access &amp; Usage</h2>
+
+      <div class="callout strava">
+        <div class="callout-label strava">🟠 Strava API</div>
+        <p>
+          These tools use the official Strava API and comply with the
+          <a href="https://www.strava.com/legal/api" target="_blank" rel="noopener">Strava API Agreement</a>.
+          This application is not endorsed or certified by Strava.
+        </p>
+      </div>
+
+      <p>When you connect your Strava account to a Tool, we request access to the following data:</p>
+      <ul>
+        <li>Your Strava athlete profile (name, profile photo, location)</li>
+        <li>Your activity data (rides, runs, and other recorded activities)</li>
+        <li>Segment effort data (times and rankings on Strava segments)</li>
+        <li>Your OAuth access token (used to authenticate requests on your behalf)</li>
+      </ul>
+
+      <p><strong>What we do with this data:</strong></p>
+      <ul>
+        <li>Display your segment efforts, rankings, and progress within the Tool</li>
+        <li>Generate shareable summary images based on your own data</li>
+        <li>Compare your efforts to leaderboard positions as returned by the Strava API</li>
+      </ul>
+
+      <p><strong>What we never do:</strong></p>
+      <ul>
+        <li>Sell, share, or transfer your Strava data to any third party</li>
+        <li>Store your raw Strava data beyond the active session</li>
+        <li>Access data from other athletes without their consent</li>
+        <li>Use your data to train machine learning models</li>
+        <li>Display or publish your data without your explicit action</li>
+      </ul>
+
+      <p>
+        <strong>Revoking Strava access:</strong> You can disconnect these tools from your
+        Strava account at any time by visiting
+        <a href="https://www.strava.com/settings/apps" target="_blank" rel="noopener">Strava Settings → My Apps</a>
+        and revoking access. Upon revocation, your OAuth token is invalidated and no
+        further data can be retrieved.
+      </p>
+    </div>
+
+    <!-- 3. Garmin -->
+    <div class="section">
+      <h2><span class="section-num">03</span> Garmin API — Data Access &amp; Usage</h2>
+
+      <div class="callout garmin">
+        <div class="callout-label garmin">🔵 Garmin Connect IQ API</div>
+        <p>
+          These tools use the official Garmin Health API or Connect IQ platform where
+          applicable, and comply with
+          <a href="https://developer.garmin.com/health-api/overview/" target="_blank" rel="noopener">Garmin's API Terms of Service</a>.
+          This application is not endorsed or certified by Garmin.
+        </p>
+      </div>
+
+      <p>When you connect your Garmin account to a Tool, we may access:</p>
+      <ul>
+        <li>Activity summaries (distance, duration, heart rate, elevation)</li>
+        <li>Fitness metrics (VO2 max estimates, training load, sleep data where permitted)</li>
+        <li>Your Garmin user profile (display name, preferences)</li>
+        <li>OAuth credentials used to authenticate API requests on your behalf</li>
+      </ul>
+
+      <p><strong>How Garmin data is used:</strong></p>
+      <ul>
+        <li>To display your personal fitness trends and summaries within the Tool</li>
+        <li>To generate personal reports or shareable cards based on your own data</li>
+        <li>Data is processed in real time and not persistently stored on our servers</li>
+      </ul>
+
+      <p><strong>What we never do:</strong></p>
+      <ul>
+        <li>Share or sell your Garmin health data to advertisers or data brokers</li>
+        <li>Retain raw Garmin health data beyond your active session</li>
+        <li>Use your health data for any purpose other than displaying it to you</li>
+        <li>Combine your Garmin health data with third-party data sets</li>
+      </ul>
+
+      <p>
+        <strong>Revoking Garmin access:</strong> You can disconnect these tools at any time
+        through your
+        <a href="https://connect.garmin.com/modern/settings/accountInformation" target="_blank" rel="noopener">Garmin Connect account settings</a>
+        under Connected Apps. Upon revocation, all OAuth tokens are invalidated.
+      </p>
+    </div>
+
+    <!-- 4. Account Data (KOM Memorial etc.) -->
+    <div class="section">
+      <h2><span class="section-num">04</span> Account Data (Self-Hosted Tools)</h2>
+      <p>
+        Some tools (such as <strong>KOM Memorial</strong>) require you to create a personal
+        account using an email address and password. The following applies:
+      </p>
+      <ul>
+        <li>Passwords are hashed using bcrypt and never stored in plain text</li>
+        <li>Your email is used solely for account authentication — never for marketing</li>
+        <li>Manually entered data (segment names, dates, notes, obituaries) is stored only to power your personal dashboard</li>
+        <li>Generated memorial images are stored on the server solely for your download</li>
+        <li>No account data is shared with any third party</li>
+      </ul>
+      <p>
+        To request deletion of your account and all associated data, contact
+        <a href="mailto:troldan92@gmail.com">troldan92@gmail.com</a>.
+      </p>
+    </div>
+
+    <!-- 5. Analytics -->
+    <div class="section">
+      <h2><span class="section-num">05</span> Analytics &amp; Cookies</h2>
+      <p>
+        This website uses <strong>Google Analytics</strong> (UA-107761621-1) to collect
+        anonymised usage statistics — pages visited, session duration, and general geographic
+        region. No personally identifiable information is collected through analytics.
+      </p>
+      <ul>
+        <li>Analytics data is aggregated and never tied to your individual identity</li>
+        <li>Google Analytics may set cookies in your browser to track sessions</li>
+        <li>You can opt out via the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a></li>
+      </ul>
+      <p>
+        No advertising cookies, tracking pixels, or third-party marketing scripts are
+        used on this website beyond Google Analytics.
+      </p>
+    </div>
+
+    <!-- 6. Data Storage & Security -->
+    <div class="section">
+      <h2><span class="section-num">06</span> Data Storage &amp; Security</h2>
+      <ul>
+        <li>API tokens from Strava and Garmin are stored only for the duration of your session and discarded when you disconnect or your session expires</li>
+        <li>Account data for self-hosted tools is stored on a private server and is not accessible to the public</li>
+        <li>All data transmission between your browser and our servers uses HTTPS encryption</li>
+        <li>We do not operate any advertising networks or data marketplaces</li>
+      </ul>
+
+      <div class="callout yellow">
+        <div class="callout-label yellow">⚠ Important Note</div>
+        <p>
+          These are personal hobby tools, not commercial products. While reasonable
+          security practices are followed, they should not be used to store sensitive
+          personal or medical information.
+        </p>
+      </div>
+    </div>
+
+    <!-- 7. Your Rights -->
+    <div class="section">
+      <h2><span class="section-num">07</span> Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li><strong>Access</strong> — request a copy of any personal data held about you</li>
+        <li><strong>Correction</strong> — request correction of inaccurate data</li>
+        <li><strong>Deletion</strong> — request deletion of your account and all associated data</li>
+        <li><strong>Revocation</strong> — disconnect Strava or Garmin access at any time via their respective platforms</li>
+        <li><strong>Portability</strong> — request an export of your data in a readable format</li>
+      </ul>
+      <p>
+        To exercise any of these rights, contact
+        <a href="mailto:troldan92@gmail.com">troldan92@gmail.com</a>.
+        Requests will be responded to within 30 days.
+      </p>
+    </div>
+
+    <!-- 8. Third-Party Services -->
+    <div class="section">
+      <h2><span class="section-num">08</span> Third-Party Services</h2>
+      <p>These tools interact with the following external services. Each has its own privacy policy:</p>
+      <ul>
+        <li><a href="https://www.strava.com/legal/privacy" target="_blank" rel="noopener">Strava Privacy Policy</a></li>
+        <li><a href="https://www.garmin.com/en-US/privacy/global-privacy-statement/" target="_blank" rel="noopener">Garmin Privacy Statement</a></li>
+        <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a> (Analytics)</li>
+      </ul>
+      <p>
+        We are not responsible for the privacy practices of these third-party services.
+        Use of those services is governed by their respective terms and policies.
+      </p>
+    </div>
+
+    <!-- 9. Changes -->
+    <div class="section">
+      <h2><span class="section-num">09</span> Changes to This Policy</h2>
+      <p>
+        This policy may be updated as new tools are added or as third-party API requirements
+        change. The "Last updated" date at the top of this page will reflect any revisions.
+        Continued use of the Tools after a policy update constitutes acceptance of the
+        revised policy.
+      </p>
+    </div>
+
+    <!-- 10. Contact -->
+    <div class="section">
+      <h2><span class="section-num">10</span> Contact</h2>
+      <p>
+        Questions, concerns, or data requests can be directed to:<br><br>
+        <strong>Tommy Roldan</strong><br>
+        <a href="mailto:troldan92@gmail.com">troldan92@gmail.com</a><br>
+        Miami, Florida, USA
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer>
+    <p>© 2026 <a href="/">Tommy Roldan</a></p>
+    <p><a href="/privacy">Privacy Policy</a></p>
+  </footer>
+
+  <script>
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+    });
+  </script>
+
+</body>
+</html>
