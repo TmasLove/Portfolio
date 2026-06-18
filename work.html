@@ -274,6 +274,24 @@
     .badge.public  { background: transparent; }
     .cards-section[data-theme="dark"] .badge.public { color: var(--white); border-color: #4b4d57; }
     .badge.live    { background: var(--cyan); color: #06281f; border-color: var(--cyan); }
+    .badge.archived { background: #d4d4d4; color: #444; border-color: var(--black); }
+    .cards-section[data-theme="dark"] .badge.archived { background: #3a3b42; color: #cbd5e1; border-color: #000; }
+
+    /* Archived cards show a screenshot/artwork header instead of the accent bar */
+    .card-img {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-bottom: var(--border);
+      background: #ececec;
+    }
+    .cards-section[data-theme="dark"] .card-img { border-bottom-color: #000; background: #0d0e12; }
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      filter: saturate(0.92);
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .card-img img { transform: scale(1.04); }
 
     .card-body h3 {
       font-family: var(--font-h);
@@ -425,6 +443,7 @@
     <button class="filter-btn" data-filter="web">Web</button>
     <button class="filter-btn" data-filter="ai">AI / Agents</button>
     <button class="filter-btn" data-filter="tool">Tools</button>
+    <button class="filter-btn" data-filter="archived">Old / Archived</button>
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle card theme">🌙 Dark</button>
   </div>
 
@@ -624,6 +643,107 @@
         <p class="card-desc">Upload any .pptx and have it read aloud slide-by-slide using your browser's built-in voices. Choose language and speed, navigate freely — zero server, zero upload.</p>
         <div class="card-tags"><span class="tag">JavaScript</span><span class="tag">Web Speech API</span></div>
         <div class="card-foot"><span class="card-meta">Tools · 2025</span><a class="card-link" href="/tools" target="_blank" rel="noopener">Try it →</a></div>
+      </div>
+    </article>
+
+    <!-- ───────── Old / Archived (≈2015, no longer live) ───────── -->
+
+    <!-- Gravity Cycles -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/gravity-cycles.png" alt="Gravity Cycles" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Gravity Cycles</h3>
+        <p class="card-desc">Custom Shopify website that made GRVT designs available to the public.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- V&C Metal Supply Corp -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/vcmetalcorp.png" alt="V&amp;C Metal Supply Corp" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>V&amp;C Metal Supply Corp</h3>
+        <p class="card-desc">Full website redesign for V&amp;C Metal Supply Corp — cleaner, faster, modern.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Fixed Latinos -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/fixed-latinos.png" alt="Fixed Latinos" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Fixed Latinos</h3>
+        <p class="card-desc">Application for the Fixed Latinos cycling team — community, routes &amp; events.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Brick Breaker -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/BrickBreaker.png" alt="Brick Breaker" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Brick Breaker v1.0</h3>
+        <p class="card-desc">A JS/Canvas game — break bricks with a ball while random RGBA balls appear for chaos.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Follow MeMe -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/MemeGen.png" alt="Follow MeMe" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Follow MeMe</h3>
+        <p class="card-desc">Create, download &amp; post memes to an anonymous public feed. Built on the MEAN stack.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Drinks on Demand -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/DonD.png" alt="Drinks on Demand" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Drinks on Demand</h3>
+        <p class="card-desc">Alcohol delivery application — search, order, delivered. Full MEAN stack build.</p>
+        <div class="card-foot"><span class="card-meta">Web · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Tropical Sun Design -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/gfx/tropical-sun.png" alt="Tropical Sun Design" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Tropical Sun Design</h3>
+        <p class="card-desc">Inspired by Miami's tropical atmosphere — a retro sun design originally sold online.</p>
+        <div class="card-foot"><span class="card-meta">Graphic · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- Cycling Rick -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/gfx/rick-triangle.png" alt="Cycling Rick" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>Cycling Rick</h3>
+        <p class="card-desc">A Rick &amp; Morty-inspired design mashup with cycling culture.</p>
+        <div class="card-foot"><span class="card-meta">Graphic · 2015</span></div>
+      </div>
+    </article>
+
+    <!-- GRVT Logo -->
+    <article class="project-card" data-cat="archived">
+      <div class="card-img"><img src="images/gfx/gvrt-logo.png" alt="GRVT Logo" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-badges"><span class="badge archived">Archived</span></div>
+        <h3>GRVT Logo</h3>
+        <p class="card-desc">Logo design for the GRVT cycling brand — clean, bold, and built to last.</p>
+        <div class="card-foot"><span class="card-meta">Graphic · 2015</span></div>
       </div>
     </article>
 
