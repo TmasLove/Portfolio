@@ -5,6 +5,10 @@ http://help.github.com/ignore-files/
 Thumbs.db
 
 
+# tooling / brainstorm scratch
+.superpowers/
+.claude/
+
 # misc
 /.sass-cache
 /connect.lock
