@@ -24,7 +24,7 @@ export default function DiscordCard() {
 
   useEffect(() => {
     let cancelled = false
-    fetch(`https://api.lanyard.rest/v1/users/${id}`)
+    fetch(`https://api.lanyard.rest/v1/users/${id}`, { cache: 'no-store' })
       .then((r) => r.json())
       .then((j) => {
         if (cancelled) return
