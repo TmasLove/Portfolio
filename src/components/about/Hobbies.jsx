@@ -102,7 +102,7 @@ export default function Hobbies() {
       </div>
 
       {/* Music strip */}
-      <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-[1fr_auto] gap-10 items-center">
+      <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <Eyebrow>On repeat</Eyebrow>
           <h3 className="font-display font-black text-3xl sm:text-4xl">Always something playing</h3>
