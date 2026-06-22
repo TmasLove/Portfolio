@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tools built by Tommy Roldan">
+    <meta property="og:title" content="Tools – Tommy Roldan">
+    <meta property="og:url" content="https://tommyroldan.com/tools">
+    <title>Tools – Tommy Roldan</title>
+    <link rel="stylesheet" href="../css/animate.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107761621-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-107761621-1');
+    </script>
+    <style>
+      body { background-color: #f1f1f1; font-family: Arial; }
+
+      .tools-hero {
+        text-align: center;
+        padding: 3rem 1rem 2rem;
+      }
+      .tools-hero h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #222;
+      }
+      .tools-hero p {
+        color: #666;
+        font-size: 1rem;
+      }
+
+      .tool-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 2rem;
+      }
+      .tool-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      }
+      .tool-card-header {
+        background: linear-gradient(135deg, #C93D00, #FC4C02);
+        padding: 2rem 1.5rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .tool-card-header .tool-icon {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .tool-card-header h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem;
+      }
+      .tool-card-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        opacity: 0.85;
+      }
+      .tool-card-body {
+        padding: 1.5rem;
+      }
+      .tool-card-body p {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+      }
+      .tool-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1.25rem;
+      }
+      .tool-tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        background: #f0f0f0;
+        color: #555;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        letter-spacing: 0.03em;
+      }
+      .tool-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .btn-tool-primary {
+        background: #FC4C02;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.15s;
+      }
+      .btn-tool-primary:hover { background: #C93D00; color: #fff; text-decoration: none; }
+
+      .btn-tool-secondary {
+        background: transparent;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: border-color 0.15s, color 0.15s;
+      }
+      .btn-tool-secondary:hover { border-color: #FC4C02; color: #FC4C02; text-decoration: none; }
+
+      .coming-soon-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffc107;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Nav -->
+    <div class="background">
+      <div class="about-container">
+        <header>
+          <nav>
+            <h3 class="animated rotateIn">Tools</h3>
+            <a href="../index.html" class="animated bounceInRight" id="main">Tommy Roldan</a>
+            <ul>
+              <li><a class="animated fadeIn" href="../about.html">About</a></li><span class="animated fadeIn">/</span>
+              <li><a class="animated fadeIn" href="../work.html"><i class="fa fa-briefcase"></i></a></li><span class="animated fadeIn">/</span>
+              <li><a class="animated fadeIn" href="../GRVT.html"><i class="fa fa-bicycle"></i></a></li><span class="animated fadeIn">/</span>
+              <li><a class="animated fadeIn" href="index.html"><i class="fa fa-wrench"></i></a></li><span class="animated fadeIn">/</span>
+              <li><a class="animated fadeIn" href="../contact.html">Contact</a></li>
+            </ul>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="tools-hero">
+      <h1>🛠 Tools</h1>
+      <p>Small web apps and utilities I've built.</p>
+    </div>
+
+    <!-- Tools grid -->
+    <div class="container" style="max-width: 860px; padding-bottom: 4rem;">
+
+      <!-- Local Legend Predictor -->
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🚴</div>
+          <div>
+            <h2>Local Legend Predictor
+              <span class="coming-soon-badge">Live soon</span>
+            </h2>
+            <p>Strava · Cycling</p>
+          </div>
+        </div>
+        <div class="tool-card-body">
+          <p>
+            Connect your Strava account and see how many more efforts you need
+            to claim (or defend) the <strong>Local Legend</strong> title on your
+            favourite segments. Track your top 10 segments from the last 90 days,
+            compare against the current legend, and download a shareable card
+            ready to post on Instagram.
+          </p>
+          <div class="tool-tags">
+            <span class="tool-tag">Node.js</span>
+            <span class="tool-tag">Express</span>
+            <span class="tool-tag">Strava API</span>
+            <span class="tool-tag">OAuth</span>
+            <span class="tool-tag">Canvas</span>
+          </div>
+          <div class="tool-actions">
+            <a href="https://github.com/TmasLove/local-legend-predictor" class="btn-tool-secondary" target="_blank" rel="noopener">
+              <i class="fa fa-github"></i> View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- KOM Memorial -->
+      <div class="tool-card">
+        <div class="tool-card-header" style="background: linear-gradient(135deg, #7f0000, #B71C1C);">
+          <div class="tool-icon">👑</div>
+          <div>
+            <h2>KOM Memorial</h2>
+            <p>Cycling · No Strava API</p>
+          </div>
+        </div>
+        <div class="tool-card-body">
+          <p>
+            Log every King of the Mountain segment you hold. When someone steals your
+            crown, give it a proper send-off — complete with a <strong>funny auto-generated obituary</strong>,
+            a days-held counter, and a shareable <strong>1080×1080 PNG memorial card</strong> ready to
+            post on Instagram. No Strava API used — all data is entered by you.
+          </p>
+          <div class="tool-tags">
+            <span class="tool-tag">Node.js</span>
+            <span class="tool-tag">Express</span>
+            <span class="tool-tag">EJS</span>
+            <span class="tool-tag">lowdb</span>
+            <span class="tool-tag">Canvas</span>
+            <span class="tool-tag">No API</span>
+          </div>
+          <div class="tool-actions">
+            <a href="https://github.com/TmasLove/kom-memorial" class="btn-tool-secondary" target="_blank" rel="noopener">
+              <i class="fa fa-github"></i> View on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder for future tools -->
+      <p style="text-align:center; color:#aaa; font-size:0.85rem; padding-top:1rem;">
+        More tools coming soon.
+      </p>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
