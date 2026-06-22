@@ -6,6 +6,7 @@ import Icon from '../ui/Icon'
 import { fade } from '../../lib/motion'
 import { SITE } from '../../data/site'
 import SteamCard from './SteamCard'
+import DiscordCard from './DiscordCard'
 
 const pill =
   'inline-flex items-center rounded-full border border-violet/30 text-violet px-4 py-1.5 text-sm font-medium hover:bg-violet hover:text-cream transition-colors'
@@ -39,8 +40,9 @@ export default function Hobbies() {
               </a>
             )}
           </div>
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
             <SteamCard />
+            <DiscordCard />
           </div>
         </Reveal>
 

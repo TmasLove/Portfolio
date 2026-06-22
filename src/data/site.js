@@ -11,6 +11,7 @@ export const SITE = {
     steam: 'https://steamcommunity.com/id/shlumplord/',
     discord: 'https://discord.com/users/346119932511125515',
   },
+  discordId: '346119932511125515',
   stravaClubs: [
     { name: 'Fixed Latinos', note: 'represents a movement', url: '' }, // TODO url
     { name: 'GRVT', note: 'the cycling brand I built ~a decade ago', url: '' }, // TODO url
