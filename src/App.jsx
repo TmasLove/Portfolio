@@ -1,18 +1,39 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
+import { useEffect } from 'react'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
+import PageTransition from './components/layout/PageTransition'
+import Home from './pages/Home'
+import Work from './pages/Work'
+import About from './pages/About'
+import Tools from './pages/Tools'
+import Contact from './pages/Contact'
+import NotFound from './pages/NotFound'
 
-function Stub({ name }) {
-  return <main className="min-h-screen grid place-items-center font-display text-5xl font-black">{name}</main>
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
 }
 
 export default function App() {
+  const location = useLocation()
   return (
-    <Routes>
-      <Route path="/" element={<Stub name="Home" />} />
-      <Route path="/work" element={<Stub name="Work" />} />
-      <Route path="/about" element={<Stub name="About" />} />
-      <Route path="/tools" element={<Stub name="Tools" />} />
-      <Route path="/contact" element={<Stub name="Contact" />} />
-      <Route path="*" element={<Stub name="404" />} />
-    </Routes>
+    <>
+      <Navbar />
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+          <Route path="/work" element={<PageTransition><Work /></PageTransition>} />
+          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+          <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
+          <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+        </Routes>
+      </AnimatePresence>
+      <Footer />
+    </>
   )
 }
