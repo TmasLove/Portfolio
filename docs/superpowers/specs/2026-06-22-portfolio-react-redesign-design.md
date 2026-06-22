@@ -53,7 +53,10 @@ with editorial sections and a stats block.
 - **Experience** — roots at Miami's top bike shops: **Mack Cycle** and **City Bikes** (details TBD — placeholder).
 - **Hobbies** (two pillars):
   - **Gaming** — blurb + **Steam** (`https://steamcommunity.com/id/shlumplord/`) + **Discord** (link TBD — placeholder).
-  - **Cycling** — joy of riding, shop background, **Strava** (`strava.com/athletes/14197229`) + **Strava clubs/groups** (TBD — placeholder), and the story of **launching GRVT** (links to the GRVT brand page). Candidate for a scroll-driven story sequence + GRVT logo reveal.
+  - **Cycling** — joy of riding, shop background, **Strava** (`strava.com/athletes/14197229`), and the story of **launching GRVT** (links to the GRVT brand page). Candidate for a scroll-driven story sequence + GRVT logo reveal.
+    - **Strava clubs** (link both; URLs TBD — placeholder):
+      - **Fixed Latinos** — represents a movement (also one of the archived 2015 projects).
+      - **GRVT** — the cycling brand Tomas tried to build ~a decade ago (ties to the GRVT page).
 - **Skills / capabilities** and a dark CTA band → Contact.
 
 ### Tools
@@ -84,4 +87,4 @@ with editorial sections and a stats block.
 - A CMS/blog.
 
 ## Open Items (placeholders, fillable without blocking build)
-- Discord link · Strava club URLs · Mack Cycle / City Bikes roles & years · final stat numbers.
+- Discord link · Strava club URLs (clubs = Fixed Latinos, GRVT) · Mack Cycle / City Bikes roles & years · final stat numbers.
