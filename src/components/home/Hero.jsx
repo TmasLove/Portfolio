@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'
 import Container from '../ui/Container'
 import Eyebrow from '../ui/Eyebrow'
 import SplitText from '../ui/SplitText'
+import BirdsCanvas from './BirdsCanvas'
 import { fadeUp, inView, EASE } from '../../lib/motion'
 import { SITE } from '../../data/site'
 
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center bg-cream text-ink overflow-hidden">
-      <Container className="py-28">
+      <BirdsCanvas className="pointer-events-none absolute inset-0 z-0 opacity-40" />
+      <Container className="relative z-10 py-28">
         <Eyebrow>{SITE.role} · {SITE.location}</Eyebrow>
 
         <h1 className="font-display font-black tracking-tight leading-[0.95] text-5xl sm:text-7xl lg:text-8xl max-w-5xl">
