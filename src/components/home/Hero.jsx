@@ -6,11 +6,29 @@ import SplitText from '../ui/SplitText'
 import BirdsCanvas from './BirdsCanvas'
 import { fadeUp, inView, EASE } from '../../lib/motion'
 import { SITE } from '../../data/site'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 export default function Hero() {
+  const reduce = useReducedMotion()
   return (
     <section className="relative min-h-screen flex items-center bg-cream text-ink overflow-hidden">
-      <BirdsCanvas className="pointer-events-none absolute inset-0 z-0 opacity-40" />
+      {/* Personal bike-ride backdrop */}
+      <video
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-45 [filter:grayscale(0.2)_contrast(1.05)]"
+        autoPlay={!reduce}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster="/video/bike-poster.jpg"
+        aria-hidden="true"
+      >
+        <source src="/video/bike.mp4" type="video/mp4" />
+      </video>
+      {/* Cream wash — headline stays crisp on the left, the ride shows toward the right */}
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-cream via-cream/75 to-cream/25" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-t from-cream via-transparent to-transparent" />
+      <BirdsCanvas className="pointer-events-none absolute inset-0 z-[1] opacity-40" />
       <Container className="relative z-10 py-28">
         <Eyebrow>{SITE.role} · {SITE.location}</Eyebrow>
 
