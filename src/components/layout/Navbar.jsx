@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import TrMark from '../ui/TrMark'
 
 const LINKS = [['/work', 'Work'], ['/about', 'About'], ['/tools', 'Tools'], ['/contact', 'Contact']]
 
@@ -25,7 +26,9 @@ export default function Navbar() {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${scrolled ? 'bg-cream/90 backdrop-blur border-b border-ink/10' : 'bg-transparent'}`}>
       <nav className="mx-auto max-w-content px-6 md:px-10 h-16 flex items-center justify-between">
-        <Link to="/" className={`font-display font-black text-lg tracking-tight ${baseText}`}>TR</Link>
+        <Link to="/" aria-label="Home" className="flex items-center">
+          <TrMark onDark={onDark} className="h-8 w-auto" />
+        </Link>
         <ul className="hidden md:flex items-center gap-1">
           {LINKS.map(([to, label]) => (
             <li key={to}>
@@ -43,7 +46,7 @@ export default function Navbar() {
           <motion.div className="fixed inset-0 z-50 bg-night text-cream flex flex-col"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="flex justify-between items-center px-6 h-16">
-              <span className="font-display font-black">TR</span>
+              <TrMark onDark className="h-8 w-auto" />
               <button className="text-xs uppercase tracking-[0.1em]" onClick={() => setOpen(false)}>Close</button>
             </div>
             <div className="flex-1 flex flex-col justify-center gap-2 px-8">

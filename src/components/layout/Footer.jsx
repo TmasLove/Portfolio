@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { SITE } from '../../data/site'
 import AnimatedBlobs from '../ui/AnimatedBlobs'
+import TrMark from '../ui/TrMark'
 
 const ICONS = {
   linkedin: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
@@ -35,8 +36,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-cream/50">
-          <span>© {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
+        <div className="mt-16 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-cream/50">
+          <div className="flex items-center gap-3">
+            <TrMark onDark className="h-7 w-auto" />
+            <span>© {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
+          </div>
           <a href="/privacy.html" className="hover:text-cream">Privacy</a>
         </div>
       </div>
