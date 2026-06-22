@@ -6,6 +6,7 @@ import Footer from './components/layout/Footer'
 import PageTransition from './components/layout/PageTransition'
 import Home from './pages/Home'
 import Work from './pages/Work'
+import ProjectDetail from './pages/ProjectDetail'
 import About from './pages/About'
 import Tools from './pages/Tools'
 import Contact from './pages/Contact'
@@ -27,6 +28,7 @@ export default function App() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<PageTransition><Home /></PageTransition>} />
           <Route path="/work" element={<PageTransition><Work /></PageTransition>} />
+          <Route path="/work/:key" element={<PageTransition><ProjectDetail /></PageTransition>} />
           <Route path="/about" element={<PageTransition><About /></PageTransition>} />
           <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
