@@ -9,7 +9,7 @@ export const SITE = {
     strava: 'https://www.strava.com/athletes/14197229',
     appleMusic: 'https://itunes.apple.com/profile/tmizle',
     steam: 'https://steamcommunity.com/id/shlumplord/',
-    discord: '', // TODO: fill in Discord invite/tag
+    discord: 'https://discord.com/users/346119932511125515',
   },
   stravaClubs: [
     { name: 'Fixed Latinos', note: 'represents a movement', url: '' }, // TODO url
