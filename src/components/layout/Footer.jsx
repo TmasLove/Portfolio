@@ -1,5 +1,6 @@
-import MagneticButton from '../ui/MagneticButton'
 import { SITE } from '../../data/site'
+import ContactForm from '../ui/ContactForm'
+import AnimatedBlobs from '../ui/AnimatedBlobs'
 
 const ICONS = {
   linkedin: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
@@ -20,21 +21,24 @@ export default function Footer() {
           ))}
         </div>
       </div>
-      <div className="mx-auto max-w-content px-6 md:px-10 py-20 md:py-28">
-        <p className="text-xs tracking-[0.22em] uppercase text-cyan mb-6">Get in touch</p>
-        <h2 className="font-display font-black text-5xl md:text-7xl leading-[0.95] tracking-tight mb-8">Let's build<br />something.</h2>
-        <MagneticButton as="a" href={`mailto:${SITE.email}`} className="bg-violet text-white px-7 py-4 text-sm font-bold uppercase tracking-[0.08em] rounded-full">
-          {SITE.email} →
-        </MagneticButton>
-        <div className="mt-14 flex flex-wrap items-center gap-3">
-          {SOCIALS.map(([key, label]) => (
-            <a key={key} href={SITE.socials[key]} target="_blank" rel="noopener" aria-label={label}
-               className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:border-cyan hover:text-cyan transition-colors">
-              {ICONS[key]}
-            </a>
-          ))}
+      <div className="relative mx-auto max-w-content px-6 md:px-10 py-20 md:py-28">
+        <AnimatedBlobs className="absolute inset-0 -z-0" />
+        <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <p className="text-xs tracking-[0.22em] uppercase text-cyan mb-6">Get in touch</p>
+            <h2 className="font-display font-black text-5xl md:text-7xl leading-[0.95] tracking-tight mb-8">Let's build<br />something.</h2>
+            <div className="mt-14 flex flex-wrap items-center gap-3">
+              {SOCIALS.map(([key, label]) => (
+                <a key={key} href={SITE.socials[key]} target="_blank" rel="noopener" aria-label={label}
+                   className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:border-cyan hover:text-cyan transition-colors">
+                  {ICONS[key]}
+                </a>
+              ))}
+            </div>
+          </div>
+          <ContactForm />
         </div>
-        <div className="mt-16 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-cream/50">
+        <div className="relative z-10 mt-16 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-cream/50">
           <span>© {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
           <a href="/privacy.html" className="hover:text-cream">Privacy</a>
         </div>

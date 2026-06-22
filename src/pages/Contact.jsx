@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import Section from '../components/ui/Section'
 import Eyebrow from '../components/ui/Eyebrow'
 import SplitText from '../components/ui/SplitText'
-import MagneticButton from '../components/ui/MagneticButton'
 import Reveal from '../components/ui/Reveal'
+import ContactForm from '../components/ui/ContactForm'
+import AnimatedBlobs from '../components/ui/AnimatedBlobs'
 import { SITE } from '../data/site'
 
 const LinkedInIcon = () => (
@@ -42,20 +42,10 @@ const socials = [
 ]
 
 export default function Contact() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-
-  function handleSubmit(e) {
-    e.preventDefault()
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name || 'someone'}`)
-    const body = encodeURIComponent(`${message}\n\n— ${name}${email ? ' (' + email + ')' : ''}`)
-    window.location.href = `mailto:${SITE.email}?subject=${subject}&body=${body}`
-  }
-
   return (
-    <Section dark className="pt-24 min-h-screen">
-      <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+    <Section dark className="pt-24 min-h-screen relative">
+      <AnimatedBlobs className="absolute inset-0 -z-0" />
+      <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20">
 
         {/* Left column: hero + CTA + socials */}
         <div>
@@ -67,16 +57,6 @@ export default function Contact() {
             <p className="mt-6 text-lg text-cream/60 max-w-xl">
               I love meeting new people. Got a project, a beer, or an idea? Hit me up.
             </p>
-          </Reveal>
-
-          <Reveal className="mt-8">
-            <MagneticButton
-              as="a"
-              href={`mailto:${SITE.email}`}
-              className="bg-cyan text-night px-7 py-4 rounded-full text-sm font-bold uppercase tracking-[0.08em]"
-            >
-              {SITE.email} →
-            </MagneticButton>
           </Reveal>
 
           <Reveal className="mt-16">
@@ -102,39 +82,9 @@ export default function Contact() {
         <div>
           <Reveal>
             <Eyebrow dark>Send a note</Eyebrow>
-            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-                className="bg-transparent border border-white/15 rounded-lg px-4 py-3 text-cream placeholder-cream/40 focus:border-cyan outline-none w-full transition-colors"
-              />
-              <input
-                type="email"
-                placeholder="Your email (optional)"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="bg-transparent border border-white/15 rounded-lg px-4 py-3 text-cream placeholder-cream/40 focus:border-cyan outline-none w-full transition-colors"
-              />
-              <textarea
-                placeholder="Your message"
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-                required
-                rows={6}
-                className="bg-transparent border border-white/15 rounded-lg px-4 py-3 text-cream placeholder-cream/40 focus:border-cyan outline-none w-full resize-none transition-colors"
-              />
-              <div>
-                <button
-                  type="submit"
-                  className="bg-violet text-white px-6 py-3 rounded-full text-sm font-bold uppercase tracking-[0.08em] hover:opacity-90 transition-opacity"
-                >
-                  Send message →
-                </button>
-              </div>
-            </form>
+            <div className="mt-6">
+              <ContactForm />
+            </div>
           </Reveal>
         </div>
 

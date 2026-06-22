@@ -32,6 +32,37 @@ function Badge({ kind }) {
 
 export default function ProjectCard({ project }) {
   const categoryLabel = CATEGORY_LABELS[project.category] || project.category
+  const isArchived = project.image && project.category === 'archived'
+
+  if (isArchived) {
+    return (
+      <Link to={'/work/' + project.key} className="block h-full">
+        <motion.article
+          whileHover={{ y: -6 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+          className="group flex flex-col bg-white border border-ink/10 rounded-lg overflow-hidden h-full"
+        >
+          <div className="relative aspect-[16/9] overflow-hidden border-b border-ink/10">
+            <img
+              src={project.image}
+              alt={project.title}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 bg-cream/85 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-0">
+              <span className="text-[0.6rem] tracking-[0.3em] uppercase text-ink/40 mb-2">— Archived —</span>
+              <h3 className="font-display font-black text-lg text-ink leading-tight">{project.title}</h3>
+              <p className="mt-2 text-xs text-ink/55 max-w-[30ch] leading-snug">{project.description}</p>
+            </div>
+          </div>
+
+          <div className="p-5 mt-auto flex items-center justify-between text-xs">
+            <span className="text-ink/40 font-bold">Old / Archived · {project.year}</span>
+          </div>
+        </motion.article>
+      </Link>
+    )
+  }
 
   return (
     <Link to={'/work/' + project.key} className="block h-full">
