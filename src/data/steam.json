@@ -1,9 +1,34 @@
 {
   "persona": "SlumpLord",
-  "avatar": "https://avatars.akamai.steamstatic.com/6e7fa10b56e75201b4db39772ab43d2c048a4266_full.jpg",
+  "avatar": "https://avatars.fastly.steamstatic.com/6e7fa10b56e75201b4db39772ab43d2c048a4266_full.jpg",
   "status": "Online",
   "memberSince": "May 15, 2012",
   "location": "United States",
   "profileUrl": "https://steamcommunity.com/id/shlumplord/",
-  "games": []
+  "games": [
+    {
+      "name": "ARC Raiders",
+      "appid": 1808500,
+      "playtime": 368,
+      "img": "https://cdn.cloudflare.steamstatic.com/steam/apps/1808500/capsule_231x87.jpg"
+    },
+    {
+      "name": "Battlefield™ 6",
+      "appid": 2807960,
+      "playtime": 156,
+      "img": "https://cdn.cloudflare.steamstatic.com/steam/apps/2807960/capsule_231x87.jpg"
+    },
+    {
+      "name": "No Man's Sky",
+      "appid": 275850,
+      "playtime": 50,
+      "img": "https://cdn.cloudflare.steamstatic.com/steam/apps/275850/capsule_231x87.jpg"
+    },
+    {
+      "name": "Cyberpunk 2077",
+      "appid": 1091500,
+      "playtime": 37,
+      "img": "https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/capsule_231x87.jpg"
+    }
+  ]
 }
