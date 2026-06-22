@@ -5,6 +5,7 @@ import Reveal from '../ui/Reveal'
 import Icon from '../ui/Icon'
 import { fade } from '../../lib/motion'
 import { SITE } from '../../data/site'
+import SteamCard from './SteamCard'
 
 const pill =
   'inline-flex items-center rounded-full border border-violet/30 text-violet px-4 py-1.5 text-sm font-medium hover:bg-violet hover:text-cream transition-colors'
@@ -37,6 +38,9 @@ export default function Hobbies() {
                 Discord →
               </a>
             )}
+          </div>
+          <div className="mt-6">
+            <SteamCard />
           </div>
         </Reveal>
 
@@ -98,10 +102,11 @@ export default function Hobbies() {
       <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-[1fr_auto] gap-10 items-center">
         <div>
           <Eyebrow>A brand I built</Eyebrow>
-          <h3 className="font-display font-black text-3xl sm:text-4xl">Launching GRVT</h3>
+          <h3 className="font-display font-black text-3xl sm:text-4xl">GRVT — a beautiful failure</h3>
           <p className="mt-5 text-ink/70 max-w-2xl">
-            Around a decade ago I started GRVT — a cycling brand born from the Fixed Latinos movement
-            and a love of the ride. It grew into designs, a store, and a community.
+            GRVT was a failed attempt — it started a few years too early, before enough people were
+            into cycling, and it never made money. But I learned a ton, made some cool designs I
+            still wear, and it was a blast. A reminder that not every build is about ROI.
           </p>
         </div>
         <motion.a

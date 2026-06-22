@@ -279,7 +279,7 @@ export const projects = [
     category: 'archived',
     badges: ['archived'],
     description:
-      'Logo design for the GRVT cycling brand — clean, bold, and built to last.',
+      "Logo and brand identity for GRVT, my early cycling label. The brand didn't last, but the designs still hold up.",
     tech: [],
     year: 2015,
     image: '/images/gfx/gvrt-logo.png',

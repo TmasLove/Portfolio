@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "fetch:steam": "node scripts/fetch-steam.mjs",
     "lint": "eslint .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist -b gh-pages --dotfiles"
