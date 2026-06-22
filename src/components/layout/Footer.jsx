@@ -12,7 +12,7 @@ const NAV = [['/work', 'Work'], ['/about', 'About'], ['/tools', 'Tools'], ['/con
 
 export default function Footer() {
   return (
-    <footer className="bg-nightsoft text-cream">
+    <footer className="bg-black text-cream">
       <div className="mx-auto max-w-content px-6 md:px-10 py-12">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           {/* Brand + nav */}
