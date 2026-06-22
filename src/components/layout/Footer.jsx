@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { SITE } from '../../data/site'
-import TrMark from '../ui/TrMark'
 
 const ICONS = {
   linkedin: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
@@ -18,9 +17,7 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           {/* Brand + nav */}
           <div className="flex flex-col gap-5">
-            <Link to="/" aria-label="Home" className="inline-flex">
-              <TrMark onDark className="h-7 w-auto" />
-            </Link>
+            <Link to="/" aria-label="Home" className="font-display font-black text-xl tracking-tight">TR</Link>
             <nav className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.1em] text-cream/70">
               {NAV.map(([to, label]) => (
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{label}</Link>
