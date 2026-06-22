@@ -15,3 +15,6 @@ Thumbs.db
 npm-debug.log
 testem.log
 /typings
+
+# internal AI planning docs (keep out of public repo)
+docs/superpowers/
