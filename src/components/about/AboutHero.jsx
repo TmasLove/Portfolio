@@ -8,7 +8,7 @@ import { EASE } from '../../lib/motion'
 const FACTS = [
   { label: 'Based in', value: 'Miami, FL' },
   { label: 'Born in', value: 'Medellín, Colombia' },
-  { label: 'Role', value: 'Chief Rain Maker · NST Pharma' },
+  { label: 'Position', value: 'CTO · Head of LATAM Sales · TerryCo Group' },
   { label: 'Passion', value: 'Cycling, Sales & Tech' },
 ]
 

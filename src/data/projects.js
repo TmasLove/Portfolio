@@ -25,7 +25,7 @@ export const projects = [
     year: 2025,
     image: null,
     icon: 'building',
-    url: 'https://clearcare-enterprise.vercel.app',
+    url: 'https://clearcaredentalenterprise.com/',
   },
   {
     key: 'cleancare-marketing',

@@ -4,10 +4,10 @@ import Reveal from '../ui/Reveal'
 
 const MILESTONES = [
   {
-    tag: 'NST Pharma · TerryCo Group',
+    tag: 'TerryCo Group',
     title: 'Building Revenue, Forging Partnerships',
     paras: [
-      'Today I operate as Chief Rain Maker at NST Pharma and a key contributor within the TerryCo Group, driving strategic partnerships and market-driven solutions across pharma, beauty, and wellness. Results include a 25% lift in client engagement through targeted outreach and relationship-first selling.',
+      'Today I operate as CTO and Head of LATAM Sales for the TerryCo Group, driving strategic partnerships and market-driven solutions across pharma, beauty, and wellness. Results include a 25% lift in client engagement through targeted outreach and relationship-first selling.',
       'Years in high-end cycling retail — at Mack Cycle & Fitness and City Bikes Miami — sharpened my ability to align solutions to customer goals and build value-driven relationships in premium markets. Every conversation is a deal; every deal is a relationship.',
     ],
   },
