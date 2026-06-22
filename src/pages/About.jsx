@@ -1,4 +1,17 @@
-import Section from '../components/ui/Section'
+import AboutHero from '../components/about/AboutHero'
+import Story from '../components/about/Story'
+import Experience from '../components/about/Experience'
+import Hobbies from '../components/about/Hobbies'
+import Skills from '../components/about/Skills'
+
 export default function About() {
-  return <Section className="pt-24"><h1 className="font-display font-black text-6xl">About</h1></Section>
+  return (
+    <>
+      <AboutHero />
+      <Story />
+      <Experience />
+      <Hobbies />
+      <Skills />
+    </>
+  )
 }
