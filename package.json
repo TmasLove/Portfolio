@@ -11,7 +11,7 @@
     "test": "vitest run",
     "lint": "eslint .",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist -b gh-pages -t true"
+    "deploy": "gh-pages -d dist -b gh-pages --dotfiles"
   },
   "dependencies": {
     "framer-motion": "^11.11.0",
