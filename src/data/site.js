@@ -7,7 +7,7 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/in/tommy-roldan/',
     instagram: 'https://instagram.com/tomcat.png',
     strava: 'https://www.strava.com/athletes/14197229',
-    appleMusic: 'https://itunes.apple.com/profile/tmizle',
+    appleMusic: 'https://music.apple.com/profile/tmizle',
     steam: 'https://steamcommunity.com/id/shlumplord/',
     discord: 'https://discord.com/users/346119932511125515',
   },

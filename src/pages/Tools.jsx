@@ -44,28 +44,22 @@ const TOOLS = [
     key: 'domain-hub',
     name: 'Domain Hub',
     icon: 'globe',
-    badge: 'Hosted',
+    badge: 'In Progress',
+    wip: true,
     url: 'https://domain-hub-khaki.vercel.app',
     external: true,
-    cta: 'Launch Domain Hub',
+    cta: 'Preview Domain Hub',
     desc: "Find, evaluate, and manage domain names for flipping. Auto-generate TLD combinations and score each domain's resale potential with a valuation engine, bulk-register via a simulated Namecheap checkout, and track your portfolio in one dashboard.",
     tech: ['React', 'Vite', 'Node.js', 'Namecheap API', 'WHOIS', 'Vercel'],
   },
 ]
 
 function BadgePill({ badge }) {
-  const isNew = badge === 'New'
-  return (
-    <span
-      className={
-        isNew
-          ? 'border border-cyan rounded-full px-2 py-0.5 text-[0.6rem] uppercase tracking-wide font-bold bg-cyan text-night'
-          : 'border border-ink/15 rounded-full px-2 py-0.5 text-[0.6rem] uppercase tracking-wide font-bold text-ink/60'
-      }
-    >
-      {badge}
-    </span>
-  )
+  const base = 'rounded-full px-2 py-0.5 text-[0.6rem] uppercase tracking-wide font-bold border'
+  let style = 'border-ink/15 text-ink/60'
+  if (badge === 'New') style = 'border-cyan bg-cyan text-night'
+  else if (badge === 'In Progress') style = 'border-amber-400 bg-amber-400 text-night'
+  return <span className={`${base} ${style}`}>{badge}</span>
 }
 
 function ToolCard({ tool }) {
@@ -76,8 +70,14 @@ function ToolCard({ tool }) {
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className="group bg-white border border-ink/10 rounded-lg overflow-hidden flex flex-col"
     >
-      {/* Gradient accent bar */}
-      <div className="h-1.5 bg-gradient-to-r from-violet to-cyan" />
+      {/* Accent bar — caution stripes for work-in-progress, gradient otherwise */}
+      <div
+        className={
+          tool.wip
+            ? 'h-1.5 bg-[repeating-linear-gradient(45deg,#f59e0b_0,#f59e0b_10px,#161616_10px,#161616_20px)]'
+            : 'h-1.5 bg-gradient-to-r from-violet to-cyan'
+        }
+      />
 
       {/* Body */}
       <div className="p-6 flex flex-col gap-3 flex-1">
@@ -92,6 +92,12 @@ function ToolCard({ tool }) {
         <h3 className="font-display font-black text-xl">{tool.name}</h3>
 
         <p className="text-sm text-ink/60 leading-relaxed">{tool.desc}</p>
+
+        {tool.wip && (
+          <p className="flex items-center gap-1.5 text-xs font-bold text-amber-500">
+            <span aria-hidden="true">🚧</span> Work in progress — still building, expect rough edges.
+          </p>
+        )}
 
         {/* Tech pills */}
         <div className="flex flex-wrap gap-1.5">

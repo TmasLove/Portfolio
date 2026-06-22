@@ -7,6 +7,7 @@ import { fade } from '../../lib/motion'
 import { SITE } from '../../data/site'
 import SteamCard from './SteamCard'
 import DiscordCard from './DiscordCard'
+import AppleMusicCard from './AppleMusicCard'
 
 const pill =
   'inline-flex items-center rounded-full border border-violet/30 text-violet px-4 py-1.5 text-sm font-medium hover:bg-violet hover:text-cream transition-colors'
@@ -99,6 +100,18 @@ export default function Hobbies() {
           </div>
         </Reveal>
       </div>
+
+      {/* Music strip */}
+      <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-[1fr_auto] gap-10 items-center">
+        <div>
+          <Eyebrow>On repeat</Eyebrow>
+          <h3 className="font-display font-black text-3xl sm:text-4xl">Always something playing</h3>
+          <p className="mt-5 text-ink/70 max-w-2xl">
+            Coding, riding, driving — there’s a soundtrack to all of it. Catch what I’m into on Apple Music.
+          </p>
+        </div>
+        <AppleMusicCard />
+      </Reveal>
 
       {/* GRVT story */}
       <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-[1fr_auto] gap-10 items-center">
