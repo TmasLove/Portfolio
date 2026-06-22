@@ -9,7 +9,7 @@ const FACTS = [
   { label: 'Based in', value: 'Miami, FL' },
   { label: 'Born in', value: 'Medellín, Colombia' },
   { label: 'Position', value: 'CTO · Head of LATAM Sales · TerryCo Group' },
-  { label: 'Passion', value: 'Cycling, Sales & Tech' },
+  { label: 'Passion', value: 'Fast cars, fixed bikes, sharp design, clean code & the close' },
 ]
 
 export default function AboutHero() {
