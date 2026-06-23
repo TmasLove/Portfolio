@@ -52,8 +52,9 @@ export default function Hero() {
           variants={fadeUp}
           {...inView}
         >
-          A Miami-based developer and builder shipping apps, web platforms, and AI
-          agents — from dental healthtech to autonomous tools.
+          A Miami-based web developer and designer building apps, fast websites,
+          e-commerce, and AI agents for startups and small businesses — available for
+          new projects.
         </motion.p>
 
         <motion.div className="mt-10" variants={fadeUp} {...inView}>

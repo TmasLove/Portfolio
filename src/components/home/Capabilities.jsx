@@ -5,10 +5,10 @@ import Reveal from '../ui/Reveal'
 import { SITE } from '../../data/site'
 
 const DESCRIPTORS = {
-  Apps: 'Cross-platform apps with React Native & Expo.',
-  Web: 'Fast, modern marketing sites & web platforms.',
-  'AI Agents': 'Autonomous agents & AI-powered tools.',
-  Tools: 'Useful utilities that solve real problems.',
+  Apps: 'iOS & Android apps with React Native & Expo.',
+  Web: 'Fast websites, e-commerce & Shopify for small businesses.',
+  'AI Agents': 'Custom AI agents & workflow automation.',
+  Tools: 'Practical web tools that solve real problems.',
 }
 
 const spring = { type: 'spring', stiffness: 300, damping: 28 }
@@ -17,8 +17,11 @@ export default function Capabilities() {
   const items = SITE.capabilities
   return (
     <Section>
-      <Eyebrow>Capabilities</Eyebrow>
-      <div className="mt-8">
+      <Eyebrow>Services</Eyebrow>
+      <Reveal as="h2" className="font-display font-black text-3xl sm:text-4xl tracking-tight max-w-2xl">
+        Web, apps &amp; AI — built for startups and small businesses.
+      </Reveal>
+      <div className="mt-10">
         {items.map((cap, i) => (
           <Reveal key={cap}>
             <motion.div

@@ -6,8 +6,8 @@ const BASE = 'https://tommyroldan.com'
 
 const META = {
   '/': {
-    title: 'Tommy Roldan — Developer & Creative',
-    desc: 'Miami-based developer & creative shipping apps, web platforms, and AI agents.',
+    title: 'Tommy Roldan — Miami Web Developer & Designer',
+    desc: 'Miami web developer & designer for hire — React apps, fast websites, e-commerce, and AI agents for startups and small businesses.',
   },
   '/work': {
     title: 'Work — Tommy Roldan',
@@ -22,8 +22,8 @@ const META = {
     desc: 'Practical utilities built to solve real problems — PPT Speech, Strava tools, and more.',
   },
   '/contact': {
-    title: 'Contact — Tommy Roldan',
-    desc: 'Get in touch with Tommy Roldan — projects, collaborations, or just to say hi.',
+    title: 'Hire Tommy Roldan — Web Developer in Miami',
+    desc: 'Start a project with Tommy Roldan — Miami web developer & designer. Websites, apps, e-commerce, and AI agents.',
   },
 }
 
