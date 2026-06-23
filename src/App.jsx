@@ -11,6 +11,7 @@ import About from './pages/About'
 import Tools from './pages/Tools'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
+import { useRouteMeta } from './hooks/useRouteMeta'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -20,6 +21,7 @@ function ScrollToTop() {
 
 export default function App() {
   const location = useLocation()
+  useRouteMeta()
   return (
     <>
       <Navbar />
