@@ -41,7 +41,7 @@ export default function ProjectCard({ project }) {
     return (
       <Link to={'/work/' + project.key} className="block h-full">
         <motion.article {...HOVER} className={CARD}>
-          <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10">
+          <div className="relative flex-1 min-h-[220px] overflow-hidden border-b border-white/10">
             <img
               src={project.image}
               alt={project.title}
