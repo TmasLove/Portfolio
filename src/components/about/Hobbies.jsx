@@ -69,8 +69,12 @@ export default function Hobbies() {
             <h3 className="font-display font-black text-2xl">Cycling</h3>
           </div>
           <p className="mt-4 text-ink/70">
-            Cycling is the constant — from years in Miami’s best shops (Mack Cycle, City Bikes) to the
-            pure joy of the ride.
+            I’ve been cycling for over a decade. It started on fixed-gear/track bikes — the love of
+            adrenaline is what catapulted my cycling career. Riding brakeless, full gas through Miami
+            traffic was insane, but it was the start of a beautiful journey. A few years of that
+            wrecked my knees, which pushed me to buy my first road bike from Robbie at Brickell Bikes —
+            also the first shop I worked at. It only lasted a couple of months (no hard feelings), but
+            it opened the door to working at Mack Cycle and City Bikes Miami.
           </p>
           <div className="mt-6">
             <a href={SITE.socials.strava} target="_blank" rel="noopener" className={pill}>
