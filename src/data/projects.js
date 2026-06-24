@@ -93,6 +93,19 @@ export const projects = [
     url: 'https://nst-redesign.vercel.app',
   },
   {
+    key: 'nullscan',
+    title: 'NullScan',
+    category: 'web',
+    badges: ['public'],
+    description:
+      'NullScan.co — a React-based security scanning web app I built, launched, and later retired. Ran on-demand scans and surfaced findings in a clean, fast dashboard.',
+    tech: ['React'],
+    year: 2024,
+    image: null,
+    icon: 'activity',
+    url: null,
+  },
+  {
     key: 'versatile-customs',
     title: 'Versatile Customs',
     category: 'web',
