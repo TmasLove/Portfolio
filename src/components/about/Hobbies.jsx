@@ -12,6 +12,19 @@ import AppleMusicCard from './AppleMusicCard'
 const pill =
   'inline-flex items-center rounded-full border border-violet/30 text-violet px-4 py-1.5 text-sm font-medium hover:bg-violet hover:text-cream transition-colors'
 
+// Strava club "latest rides" embeds. Each src is a per-club token from
+// Strava → club page → ⋯ → "Embed on your website". Add Fixed Latinos once you grab it.
+const STRAVA_CLUBS = [
+  {
+    name: 'GRVT',
+    src: 'https://www.strava.com/clubs/558892/latest-rides/c36ad841324e45dd580b1fe925f8d2b30351b763?show_rides=true',
+  },
+  // {
+  //   name: 'Fixed Latinos',
+  //   src: 'https://www.strava.com/clubs/<CLUB_ID>/latest-rides/<TOKEN>?show_rides=true',
+  // },
+]
+
 export default function Hobbies() {
   return (
     <Section>
@@ -87,18 +100,25 @@ export default function Hobbies() {
           </div>
 
           <div className="mt-8">
-            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">Latest GRVT club rides</h4>
-            <div className="mt-3 overflow-hidden rounded-sm border border-ink/10">
-              <iframe
-                height="454"
-                width="100%"
-                frameBorder="0"
-                allowTransparency="true"
-                scrolling="no"
-                loading="lazy"
-                title="GRVT Strava Club — Latest Rides"
-                src="https://www.strava.com/clubs/558892/latest-rides/c36ad841324e45dd580b1fe925f8d2b30351b763?show_rides=true"
-              ></iframe>
+            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">Latest club rides</h4>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              {STRAVA_CLUBS.map((club) => (
+                <div key={club.name}>
+                  <p className="mb-2 text-sm font-bold">{club.name}</p>
+                  <div className="overflow-hidden rounded-sm border border-ink/10">
+                    <iframe
+                      height="454"
+                      width="100%"
+                      frameBorder="0"
+                      allowTransparency="true"
+                      scrolling="no"
+                      loading="lazy"
+                      title={`${club.name} Strava Club — Latest Rides`}
+                      src={club.src}
+                    ></iframe>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </Reveal>
