@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import { SITE } from '../../data/site'
 
 // Live Miami time — ticks every second, no API needed.
@@ -29,6 +30,71 @@ function MiamiClock() {
   )
 }
 
+const DISCORD_STATUS = {
+  online: 'bg-green-400',
+  idle: 'bg-yellow-400',
+  dnd: 'bg-red-400',
+  offline: 'bg-gray-500',
+}
+
+// Live Discord presence via Lanyard — shows current activity or status.
+function DiscordLive() {
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    let cancelled = false
+    fetch(`https://api.lanyard.rest/v1/users/${SITE.discordId}`, { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((j) => { if (!cancelled && j && j.success) setData(j.data) })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+
+  const status = data?.discord_status || 'offline'
+  const activity = (data?.activities || []).find((a) => a.type !== 4)
+  const label = activity ? `Playing ${activity.name}` : status === 'offline' ? 'Offline on Discord' : `${status[0].toUpperCase()}${status.slice(1)} on Discord`
+
+  return (
+    <a href={SITE.socials.discord} target="_blank" rel="noopener"
+       className="inline-flex items-center gap-2 text-cream/50 hover:text-cream/80 transition-colors">
+      <span className={`inline-block w-2 h-2 rounded-full ${DISCORD_STATUS[status]} ${status !== 'offline' ? 'animate-pulse' : ''}`} />
+      <span>{label}</span>
+    </a>
+  )
+}
+
+// Curated "on repeat" — links to Apple Music profile.
+function OnRepeat() {
+  const { track, artist } = SITE.nowSpinning
+  return (
+    <a href={SITE.socials.appleMusic} target="_blank" rel="noopener"
+       className="inline-flex items-center gap-2 text-cream/50 hover:text-cream/80 transition-colors group">
+      <span aria-hidden="true" className="inline-block group-hover:animate-spin">♫</span>
+      <span>On repeat: <span className="text-cream/70">{track}</span> — {artist}</span>
+    </a>
+  )
+}
+
+// Rotating cycling-flavored tagline.
+function RotatingTagline() {
+  const lines = SITE.taglines
+  const [i, setI] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setI((v) => (v + 1) % lines.length), 3200)
+    return () => clearInterval(id)
+  }, [lines.length])
+  return (
+    <span className="relative block h-4 overflow-hidden text-xs text-cream/40">
+      <AnimatePresence mode="wait">
+        <motion.span key={i} className="block"
+          initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -12, opacity: 0 }}
+          transition={{ duration: 0.4 }}>
+          {lines[i]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
+
 const ICONS = {
   linkedin: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
   instagram: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>,
@@ -45,13 +111,22 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           {/* Brand + nav */}
           <div className="flex flex-col gap-5">
-            <Link to="/" aria-label="Home" className="font-display font-black text-xl tracking-tight">TR</Link>
+            <div className="flex flex-col gap-1">
+              <Link to="/" aria-label="Home" className="font-display font-black text-xl tracking-tight">TR</Link>
+              <RotatingTagline />
+            </div>
             <nav className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.1em] text-cream/70">
               {NAV.map(([to, label]) => (
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{label}</Link>
               ))}
               <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
+
+            {/* Live "currently" status */}
+            <div className="flex flex-col gap-1.5 text-xs">
+              <DiscordLive />
+              <OnRepeat />
+            </div>
           </div>
 
           {/* Contact + socials */}

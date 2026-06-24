@@ -22,4 +22,14 @@ export const SITE = {
     { n: 2015, suffix: '', label: 'Building since' },
   ],
   capabilities: ['Apps', 'Web', 'AI Agents', 'Tools'],
+  // Curated "on repeat" pick for the footer (no public now-playing API — swap freely).
+  nowSpinning: { track: 'Midnight City', artist: 'M83' },
+  // Rotating cycling-flavored taglines for the footer.
+  taglines: [
+    'Building since 2015.',
+    'Steady output, sharp lines.',
+    'Powered by café con leche.',
+    'Always one more ride.',
+    'Made in Miami. 🌴',
+  ],
 }

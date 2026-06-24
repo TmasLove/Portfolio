@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import PageTransition from './components/layout/PageTransition'
+import KonamiEgg from './components/ui/KonamiEgg'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import ProjectDetail from './pages/ProjectDetail'
@@ -38,6 +39,7 @@ export default function App() {
         </Routes>
       </AnimatePresence>
       <Footer />
+      <KonamiEgg />
     </>
   )
 }
