@@ -22,7 +22,7 @@ export const projects = [
     description:
       'Enterprise dashboard powering the Clear Care platform. Handles benefits administration, member management, and practice operations at scale through a fast, data-dense React interface.',
     tech: ['JavaScript', 'React'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/cleancare-enterprise.jpg',
     icon: 'building',
     url: 'https://clearcaredentalenterprise.com/',
@@ -35,7 +35,7 @@ export const projects = [
     description:
       'Conversion-focused marketing site for the Clear Care Dental group. Tells the brand story, breaks down plan options, and funnels visitors smoothly into member sign-up.',
     tech: ['JavaScript'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/cleancare-marketing.jpg',
     icon: 'megaphone',
     url: 'https://clearcaredentalgroup.com',
@@ -87,7 +87,7 @@ export const projects = [
     description:
       'Ground-up redesign of the NST Pharma site, built in React + Vite with Tailwind. Home of the product card system that inspired this very page.',
     tech: ['React', 'Vite', 'Tailwind'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/nst-redesign.jpg',
     icon: 'pill',
     url: 'https://nst-redesign.vercel.app',
@@ -98,9 +98,9 @@ export const projects = [
     category: 'web',
     badges: ['public'],
     description:
-      'NullScan.co — a React-based security scanning web app I built, launched, and later retired. Ran on-demand scans and surfaced findings in a clean, fast dashboard.',
-    tech: ['React'],
-    year: 2024,
+      'NullScan.co — automated security scanning for small businesses: find vulnerabilities before hackers do, with plain-English reports. Next.js front end backed by a Python scanning worker. Built, launched, and recently retired.',
+    tech: ['Next.js', 'TypeScript', 'Python'],
+    year: 2026,
     image: null,
     icon: 'activity',
     url: null,
@@ -113,7 +113,7 @@ export const projects = [
     description:
       'Brand site and storefront for a custom build shop. Showcases services and a project gallery, and lets clients request tailored quotes in just a few clicks.',
     tech: ['JavaScript'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/versatile-customs.jpg',
     icon: 'wrench',
     url: 'https://versatile-customs.vercel.app',
@@ -126,7 +126,7 @@ export const projects = [
     description:
       'Multilingual corporate site for Cuatro Group. Clean, fast, and fully internationalized — built to present the company to a global, multi-language audience.',
     tech: ['TypeScript', 'i18n'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/cuatro-group.jpg',
     icon: 'globe',
     url: 'https://cuatro-group.vercel.app/en',
@@ -152,7 +152,7 @@ export const projects = [
     description:
       'Shopify e-commerce brand for sublingual SoulStrips supplements. Bold editorial storefront with science-backed storytelling, same-day Miami shipping, and a frictionless checkout.',
     tech: ['Shopify', 'E-commerce', 'Liquid'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/dolce-vita-supplements.jpg',
     icon: 'layers',
     url: 'https://www.dolcevitasupplements.com/',
@@ -165,7 +165,7 @@ export const projects = [
     description:
       'Italian-inspired home and lifestyle brand site. Warm, editorial, and product-forward — designed to make browsing the collection feel like flipping through a design magazine.',
     tech: ['TypeScript'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/la-dolce-vita-casa.jpg',
     icon: 'home',
     url: 'https://ladolcevitacasa.com',
@@ -178,7 +178,7 @@ export const projects = [
     description:
       'Connect your Strava and see how many more efforts you need to claim the Local Legend title on your top segments. Generates a shareable card for Instagram.',
     tech: ['Strava API', 'JavaScript'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/local-legend-predictor.jpg',
     icon: 'bike',
     url: 'https://local-legend-predictor.onrender.com',
@@ -191,7 +191,7 @@ export const projects = [
     description:
       "Upload any .pptx and have it read aloud slide-by-slide using your browser's built-in voices. Choose language and speed, navigate freely — zero server, zero upload.",
     tech: ['JavaScript', 'Web Speech API'],
-    year: 2025,
+    year: 2026,
     image: '/images/shots/powerpoint-speech-tool.jpg',
     icon: 'presentation',
     url: '/tools',
