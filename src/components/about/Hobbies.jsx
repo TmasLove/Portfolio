@@ -19,10 +19,10 @@ const STRAVA_CLUBS = [
     name: 'GRVT',
     src: 'https://www.strava.com/clubs/558892/latest-rides/c36ad841324e45dd580b1fe925f8d2b30351b763?show_rides=true',
   },
-  // {
-  //   name: 'Fixed Latinos',
-  //   src: 'https://www.strava.com/clubs/<CLUB_ID>/latest-rides/<TOKEN>?show_rides=true',
-  // },
+  {
+    name: 'Fixed Latinos',
+    src: 'https://www.strava.com/clubs/206322/latest-rides/86bb2fd6cb688a02d8925fd0b5c16234584ff381?show_rides=true',
+  },
 ]
 
 export default function Hobbies() {
