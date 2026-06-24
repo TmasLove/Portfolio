@@ -1,11 +1,23 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 
+const DEFAULTS = {
+  dot: 'rgba(120,130,255,0.8)',   // violet particles
+  dotAlt: 'rgba(0,224,198,0.8)',  // cyan particles
+  link: '90,100,232',             // inter-particle line (rgb)
+  linkAlpha: 0.18,
+  cursorLink: '0,224,198',        // cursor thread (rgb)
+  cursorAlpha: 0.45,
+  radius: 1.0,                    // particle radius multiplier
+  density: 15000,                 // lower = more particles
+}
+
 // A drifting particle constellation that reacts to the cursor: nearby points link to
 // the pointer with cyan threads and gently get pushed away. Pure canvas, no deps.
-export default function InteractiveField({ className = '' }) {
+export default function InteractiveField({ className = '', colors = {} }) {
   const ref = useRef(null)
   const reduce = useReducedMotion()
+  const C = { ...DEFAULTS, ...colors }
 
   useEffect(() => {
     if (reduce) return
@@ -25,13 +37,13 @@ export default function InteractiveField({ className = '' }) {
       canvas.style.width = W + 'px'
       canvas.style.height = H + 'px'
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const count = Math.max(24, Math.min(90, Math.floor((W * H) / 15000)))
+      const count = Math.max(24, Math.min(120, Math.floor((W * H) / C.density)))
       particles = Array.from({ length: count }, () => ({
         x: Math.random() * W,
         y: Math.random() * H,
         vx: (Math.random() - 0.5) * 0.3,
         vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.6 + 0.6,
+        r: (Math.random() * 1.6 + 0.6) * C.radius,
         cyan: Math.random() < 0.3,
       }))
     }
@@ -75,7 +87,7 @@ export default function InteractiveField({ className = '' }) {
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.cyan ? 'rgba(0,224,198,0.8)' : 'rgba(120,130,255,0.8)'
+        ctx.fillStyle = p.cyan ? C.dotAlt : C.dot
         ctx.fill()
       }
       for (let i = 0; i < particles.length; i++) {
@@ -85,7 +97,7 @@ export default function InteractiveField({ className = '' }) {
           const dx = a.x - b.x, dy = a.y - b.y
           const d = Math.hypot(dx, dy)
           if (d < 110) {
-            ctx.strokeStyle = `rgba(90,100,232,${(1 - d / 110) * 0.18})`
+            ctx.strokeStyle = `rgba(${C.link},${(1 - d / 110) * C.linkAlpha})`
             ctx.lineWidth = 1
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
@@ -96,7 +108,7 @@ export default function InteractiveField({ className = '' }) {
         const mdx = a.x - mouse.x, mdy = a.y - mouse.y
         const md = Math.hypot(mdx, mdy)
         if (md < 160) {
-          ctx.strokeStyle = `rgba(0,224,198,${(1 - md / 160) * 0.45})`
+          ctx.strokeStyle = `rgba(${C.cursorLink},${(1 - md / 160) * C.cursorAlpha})`
           ctx.lineWidth = 1
           ctx.beginPath()
           ctx.moveTo(a.x, a.y)

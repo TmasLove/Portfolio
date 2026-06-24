@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Container from '../components/ui/Container'
 import Eyebrow from '../components/ui/Eyebrow'
-import AnimatedBlobs from '../components/ui/AnimatedBlobs'
-import InteractiveField from '../components/ui/InteractiveField'
+import WorkBackground from '../components/work/WorkBackground'
 import FilterBar from '../components/work/FilterBar'
 import ProjectCard from '../components/work/ProjectCard'
 import { projects } from '../data/projects'
@@ -18,14 +17,9 @@ export default function Work() {
       : projects.filter((p) => p.category === active)
 
   return (
-    <section className="relative isolate overflow-hidden bg-cream text-ink min-h-screen">
-      {/* Interactive background — aurora wash + cursor-reactive constellation */}
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <AnimatedBlobs className="absolute inset-0" />
-        <InteractiveField className="absolute inset-0" />
-        {/* Soft fade so cards near the bottom stay crisp */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-cream to-transparent" />
-      </div>
+    <section className="relative bg-cream text-ink min-h-screen">
+      {/* Interactive background — aurora wash + cursor spotlight + constellation */}
+      <WorkBackground />
 
       <Container className="relative z-10 pt-24 pb-28">
         <Eyebrow>Portfolio</Eyebrow>
