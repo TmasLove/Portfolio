@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Eyebrow from '../ui/Eyebrow'
 import Reveal from '../ui/Reveal'
@@ -12,11 +13,12 @@ const featured = FEATURED_KEYS.map((k) => projects.find((p) => p.key === k)).fil
 const spring = { type: 'spring', stiffness: 300, damping: 28 }
 
 export default function FeaturedWork() {
+  const { t } = useTranslation()
   return (
     <Section dark>
-      <Eyebrow dark>Selected work</Eyebrow>
+      <Eyebrow dark>{t('featured.eyebrow', 'Selected work')}</Eyebrow>
       <h2 className="font-display font-black text-4xl sm:text-6xl tracking-tight">
-        Featured projects
+        {t('featured.heading', 'Featured projects')}
       </h2>
 
       <div className="mt-12">
@@ -50,7 +52,7 @@ export default function FeaturedWork() {
                     {p.title}
                   </h3>
                   <p className="mt-3 text-cream/60 max-w-prose leading-relaxed">
-                    {p.description}
+                    {t(`data.projects.${p.key}`, p.description)}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {p.tech.map((t) => (
@@ -66,13 +68,13 @@ export default function FeaturedWork() {
 
                 <div className="md:col-span-3 md:text-right">
                   <p className="text-xs uppercase tracking-[0.18em] text-cream/40">
-                    {p.category} · {p.year}
+                    {t(`filter.${p.category}`, p.category)} · {p.year}
                   </p>
                   <LinkEl
                     {...linkProps}
                     className="mt-2 inline-block text-sm font-bold text-cream transition-colors group-hover:text-cyan"
                   >
-                    View →
+                    {t('common.view', 'View →')}
                   </LinkEl>
                 </div>
               </motion.div>
@@ -83,7 +85,7 @@ export default function FeaturedWork() {
 
       <div className="mt-10">
         <Link to="/work" className="text-cyan text-sm font-bold uppercase tracking-[0.08em]">
-          See all work →
+          {t('common.seeAllWork', 'See all work →')}
         </Link>
       </div>
     </Section>

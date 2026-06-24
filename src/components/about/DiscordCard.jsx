@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { SITE } from '../../data/site'
 
 const STATUS = {
@@ -17,6 +18,7 @@ const DiscordGlyph = ({ className = 'w-8 h-8' }) => (
 const CARD = 'relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#5865F2] to-night text-cream p-5'
 
 export default function DiscordCard() {
+  const { t } = useTranslation()
   const id = SITE.discordId
   const profileUrl = SITE.socials.discord
   const [data, setData] = useState(null)
@@ -45,15 +47,15 @@ export default function DiscordCard() {
           </div>
           <div>
             <h4 className="font-display font-black text-lg">Discord</h4>
-            <p className="text-xs text-cream/70">{failed ? 'Say hi — open to a chat' : 'Loading…'}</p>
+            <p className="text-xs text-cream/70">{failed ? t('discordCard.sayHi', 'Say hi — open to a chat') : t('discordCard.loading', 'Loading…')}</p>
           </div>
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
           <a href={SITE.socials.discordServer} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white hover:underline">
-            Join the server →
+            {t('discordCard.joinServer', 'Join the server →')}
           </a>
           <a href={profileUrl} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white/70 hover:text-white hover:underline">
-            Add me →
+            {t('discordCard.addMe', 'Add me →')}
           </a>
         </div>
       </div>
@@ -61,7 +63,9 @@ export default function DiscordCard() {
   }
 
   const user = data.discord_user || {}
-  const status = STATUS[data.discord_status] || STATUS.offline
+  const statusKey = STATUS[data.discord_status] ? data.discord_status : 'offline'
+  const status = STATUS[statusKey]
+  const statusLabel = t(`discordCard.status.${statusKey}`, status.label)
   const avatar = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
     : 'https://cdn.discordapp.com/embed/avatars/0.png'
@@ -75,10 +79,10 @@ export default function DiscordCard() {
         <div>
           <div className="flex items-center gap-2">
             <h4 className="font-display font-black text-lg">{name}</h4>
-            <span className={`inline-block w-2 h-2 rounded-full ${status.color}`} title={status.label} />
+            <span className={`inline-block w-2 h-2 rounded-full ${status.color}`} title={statusLabel} />
           </div>
-          <p className="text-xs text-cream/70">{user.username ? `@${user.username}` : ''} · {status.label}</p>
-          {activity && <p className="mt-0.5 text-xs text-cream/60">Playing {activity.name}</p>}
+          <p className="text-xs text-cream/70">{user.username ? `@${user.username}` : ''} · {statusLabel}</p>
+          {activity && <p className="mt-0.5 text-xs text-cream/60">{t('discordCard.playing', `Playing ${activity.name}`, { name: activity.name })}</p>}
         </div>
       </div>
       <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">

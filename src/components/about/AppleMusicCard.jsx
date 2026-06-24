@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { SITE } from '../../data/site'
 
 // Apple Music embeddable player (previews for everyone, full playback for subscribers).
@@ -5,6 +6,7 @@ const PLAYLIST_EMBED =
   'https://embed.music.apple.com/us/playlist/chill-web/pl.u-06oxxNATom9ePX'
 
 export default function AppleMusicCard() {
+  const { t } = useTranslation()
   return (
     <div className="w-full">
       <iframe
@@ -23,7 +25,7 @@ export default function AppleMusicCard() {
         rel="noopener"
         className="mt-3 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-[#FA2D48] hover:underline"
       >
-        @tmizle on Apple Music →
+        {t('appleMusic.link', '@tmizle on Apple Music →')}
       </a>
     </div>
   )

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import steam from '../../data/steam.json'
 import Reveal from '../ui/Reveal'
 
@@ -11,6 +12,7 @@ const SHORTCUTS = [
 const hours = (min) => `${(min / 60).toFixed(1)}h`
 
 export default function SteamCard() {
+  const { t } = useTranslation()
   const online = steam.status === 'Online'
   const memberYear = steam.memberSince.split(', ').pop()
   return (
@@ -29,7 +31,7 @@ export default function SteamCard() {
               <h4 className="font-display font-black text-lg group-hover/head:text-cyan transition-colors">{steam.persona}</h4>
               {online && <span className="inline-block w-2 h-2 rounded-full bg-green-400" title="Online" />}
             </div>
-            <p className="text-xs text-cream/50">Member since {memberYear} · {steam.location}</p>
+            <p className="text-xs text-cream/50">{t('steam.memberSince', `Member since ${memberYear}`, { year: memberYear })} · {steam.location}</p>
           </div>
         </a>
 
@@ -43,7 +45,7 @@ export default function SteamCard() {
               rel="noopener"
               className="rounded-full border border-white/15 px-2.5 py-1 text-[0.6rem] uppercase tracking-wide font-bold text-cream/70 hover:border-cyan hover:text-cyan transition-colors"
             >
-              {label}
+              {t(`steam.shortcuts.${label}`, label)}
             </a>
           ))}
         </div>
@@ -51,7 +53,7 @@ export default function SteamCard() {
         {/* Most-played games — clickable tiles to the store */}
         {Array.isArray(steam.games) && steam.games.length > 0 && (
           <div className="mt-5">
-            <p className="text-[0.65rem] uppercase tracking-[0.18em] text-cream/40 mb-2">Most played</p>
+            <p className="text-[0.65rem] uppercase tracking-[0.18em] text-cream/40 mb-2">{t('steam.mostPlayed', 'Most played')}</p>
             <div className="grid grid-cols-2 gap-2">
               {steam.games.slice(0, 4).map((g) => (
                 <a
@@ -66,7 +68,7 @@ export default function SteamCard() {
                   )}
                   <div className="px-2 py-1.5">
                     <p className="text-[0.7rem] font-bold truncate group-hover/g:text-cyan transition-colors">{g.name}</p>
-                    <p className="text-[0.6rem] text-cream/50">{hours(g.playtime)} played</p>
+                    <p className="text-[0.6rem] text-cream/50">{t('steam.played', `${hours(g.playtime)} played`, { h: hours(g.playtime) })}</p>
                   </div>
                 </a>
               ))}
@@ -80,7 +82,7 @@ export default function SteamCard() {
           rel="noopener"
           className="mt-5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-cyan hover:underline"
         >
-          View full profile →
+          {t('steam.viewProfile', 'View full profile →')}
         </a>
       </div>
     </Reveal>

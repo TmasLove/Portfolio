@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Eyebrow from '../ui/Eyebrow'
 import Reveal from '../ui/Reveal'
 
 const MILESTONES = [
   {
+    id: 'm1',
     tag: 'TerryCo Group',
     title: 'Building Revenue, Forging Partnerships',
     paras: [
@@ -12,6 +14,7 @@ const MILESTONES = [
     ],
   },
   {
+    id: 'm2',
     tag: 'Ironhack · MEAN Stack',
     title: '10 Weeks That Changed Everything',
     paras: [
@@ -22,29 +25,30 @@ const MILESTONES = [
 ]
 
 export default function Experience() {
+  const { t } = useTranslation()
   return (
     <Section dark>
-      <Eyebrow dark>Experience</Eyebrow>
+      <Eyebrow dark>{t('experience.eyebrow', 'Experience')}</Eyebrow>
       <div className="mt-4">
         {MILESTONES.map((m) => (
           <Reveal
-            key={m.title}
+            key={m.id}
             className="border-t border-white/10 py-10 grid md:grid-cols-[18rem_1fr] gap-6 md:gap-12"
           >
             <span className="text-sm uppercase tracking-[0.18em] text-cyan">{m.tag}</span>
             <div>
-              <h3 className="font-display font-black text-3xl sm:text-4xl">{m.title}</h3>
+              <h3 className="font-display font-black text-3xl sm:text-4xl">{t(`experience.${m.id}Title`, m.title)}</h3>
               <div className="mt-5 space-y-5 text-cream/60 max-w-2xl">
                 {m.paras.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p key={i}>{t(`experience.${m.id}p${i + 1}`, p)}</p>
                 ))}
               </div>
             </div>
           </Reveal>
         ))}
         <Reveal className="border-t border-b border-white/10 py-6 text-cream/70">
-          <span className="text-xs uppercase tracking-[0.18em] text-cyan mr-3">Roots</span>
-          Cycling retail — Mack Cycle &amp; Fitness · City Bikes Miami
+          <span className="text-xs uppercase tracking-[0.18em] text-cyan mr-3">{t('experience.rootsLabel', 'Roots')}</span>
+          {t('experience.rootsText', 'Cycling retail — Mack Cycle & Fitness · City Bikes Miami')}
         </Reveal>
       </div>
     </Section>

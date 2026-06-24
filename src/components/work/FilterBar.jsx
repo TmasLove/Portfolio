@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { CATEGORIES } from '../../data/projects'
 
 const CATEGORY_LABELS = {
@@ -10,6 +11,7 @@ const CATEGORY_LABELS = {
 }
 
 export default function FilterBar({ active, onChange }) {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-wrap gap-2">
       {CATEGORIES.map((cat) => {
@@ -25,7 +27,7 @@ export default function FilterBar({ active, onChange }) {
                 : 'border border-ink/15 text-ink/70 hover:border-violet hover:text-violet'
             }`}
           >
-            {CATEGORY_LABELS[cat] || cat}
+            {t(`filter.${cat}`, CATEGORY_LABELS[cat] || cat)}
           </button>
         )
       })}

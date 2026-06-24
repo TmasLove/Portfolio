@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import Section from '../components/ui/Section'
 import Container from '../components/ui/Container'
 import Eyebrow from '../components/ui/Eyebrow'
@@ -55,14 +56,16 @@ const TOOLS = [
 ]
 
 function BadgePill({ badge }) {
+  const { t } = useTranslation()
   const base = 'rounded-full px-2 py-0.5 text-[0.6rem] uppercase tracking-wide font-bold border'
   let style = 'border-white/20 text-cream/60'
   if (badge === 'New') style = 'border-cyan bg-cyan text-night'
   else if (badge === 'In Progress') style = 'border-amber-400 bg-amber-400 text-night'
-  return <span className={`${base} ${style}`}>{badge}</span>
+  return <span className={`${base} ${style}`}>{t(`toolsPage.badge.${badge}`, badge)}</span>
 }
 
 function ToolCard({ tool }) {
+  const { t } = useTranslation()
   return (
     <motion.article
       variants={fadeUp}
@@ -89,24 +92,24 @@ function ToolCard({ tool }) {
           <BadgePill badge={tool.badge} />
         </div>
 
-        <h3 className="font-display font-black text-xl">{tool.name}</h3>
+        <h3 className="font-display font-black text-xl">{t(`data.tools.${tool.key}.name`, tool.name)}</h3>
 
-        <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{tool.desc}</p>
+        <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{t(`data.tools.${tool.key}.desc`, tool.desc)}</p>
 
         {tool.wip && (
           <p className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-500">
-            <span aria-hidden="true">🚧</span> Work in progress — still building, expect rough edges.
+            {t('toolsPage.wip', '🚧 Work in progress — still building, expect rough edges.')}
           </p>
         )}
 
         {/* Tech pills */}
         <div className="flex flex-wrap justify-center gap-1.5">
-          {tool.tech.map((t) => (
+          {tool.tech.map((tech) => (
             <span
-              key={t}
+              key={tech}
               className="border border-white/15 rounded-full px-2 py-0.5 text-xs text-cream/70"
             >
-              {t}
+              {tech}
             </span>
           ))}
         </div>
@@ -120,14 +123,14 @@ function ToolCard({ tool }) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-cream text-night group-hover:bg-violet group-hover:text-white transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
             >
-              ↗ {tool.cta}
+              ↗ {t(`toolsPage.cta.${tool.cta}`, tool.cta)}
             </a>
           ) : (
             <a
               href={tool.url}
               className="inline-flex items-center gap-2 bg-cream text-night group-hover:bg-violet group-hover:text-white transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
             >
-              ↗ {tool.cta}
+              ↗ {t(`toolsPage.cta.${tool.cta}`, tool.cta)}
             </a>
           )}
         </div>
@@ -137,15 +140,16 @@ function ToolCard({ tool }) {
 }
 
 export default function Tools() {
+  const { t } = useTranslation()
   return (
     <Section className="pt-24">
       <Container>
         {/* Hero */}
         <Reveal>
-          <Eyebrow>Utilities</Eyebrow>
-          <h1 className="font-display font-black text-5xl sm:text-7xl mt-4">Tools.</h1>
+          <Eyebrow>{t('toolsPage.eyebrow', 'Utilities')}</Eyebrow>
+          <h1 className="font-display font-black text-5xl sm:text-7xl mt-4">{t('toolsPage.heading', 'Tools.')}</h1>
           <p className="mt-4 text-lg text-ink/60 max-w-xl">
-            Practical utilities — built to solve real problems.
+            {t('toolsPage.subtitle', 'Practical utilities — built to solve real problems.')}
           </p>
         </Reveal>
 

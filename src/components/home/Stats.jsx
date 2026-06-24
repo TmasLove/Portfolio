@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Reveal from '../ui/Reveal'
 import CountUp from '../ui/CountUp'
 import { SITE } from '../../data/site'
 
 export default function Stats() {
+  const { t } = useTranslation()
   return (
     <Section dark>
       <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -20,7 +22,7 @@ export default function Stats() {
               className="block font-display font-black text-5xl sm:text-6xl text-cyan"
             />
             <span className="mt-3 block text-cream/50 uppercase text-xs tracking-wide">
-              {s.label}
+              {t(`stats.labels.${i}`, s.label)}
             </span>
           </Reveal>
         ))}

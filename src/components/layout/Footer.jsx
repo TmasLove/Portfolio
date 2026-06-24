@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { SITE } from '../../data/site'
 
 // Live Miami time — ticks every second, no API needed.
 function MiamiClock() {
+  const { t } = useTranslation()
   const [time, setTime] = useState('')
   useEffect(() => {
     const tick = () =>
@@ -25,7 +27,7 @@ function MiamiClock() {
     <span className="inline-flex items-center gap-1.5 tabular-nums">
       <span aria-hidden="true">🌴</span>
       <span>{time}</span>
-      <span className="text-cream/30">in Miami</span>
+      <span className="text-cream/30">{t('footer.inMiami', 'in Miami')}</span>
     </span>
   )
 }
@@ -39,6 +41,7 @@ const DISCORD_STATUS = {
 
 // Live Discord presence via Lanyard — shows current activity or status.
 function DiscordLive() {
+  const { t } = useTranslation()
   const [data, setData] = useState(null)
   useEffect(() => {
     let cancelled = false
@@ -51,7 +54,10 @@ function DiscordLive() {
 
   const status = data?.discord_status || 'offline'
   const activity = (data?.activities || []).find((a) => a.type !== 4)
-  const label = activity ? `Playing ${activity.name}` : status === 'offline' ? 'Offline on Discord' : `${status[0].toUpperCase()}${status.slice(1)} on Discord`
+  const englishStatus = status === 'offline' ? 'Offline on Discord' : `${status[0].toUpperCase()}${status.slice(1)} on Discord`
+  const label = activity
+    ? t('footer.discord.playing', `Playing ${activity.name}`, { name: activity.name })
+    : t(`footer.discord.${status}`, englishStatus)
 
   return (
     <a href={SITE.socials.discord} target="_blank" rel="noopener"
@@ -64,19 +70,21 @@ function DiscordLive() {
 
 // Curated "on repeat" — links to Apple Music profile.
 function OnRepeat() {
+  const { t } = useTranslation()
   const { track, artist } = SITE.nowSpinning
   return (
     <a href={SITE.socials.appleMusic} target="_blank" rel="noopener"
        className="inline-flex items-center gap-2 text-cream/50 hover:text-cream/80 transition-colors group">
       <span aria-hidden="true" className="inline-block group-hover:animate-spin">♫</span>
-      <span>On repeat: <span className="text-cream/70">{track}</span> — {artist}</span>
+      <span>{t('footer.onRepeat', 'On repeat:')} <span className="text-cream/70">{track}</span> — {artist}</span>
     </a>
   )
 }
 
 // Rotating cycling-flavored tagline.
 function RotatingTagline() {
-  const lines = SITE.taglines
+  const { t } = useTranslation()
+  const lines = t('footer.taglines', { returnObjects: true, defaultValue: SITE.taglines })
   const [i, setI] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setI((v) => (v + 1) % lines.length), 3200)
@@ -88,7 +96,7 @@ function RotatingTagline() {
         <motion.span key={i} className="block"
           initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -12, opacity: 0 }}
           transition={{ duration: 0.4 }}>
-          {lines[i]}
+          {lines[i % lines.length]}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -102,9 +110,10 @@ const ICONS = {
   appleMusic: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5v-6l5 3z"/></svg>,
 }
 const SOCIALS = [['linkedin', 'LinkedIn'], ['instagram', 'Instagram'], ['strava', 'Strava'], ['appleMusic', 'Apple Music']]
-const NAV = [['/work', 'Work'], ['/about', 'About'], ['/tools', 'Tools'], ['/contact', 'Contact']]
+const NAV = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools', 'Tools', 'tools'], ['/contact', 'Contact', 'contact']]
 
 export default function Footer() {
+  const { t } = useTranslation()
   return (
     <footer className="bg-black text-cream">
       <div className="mx-auto max-w-content px-6 md:px-10 py-12">
@@ -116,8 +125,8 @@ export default function Footer() {
               <RotatingTagline />
             </div>
             <nav className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.1em] text-cream/70">
-              {NAV.map(([to, label]) => (
-                <Link key={to} to={to} className="hover:text-cyan transition-colors">{label}</Link>
+              {NAV.map(([to, label, key]) => (
+                <Link key={to} to={to} className="hover:text-cyan transition-colors">{t(`nav.${key}`, label)}</Link>
               ))}
               <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
@@ -129,7 +138,7 @@ export default function Footer() {
               <a href={SITE.socials.discordServer} target="_blank" rel="noopener"
                  className="inline-flex items-center gap-2 text-cream/50 hover:text-cyan transition-colors">
                 <span aria-hidden="true">⊕</span>
-                <span>Join the Discord</span>
+                <span>{t('footer.joinDiscord', 'Join the Discord')}</span>
               </a>
             </div>
           </div>
@@ -141,10 +150,10 @@ export default function Footer() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan" />
               </span>
-              Available for new projects
+              {t('footer.available', 'Available for new projects')}
             </span>
             <Link to="/contact" className="text-sm font-bold uppercase tracking-[0.08em] text-cyan hover:underline">
-              Get in touch →
+              {t('common.getInTouch', 'Get in touch →')}
             </Link>
             <div className="flex gap-2">
               {SOCIALS.map(([key, label]) => (
@@ -160,7 +169,7 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-cream/40">
           <span>© {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
           <MiamiClock />
-          <a href="/privacy.html" className="hover:text-cream/70 transition-colors">Privacy</a>
+          <a href="/privacy.html" className="hover:text-cream/70 transition-colors">{t('footer.privacy', 'Privacy')}</a>
         </div>
       </div>
     </footer>

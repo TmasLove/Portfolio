@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import Icon from '../ui/Icon'
 
 const CATEGORY_LABELS = {
@@ -22,13 +23,14 @@ const CARD = 'group flex flex-col bg-nightsoft border border-white/10 rounded-lg
 const HOVER = { whileHover: { y: -6 }, transition: { type: 'spring', stiffness: 300, damping: 24 } }
 
 function Badge({ kind }) {
+  const { t } = useTranslation()
   return (
     <span
       className={`text-[0.6rem] tracking-wide font-bold px-2 py-0.5 rounded-full border uppercase ${
         BADGE_STYLES[kind] || 'border-white/20 text-cream/60'
       }`}
     >
-      {kind}
+      {t(`badges.${kind}`, kind)}
     </span>
   )
 }
@@ -50,7 +52,9 @@ function CardLink({ url, projectKey, children }) {
 }
 
 export default function ProjectCard({ project }) {
-  const categoryLabel = CATEGORY_LABELS[project.category] || project.category
+  const { t } = useTranslation()
+  const categoryLabel = t(`filter.${project.category}`, CATEGORY_LABELS[project.category] || project.category)
+  const description = t(`data.projects.${project.key}`, project.description)
   const isArchived = project.image && project.category === 'archived'
 
   if (isArchived) {
@@ -65,14 +69,14 @@ export default function ProjectCard({ project }) {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 bg-night/85 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-0">
-              <span className="text-[0.6rem] tracking-[0.3em] uppercase text-cream/40 mb-2">— Archived —</span>
+              <span className="text-[0.6rem] tracking-[0.3em] uppercase text-cream/40 mb-2">— {t('badges.archived', 'Archived')} —</span>
               <h3 className="font-display font-black text-lg text-cream leading-tight">{project.title}</h3>
-              <p className="mt-2 text-xs text-cream/55 max-w-[30ch] leading-snug">{project.description}</p>
+              <p className="mt-2 text-xs text-cream/55 max-w-[30ch] leading-snug">{description}</p>
             </div>
           </div>
 
           <div className="p-5 mt-auto flex items-center justify-center text-xs">
-            <span className="text-cream/40 font-bold">Old / Archived · {project.year}</span>
+            <span className="text-cream/40 font-bold">{categoryLabel} · {project.year}</span>
           </div>
         </motion.article>
       </Link>
@@ -109,16 +113,16 @@ export default function ProjectCard({ project }) {
           )}
 
           <h3 className="font-display font-black text-lg text-cream">{project.title}</h3>
-          <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{project.description}</p>
+          <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{description}</p>
 
           {project.tech && project.tech.length > 0 && (
             <div className="flex flex-wrap justify-center gap-1.5">
-              {project.tech.map((t) => (
+              {project.tech.map((tech) => (
                 <span
-                  key={t}
+                  key={tech}
                   className="border border-white/15 rounded-full px-2 py-0.5 text-xs text-cream/70"
                 >
-                  {t}
+                  {tech}
                 </span>
               ))}
             </div>
@@ -130,7 +134,7 @@ export default function ProjectCard({ project }) {
             </span>
             {project.url && (
               <span className="text-cream/70 font-bold group-hover:text-cyan transition-colors">
-                Visit →
+                {t('common.visit', 'Visit →')}
               </span>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Eyebrow from '../ui/Eyebrow'
 import Reveal from '../ui/Reveal'
@@ -37,7 +38,10 @@ const META = {
 const spring = { type: 'spring', stiffness: 300, damping: 28 }
 
 function CapabilityRow({ name, index, isLast }) {
+  const { t } = useTranslation()
   const meta = META[name] || { desc: '', icon: 'layers', tags: [], href: '/work' }
+  const displayName = t(`capabilities.names.${name}`, name)
+  const desc = t(`capabilities.desc.${name}`, meta.desc)
   const rowRef = useRef(null)
 
   // Cursor-following spotlight — set CSS vars directly for perf (no re-render).
@@ -55,7 +59,7 @@ function CapabilityRow({ name, index, isLast }) {
         to={meta.href}
         ref={rowRef}
         onMouseMove={handleMove}
-        aria-label={`${name} — ${meta.desc}`}
+        aria-label={`${displayName} — ${desc}`}
         className={`group relative block overflow-hidden border-t border-ink/10 ${
           isLast ? 'border-b' : ''
         }`}
@@ -89,7 +93,7 @@ function CapabilityRow({ name, index, isLast }) {
                 {String(index + 1).padStart(2, '0')}
               </span>
               <span className="relative font-display font-black text-3xl sm:text-4xl tracking-tight transition-colors duration-300 group-hover:text-violet">
-                {name}
+                {displayName}
                 <span className="absolute left-0 -bottom-1 h-0.5 bg-violet w-0 transition-all duration-500 group-hover:w-full" />
               </span>
             </div>
@@ -97,12 +101,12 @@ function CapabilityRow({ name, index, isLast }) {
             {/* Tags — revealed on hover */}
             <div className="mt-0 max-h-0 overflow-hidden opacity-0 transition-all duration-500 group-hover:mt-3 group-hover:max-h-12 group-hover:opacity-100">
               <div className="flex flex-wrap gap-1.5 pl-9 sm:pl-10">
-                {meta.tags.map((t) => (
+                {meta.tags.map((tag) => (
                   <span
-                    key={t}
+                    key={tag}
                     className="rounded-full border border-violet/30 bg-violet/5 px-2 py-0.5 text-[0.7rem] font-bold uppercase tracking-wide text-violet"
                   >
-                    {t}
+                    {t(`capabilities.tags.${tag}`, tag)}
                   </span>
                 ))}
               </div>
@@ -112,7 +116,7 @@ function CapabilityRow({ name, index, isLast }) {
           {/* Descriptor + arrow */}
           <div className="hidden sm:flex items-center gap-4 shrink-0">
             <span className="text-ink/50 text-right max-w-xs transition-colors duration-300 group-hover:text-ink/70">
-              {meta.desc}
+              {desc}
             </span>
             <span className="grid place-items-center w-9 h-9 rounded-full border border-ink/15 text-ink/40 transition-all duration-300 group-hover:border-violet group-hover:bg-violet group-hover:text-white group-hover:-rotate-45">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -128,12 +132,13 @@ function CapabilityRow({ name, index, isLast }) {
 }
 
 export default function Capabilities() {
+  const { t } = useTranslation()
   const items = SITE.capabilities
   return (
     <Section>
-      <Eyebrow>Services</Eyebrow>
+      <Eyebrow>{t('capabilities.eyebrow', 'Services')}</Eyebrow>
       <Reveal as="h2" className="font-display font-black text-3xl sm:text-4xl tracking-tight max-w-2xl">
-        Web, apps &amp; AI — built for startups and small businesses.
+        {t('capabilities.heading', 'Web, apps & AI — built for startups and small businesses.')}
       </Reveal>
       <div className="mt-10">
         {items.map((cap, i) => (

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { projects } from '../data/projects'
 
 const BASE = 'https://tommyroldan.com'
@@ -47,25 +48,30 @@ function setCanonical(href) {
   el.setAttribute('href', href)
 }
 
-// Updates document title / description / canonical / OG+Twitter on route change.
+// Updates document title / description / canonical / OG+Twitter on route or language change.
 export function useRouteMeta() {
   const { pathname } = useLocation()
+  const { t, i18n } = useTranslation()
+  const lng = i18n.resolvedLanguage
   useEffect(() => {
     let m = META[pathname]
-    if (!m && pathname.startsWith('/work/')) {
+    if (m) {
+      m = { title: t(`meta.${pathname}.title`, m.title), desc: t(`meta.${pathname}.desc`, m.desc) }
+    } else if (pathname.startsWith('/work/')) {
       const key = pathname.split('/')[2]
       const p = projects.find((x) => x.key === key)
-      if (p) m = { title: `${p.title} — Tommy Roldan`, desc: p.description }
+      if (p) m = { title: `${p.title} — Tommy Roldan`, desc: t(`data.projects.${p.key}`, p.description) }
     }
-    if (!m) m = META['/']
+    if (!m) m = { title: t('meta./.title', META['/'].title), desc: t('meta./.desc', META['/'].desc) }
 
     document.title = m.title
     setMeta('description', m.desc)
     setMeta('og:title', m.title, 'property')
     setMeta('og:description', m.desc, 'property')
     setMeta('og:url', BASE + (pathname === '/' ? '/' : pathname), 'property')
+    setMeta('og:locale', (lng || 'en') === 'es' ? 'es_ES' : 'en_US', 'property')
     setMeta('twitter:title', m.title)
     setMeta('twitter:description', m.desc)
     setCanonical(BASE + (pathname === '/' ? '/' : pathname))
-  }, [pathname])
+  }, [pathname, lng, t])
 }

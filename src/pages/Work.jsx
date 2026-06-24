@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import Section from '../components/ui/Section'
 import Eyebrow from '../components/ui/Eyebrow'
 import FilterBar from '../components/work/FilterBar'
@@ -8,6 +9,7 @@ import { projects } from '../data/projects'
 import { fadeUp } from '../lib/motion'
 
 export default function Work() {
+  const { t } = useTranslation()
   const [active, setActive] = useState('all')
 
   const filtered =
@@ -17,10 +19,10 @@ export default function Work() {
 
   return (
     <Section className="pt-24">
-      <Eyebrow>Portfolio</Eyebrow>
-      <h1 className="font-display font-black text-5xl sm:text-7xl">Selected work.</h1>
+      <Eyebrow>{t('work.eyebrow', 'Portfolio')}</Eyebrow>
+      <h1 className="font-display font-black text-5xl sm:text-7xl">{t('work.heading', 'Selected work.')}</h1>
       <p className="mt-6 text-lg text-ink/60 max-w-2xl">
-        Apps, web platforms, AI agents, and tools — a decade of building.
+        {t('work.subtitle', 'Apps, web platforms, AI agents, and tools — a decade of building.')}
       </p>
 
       <div className="mt-10">
@@ -45,7 +47,7 @@ export default function Work() {
       </motion.div>
 
       {filtered.length === 0 && (
-        <p className="mt-10 text-sm text-ink/50">No projects in this category yet.</p>
+        <p className="mt-10 text-sm text-ink/50">{t('work.empty', 'No projects in this category yet.')}</p>
       )}
     </Section>
   )

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Container from '../ui/Container'
 import Eyebrow from '../ui/Eyebrow'
 import SplitText from '../ui/SplitText'
@@ -10,6 +11,8 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 export default function Hero() {
   const reduce = useReducedMotion()
+  const { t, i18n } = useTranslation()
+  const lng = (i18n.resolvedLanguage || 'en').split('-')[0]
   return (
     <section className="relative min-h-screen flex items-center bg-cream text-ink overflow-hidden">
       {/* Personal bike-ride backdrop */}
@@ -30,10 +33,10 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-t from-cream via-transparent to-transparent" />
       <BirdsCanvas className="pointer-events-none absolute inset-0 z-[1] opacity-40" />
       <Container className="relative z-10 py-28">
-        <Eyebrow>{SITE.role} · {SITE.location}</Eyebrow>
+        <Eyebrow>{t('hero.role', SITE.role)} · {SITE.location}</Eyebrow>
 
-        <h1 className="font-display font-black tracking-tight leading-[0.95] text-5xl sm:text-7xl lg:text-8xl max-w-5xl">
-          <SplitText text="Building products that" />
+        <h1 key={lng} className="font-display font-black tracking-tight leading-[0.95] text-5xl sm:text-7xl lg:text-8xl max-w-5xl">
+          <SplitText text={t('hero.line1', 'Building products that')} />
           <br />
           <motion.span
             className="font-display italic text-violet inline-block"
@@ -42,9 +45,9 @@ export default function Hero() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
           >
-            move&nbsp;
+            {t('hero.move', 'move')}&nbsp;
           </motion.span>
-          <SplitText text="the work forward." />
+          <SplitText text={t('hero.line2', 'the work forward.')} />
         </h1>
 
         <motion.p
@@ -52,9 +55,7 @@ export default function Hero() {
           variants={fadeUp}
           {...inView}
         >
-          A Miami-based web developer and designer building apps, fast websites,
-          e-commerce, and AI agents for startups and small businesses — available for
-          new projects.
+          {t('hero.blurb', 'A Miami-based web developer and designer building apps, fast websites, e-commerce, and AI agents for startups and small businesses — available for new projects.')}
         </motion.p>
 
         <motion.div className="mt-10" variants={fadeUp} {...inView}>
@@ -62,7 +63,7 @@ export default function Hero() {
             to="/work"
             className="inline-flex items-center gap-2 bg-ink text-cream px-7 py-4 rounded-full text-sm font-bold uppercase tracking-[0.08em] transition-colors hover:bg-violet"
           >
-            View the work →
+            {t('common.viewWork', 'View the work →')}
           </Link>
         </motion.div>
       </Container>
@@ -70,7 +71,7 @@ export default function Hero() {
       <div className="absolute bottom-8 left-0 right-0">
         <Container>
           <div className="flex items-center gap-3 text-ink/40">
-            <span className="text-xs uppercase tracking-[0.22em]">Scroll</span>
+            <span className="text-xs uppercase tracking-[0.22em]">{t('common.scroll', 'Scroll')}</span>
             <motion.span
               className="block h-px w-12 bg-ink/30 origin-left"
               animate={{ scaleX: [0.3, 1, 0.3] }}

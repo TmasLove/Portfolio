@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Section from '../components/ui/Section'
 import Eyebrow from '../components/ui/Eyebrow'
 import SplitText from '../components/ui/SplitText'
@@ -43,6 +44,8 @@ const socials = [
 ]
 
 export default function Contact() {
+  const { t, i18n } = useTranslation()
+  const lng = (i18n.resolvedLanguage || 'en').split('-')[0]
   return (
     <Section dark className="pt-24 min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 -z-0">
@@ -54,17 +57,17 @@ export default function Contact() {
         {/* Left column: hero + CTA + socials */}
         <div>
           <Reveal>
-            <Eyebrow dark>Contact</Eyebrow>
-            <h1 className="font-display font-black text-6xl sm:text-8xl leading-none">
-              <SplitText text="Let's talk." />
+            <Eyebrow dark>{t('contact.eyebrow', 'Contact')}</Eyebrow>
+            <h1 key={lng} className="font-display font-black text-6xl sm:text-8xl leading-none">
+              <SplitText text={t('contact.heading', "Let's talk.")} />
             </h1>
             <p className="mt-6 text-lg text-cream/60 max-w-xl">
-              I love meeting new people. Got a project, a beer, or an idea? Hit me up.
+              {t('contact.blurb', 'I love meeting new people. Got a project, a beer, or an idea? Hit me up.')}
             </p>
           </Reveal>
 
           <Reveal className="mt-16">
-            <Eyebrow dark>Follow along</Eyebrow>
+            <Eyebrow dark>{t('contact.followAlong', 'Follow along')}</Eyebrow>
             <div className="flex gap-3 mt-4">
               {socials.map(({ key, label, href, Icon }) => (
                 <a
@@ -85,7 +88,7 @@ export default function Contact() {
         {/* Right column: send a note form */}
         <div>
           <Reveal>
-            <Eyebrow dark>Send a note</Eyebrow>
+            <Eyebrow dark>{t('contact.sendNote', 'Send a note')}</Eyebrow>
             <div className="mt-6">
               <ContactForm />
             </div>

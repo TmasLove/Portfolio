@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Eyebrow from '../ui/Eyebrow'
 import Reveal from '../ui/Reveal'
@@ -13,7 +14,7 @@ const pill =
   'inline-flex items-center rounded-full border border-violet/30 text-violet px-4 py-1.5 text-sm font-medium hover:bg-violet hover:text-cream transition-colors'
 
 // Strava club "latest rides" embeds. Each src is a per-club token from
-// Strava → club page → ⋯ → "Embed on your website". Add Fixed Latinos once you grab it.
+// Strava → club page → ⋯ → "Embed on your website".
 const STRAVA_CLUBS = [
   {
     name: 'GRVT',
@@ -28,11 +29,12 @@ const STRAVA_CLUBS = [
 ]
 
 export default function Hobbies() {
+  const { t } = useTranslation()
   return (
     <Section>
-      <Eyebrow>Off the keyboard</Eyebrow>
+      <Eyebrow>{t('hobbies.eyebrow', 'Off the keyboard')}</Eyebrow>
       <Reveal as="h2" className="font-display font-black text-4xl">
-        Hobbies
+        {t('hobbies.heading', 'Hobbies')}
       </Reveal>
 
       <div className="mt-12 grid md:grid-cols-2 gap-10">
@@ -40,11 +42,10 @@ export default function Hobbies() {
         <Reveal className="border border-ink/10 rounded-sm p-8">
           <div className="flex items-center gap-3">
             <Icon name="bot" className="w-6 h-6 text-violet" />
-            <h3 className="font-display font-black text-2xl">Gaming</h3>
+            <h3 className="font-display font-black text-2xl">{t('hobbies.gamingTitle', 'Gaming')}</h3>
           </div>
           <p className="mt-4 text-ink/70">
-            When I’m not building, I’m gaming — co-op nights, competitive ladders, and the occasional
-            deep-dive RPG.
+            {t('hobbies.gamingP', 'When I’m not building, I’m gaming — co-op nights, competitive ladders, and the occasional deep-dive RPG.')}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href={SITE.socials.steam} target="_blank" rel="noopener" className={pill}>
@@ -66,15 +67,10 @@ export default function Hobbies() {
         <Reveal className="border border-ink/10 rounded-sm p-8">
           <div className="flex items-center gap-3">
             <Icon name="bike" className="w-6 h-6 text-violet" />
-            <h3 className="font-display font-black text-2xl">Cycling</h3>
+            <h3 className="font-display font-black text-2xl">{t('hobbies.cyclingTitle', 'Cycling')}</h3>
           </div>
           <p className="mt-4 text-ink/70">
-            I’ve been cycling for over a decade. It started on fixed-gear/track bikes — the love of
-            adrenaline is what catapulted my cycling career. Riding brakeless, full gas through Miami
-            traffic was insane, but it was the start of a beautiful journey. A few years of that
-            wrecked my knees, which pushed me to buy my first road bike from Robbie at Brickell Bikes —
-            also the first shop I worked at. It only lasted a couple of months (no hard feelings), but
-            it opened the door to working at Mack Cycle and City Bikes Miami.
+            {t('hobbies.cyclingStory', 'I’ve been cycling for over a decade. It started on fixed-gear/track bikes — the love of adrenaline is what catapulted my cycling career. Riding brakeless, full gas through Miami traffic was insane, but it was the start of a beautiful journey. A few years of that wrecked my knees, which pushed me to buy my first road bike from Robbie at Brickell Bikes — also the first shop I worked at. It only lasted a couple of months (no hard feelings), but it opened the door to working at Mack Cycle and City Bikes Miami.')}
           </p>
           <div className="mt-6">
             <a href={SITE.socials.strava} target="_blank" rel="noopener" className={pill}>
@@ -83,7 +79,7 @@ export default function Hobbies() {
           </div>
 
           <div className="mt-8">
-            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">Strava clubs</h4>
+            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">{t('hobbies.clubsLabel', 'Strava clubs')}</h4>
             <ul className="mt-3 space-y-2">
               {SITE.stravaClubs.map((c) => (
                 <li key={c.name} className="flex flex-wrap items-baseline gap-x-2">
@@ -99,14 +95,14 @@ export default function Hobbies() {
                   ) : (
                     <span className="font-bold">{c.name}</span>
                   )}
-                  <span className="text-ink/50">— {c.note}</span>
+                  <span className="text-ink/50">— {t(`hobbies.clubNotes.${c.name}`, c.note)}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           <div className="mt-8">
-            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">Latest club rides</h4>
+            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">{t('hobbies.latestRides', 'Latest club rides')}</h4>
             <div className="mt-3 grid gap-4 sm:grid-cols-2">
               {STRAVA_CLUBS.map((club) => (
                 <div key={club.name}>
@@ -133,10 +129,10 @@ export default function Hobbies() {
       {/* Music strip */}
       <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <Eyebrow>On repeat</Eyebrow>
-          <h3 className="font-display font-black text-3xl sm:text-4xl">Always something playing</h3>
+          <Eyebrow>{t('hobbies.musicEyebrow', 'On repeat')}</Eyebrow>
+          <h3 className="font-display font-black text-3xl sm:text-4xl">{t('hobbies.musicHeading', 'Always something playing')}</h3>
           <p className="mt-5 text-ink/70 max-w-2xl">
-            Coding, riding, driving — there’s a soundtrack to all of it. Catch what I’m into on Apple Music.
+            {t('hobbies.musicP', 'Coding, riding, driving — there’s a soundtrack to all of it. Catch what I’m into on Apple Music.')}
           </p>
         </div>
         <AppleMusicCard />
@@ -145,12 +141,10 @@ export default function Hobbies() {
       {/* GRVT story */}
       <Reveal className="mt-12 border-t border-ink/10 pt-12 grid md:grid-cols-[1fr_auto] gap-10 items-center">
         <div>
-          <Eyebrow>A brand I built</Eyebrow>
-          <h3 className="font-display font-black text-3xl sm:text-4xl">GRVT — a beautiful failure</h3>
+          <Eyebrow>{t('hobbies.grvtEyebrow', 'A brand I built')}</Eyebrow>
+          <h3 className="font-display font-black text-3xl sm:text-4xl">{t('hobbies.grvtHeading', 'GRVT — a beautiful failure')}</h3>
           <p className="mt-5 text-ink/70 max-w-2xl">
-            GRVT was a failed attempt — it started a few years too early, before enough people were
-            into cycling, and it never made money. But I learned a ton, made some cool designs I
-            still wear, and it was a blast. A reminder that not every build is about ROI.
+            {t('hobbies.grvtP', 'GRVT was a failed attempt — it started a few years too early, before enough people were into cycling, and it never made money. But I learned a ton, made some cool designs I still wear, and it was a blast. A reminder that not every build is about ROI.')}
           </p>
         </div>
         <motion.a
