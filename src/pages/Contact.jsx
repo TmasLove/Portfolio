@@ -4,6 +4,7 @@ import SplitText from '../components/ui/SplitText'
 import Reveal from '../components/ui/Reveal'
 import ContactForm from '../components/ui/ContactForm'
 import AnimatedBlobs from '../components/ui/AnimatedBlobs'
+import InteractiveField from '../components/ui/InteractiveField'
 import { SITE } from '../data/site'
 
 const LinkedInIcon = () => (
@@ -43,8 +44,11 @@ const socials = [
 
 export default function Contact() {
   return (
-    <Section dark className="pt-24 min-h-screen relative">
-      <AnimatedBlobs className="absolute inset-0 -z-0" />
+    <Section dark className="pt-24 min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 -z-0">
+        <AnimatedBlobs className="absolute inset-0 opacity-70" />
+        <InteractiveField className="absolute inset-0" />
+      </div>
       <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20">
 
         {/* Left column: hero + CTA + socials */}

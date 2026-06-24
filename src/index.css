@@ -7,7 +7,7 @@
 :root { color-scheme: light; }
 html { scroll-behavior: smooth; }
 body { @apply bg-cream text-ink font-body antialiased; }
-::selection { background: #7B2FFF; color: #fff; }
+::selection { background: #5A64E8; color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

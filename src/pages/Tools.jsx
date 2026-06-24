@@ -56,7 +56,7 @@ const TOOLS = [
 
 function BadgePill({ badge }) {
   const base = 'rounded-full px-2 py-0.5 text-[0.6rem] uppercase tracking-wide font-bold border'
-  let style = 'border-ink/15 text-ink/60'
+  let style = 'border-white/20 text-cream/60'
   if (badge === 'New') style = 'border-cyan bg-cyan text-night'
   else if (badge === 'In Progress') style = 'border-amber-400 bg-amber-400 text-night'
   return <span className={`${base} ${style}`}>{badge}</span>
@@ -68,13 +68,13 @@ function ToolCard({ tool }) {
       variants={fadeUp}
       whileHover={{ y: -6 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className="group bg-white border border-ink/10 rounded-lg overflow-hidden flex flex-col"
+      className="group bg-nightsoft text-cream border border-white/10 rounded-lg overflow-hidden flex flex-col transition-colors hover:border-white/25"
     >
       {/* Accent bar — caution stripes for work-in-progress, gradient otherwise */}
       <div
         className={
           tool.wip
-            ? 'h-1.5 bg-[repeating-linear-gradient(45deg,#f59e0b_0,#f59e0b_10px,#161616_10px,#161616_20px)]'
+            ? 'h-1.5 bg-[repeating-linear-gradient(45deg,#f59e0b_0,#f59e0b_10px,#1E1F26_10px,#1E1F26_20px)]'
             : 'h-1.5 bg-gradient-to-r from-violet to-cyan'
         }
       />
@@ -91,7 +91,7 @@ function ToolCard({ tool }) {
 
         <h3 className="font-display font-black text-xl">{tool.name}</h3>
 
-        <p className="text-sm text-ink/60 leading-relaxed">{tool.desc}</p>
+        <p className="text-sm text-cream/60 leading-relaxed">{tool.desc}</p>
 
         {tool.wip && (
           <p className="flex items-center gap-1.5 text-xs font-bold text-amber-500">
@@ -104,7 +104,7 @@ function ToolCard({ tool }) {
           {tool.tech.map((t) => (
             <span
               key={t}
-              className="border border-ink/15 rounded-full px-2 py-0.5 text-xs text-ink/70"
+              className="border border-white/15 rounded-full px-2 py-0.5 text-xs text-cream/70"
             >
               {t}
             </span>
@@ -118,14 +118,14 @@ function ToolCard({ tool }) {
               href={tool.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-ink text-cream group-hover:bg-violet transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
+              className="inline-flex items-center gap-2 bg-cream text-night group-hover:bg-violet group-hover:text-white transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
             >
               ↗ {tool.cta}
             </a>
           ) : (
             <a
               href={tool.url}
-              className="inline-flex items-center gap-2 bg-ink text-cream group-hover:bg-violet transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
+              className="inline-flex items-center gap-2 bg-cream text-night group-hover:bg-violet group-hover:text-white transition-colors px-5 py-3 rounded-full text-xs font-bold uppercase tracking-[0.08em]"
             >
               ↗ {tool.cta}
             </a>

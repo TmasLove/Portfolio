@@ -6,7 +6,7 @@ export default {
       colors: {
         cream: '#FAF9F6',
         ink: '#161616',
-        violet: '#7B2FFF',
+        violet: '#5A64E8',
         cyan: '#00E0C6',
         night: '#0E0E10',
         nightsoft: '#1E1F26',

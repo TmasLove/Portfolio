@@ -12,17 +12,20 @@ const CATEGORY_LABELS = {
 }
 
 const BADGE_STYLES = {
-  private: 'border-violet/40 text-violet',
-  public: 'border-ink/20 text-ink/60',
+  private: 'border-violet/50 text-violet',
+  public: 'border-white/20 text-cream/60',
   live: 'bg-cyan text-night border-cyan',
-  archived: 'border-ink/15 text-ink/40',
+  archived: 'border-white/15 text-cream/40',
 }
+
+const CARD = 'group flex flex-col bg-nightsoft border border-white/10 rounded-lg overflow-hidden h-full text-cream transition-colors hover:border-white/25'
+const HOVER = { whileHover: { y: -6 }, transition: { type: 'spring', stiffness: 300, damping: 24 } }
 
 function Badge({ kind }) {
   return (
     <span
       className={`text-[0.6rem] tracking-wide font-bold px-2 py-0.5 rounded-full border uppercase ${
-        BADGE_STYLES[kind] || 'border-ink/20 text-ink/60'
+        BADGE_STYLES[kind] || 'border-white/20 text-cream/60'
       }`}
     >
       {kind}
@@ -37,27 +40,23 @@ export default function ProjectCard({ project }) {
   if (isArchived) {
     return (
       <Link to={'/work/' + project.key} className="block h-full">
-        <motion.article
-          whileHover={{ y: -6 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          className="group flex flex-col bg-white border border-ink/10 rounded-lg overflow-hidden h-full"
-        >
-          <div className="relative aspect-[16/9] overflow-hidden border-b border-ink/10">
+        <motion.article {...HOVER} className={CARD}>
+          <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10">
             <img
               src={project.image}
               alt={project.title}
               loading="lazy"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 bg-cream/85 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-0">
-              <span className="text-[0.6rem] tracking-[0.3em] uppercase text-ink/40 mb-2">— Archived —</span>
-              <h3 className="font-display font-black text-lg text-ink leading-tight">{project.title}</h3>
-              <p className="mt-2 text-xs text-ink/55 max-w-[30ch] leading-snug">{project.description}</p>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-5 bg-night/85 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-0">
+              <span className="text-[0.6rem] tracking-[0.3em] uppercase text-cream/40 mb-2">— Archived —</span>
+              <h3 className="font-display font-black text-lg text-cream leading-tight">{project.title}</h3>
+              <p className="mt-2 text-xs text-cream/55 max-w-[30ch] leading-snug">{project.description}</p>
             </div>
           </div>
 
           <div className="p-5 mt-auto flex items-center justify-between text-xs">
-            <span className="text-ink/40 font-bold">Old / Archived · {project.year}</span>
+            <span className="text-cream/40 font-bold">Old / Archived · {project.year}</span>
           </div>
         </motion.article>
       </Link>
@@ -66,13 +65,9 @@ export default function ProjectCard({ project }) {
 
   return (
     <Link to={'/work/' + project.key} className="block h-full">
-      <motion.article
-        whileHover={{ y: -6 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-        className="group block bg-white border border-ink/10 rounded-lg overflow-hidden h-full"
-      >
+      <motion.article {...HOVER} className={CARD}>
         {project.image ? (
-          <div className="aspect-[16/9] overflow-hidden border-b border-ink/10">
+          <div className="aspect-[16/9] overflow-hidden border-b border-white/10">
             <img
               src={project.image}
               alt={project.title}
@@ -84,7 +79,7 @@ export default function ProjectCard({ project }) {
           <div className="h-1.5 bg-gradient-to-r from-violet to-cyan" />
         )}
 
-        <div className="p-5 flex flex-col gap-3">
+        <div className="p-5 flex flex-col gap-3 flex-1">
           {!project.image && (
             <span className="inline-flex w-10 h-10 items-center justify-center rounded-md bg-violet text-white">
               <Icon name={project.icon} className="w-5 h-5" />
@@ -99,15 +94,15 @@ export default function ProjectCard({ project }) {
             </div>
           )}
 
-          <h3 className="font-display font-black text-lg">{project.title}</h3>
-          <p className="text-sm text-ink/60 leading-relaxed">{project.description}</p>
+          <h3 className="font-display font-black text-lg text-cream">{project.title}</h3>
+          <p className="text-sm text-cream/60 leading-relaxed">{project.description}</p>
 
           {project.tech && project.tech.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {project.tech.map((t) => (
                 <span
                   key={t}
-                  className="border border-ink/15 rounded-full px-2 py-0.5 text-xs text-ink/70"
+                  className="border border-white/15 rounded-full px-2 py-0.5 text-xs text-cream/70"
                 >
                   {t}
                 </span>
@@ -115,12 +110,12 @@ export default function ProjectCard({ project }) {
             </div>
           )}
 
-          <div className="mt-auto pt-3 border-t border-ink/10 flex items-center justify-between text-xs">
+          <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between text-xs">
             <span className="text-violet font-bold">
               {categoryLabel} · {project.year}
             </span>
             {project.url && (
-              <span className="text-ink/70 font-bold group-hover:text-violet transition-colors">
+              <span className="text-cream/70 font-bold group-hover:text-cyan transition-colors">
                 Visit →
               </span>
             )}
