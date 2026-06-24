@@ -23,12 +23,12 @@
 
   <style>
     :root {
-      --cream:  #FFFDF5;
-      --violet: #7B2FFF;
+      --cream:  #FAF9F6;
+      --violet: #5A64E8;
       --cyan:   #00E0C6;
-      --red:    #7B2FFF;
+      --red:    #5A64E8;
       --yellow: #00E0C6;
-      --purple: #7B2FFF;
+      --purple: #5A64E8;
       --black:  #161616;
       --white:  #FFFFFF;
       --border: 3px solid #161616;
@@ -50,33 +50,29 @@
       flex-direction: column;
     }
 
-    /* ─── Navigation ─────────────────────────────────────────── */
+    /* ─── Navigation (matches React Navbar) ──────────────────── */
     nav {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.2rem 2rem; background: var(--cream);
-      border-bottom: var(--border); position: sticky; top: 0; z-index: 100;
-      flex-wrap: wrap; gap: 0.75rem;
+      height: 4rem; padding: 0 1.5rem; gap: 0.75rem;
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250, 249, 246, 0.9);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(22, 22, 22, 0.1);
     }
     .nav-brand {
-      font-family: var(--font-h); font-weight: 900; font-size: 1.3rem;
-      text-decoration: none; color: var(--white); background: var(--violet);
-      border: var(--border); padding: 0.3rem 0.75rem;
-      box-shadow: 3px 3px 0 var(--black); transition: transform 0.15s, box-shadow 0.15s;
+      font-family: var(--font-h); font-weight: 900; font-size: 1.125rem;
+      letter-spacing: -0.02em; text-decoration: none; color: var(--black);
     }
-    .nav-brand:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--black); }
-    .nav-links { display: flex; list-style: none; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    .nav-links { display: flex; list-style: none; gap: 0.25rem; align-items: center; }
     .nav-links a {
-      font-family: var(--font-b); font-weight: 700; font-size: 0.82rem;
+      font-family: var(--font-b); font-weight: 700; font-size: 0.72rem;
       text-decoration: none; color: var(--black); text-transform: uppercase;
-      letter-spacing: 0.08em; padding: 0.35rem 0.75rem;
-      border: 2px solid transparent; transition: all 0.15s;
+      letter-spacing: 0.1em; padding: 0.5rem 0.75rem;
+      transition: color 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active {
-      border-color: var(--black); background: var(--red); color: var(--white);
-    }
+    .nav-links a:hover, .nav-links a.active { color: var(--violet); }
     .nav-toggle {
-      display: none; background: none; border: var(--border); cursor: pointer;
-      padding: 0.35rem 0.55rem; box-shadow: 2px 2px 0 var(--black);
+      display: none; background: none; border: none; cursor: pointer;
       flex-direction: column; gap: 5px; align-items: center; justify-content: center;
       min-width: 44px; min-height: 44px;
     }
@@ -237,16 +233,19 @@
 
     /* ─── Responsive ──────────────────────────────────────────── */
     @media (max-width: 640px) {
-      nav { padding: 0.9rem 1rem; }
+      nav { padding: 0 1rem; }
       .nav-toggle { display: inline-flex; }
       .nav-links {
-        display: none; flex-direction: column; width: 100%;
-        border-top: var(--border); margin-top: 0.25rem;
-        padding-top: 0.5rem; gap: 0.15rem;
+        display: none; flex-direction: column; align-items: stretch;
+        position: absolute; top: 4rem; left: 0; right: 0; gap: 0;
+        background: rgba(250, 249, 246, 0.95);
+        -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(22, 22, 22, 0.1);
+        padding: 0.5rem 1rem 0.75rem;
       }
       .nav-links.open { display: flex; }
       .nav-links li { width: 100%; }
-      .nav-links a { display: block; padding: 0.65rem 0.75rem; width: 100%; }
+      .nav-links a { display: block; padding: 0.75rem 0.25rem; width: 100%; }
       .content { padding: 2rem 1rem 4rem; }
       .page-header { padding: 2rem 1rem 1.5rem; }
     }
@@ -265,8 +264,8 @@
       <span></span><span></span><span></span>
     </button>
     <ul class="nav-links" id="nav-links">
-      <li><a href="/about">About</a></li>
       <li><a href="/work">Work</a></li>
+      <li><a href="/about">About</a></li>
       <li><a href="/tools">Tools</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
