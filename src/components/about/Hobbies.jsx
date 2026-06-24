@@ -22,8 +22,8 @@ const STRAVA_CLUBS = [
   },
   {
     name: 'Fixed Latinos',
-    height: 160,
-    src: 'https://www.strava.com/clubs/206322/latest-rides/86bb2fd6cb688a02d8925fd0b5c16234584ff381?show_rides=false',
+    height: 454,
+    src: 'https://www.strava.com/clubs/206322/latest-rides/86bb2fd6cb688a02d8925fd0b5c16234584ff381?show_rides=true',
   },
 ]
 
