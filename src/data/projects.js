@@ -16,7 +16,7 @@ export const projects = [
   },
   {
     key: 'cleancare-enterprise',
-    title: 'Clear Care Dental Enterprise Website',
+    title: "Clear Care Dental's Enterprise Website",
     category: 'web',
     badges: ['public', 'live'],
     description:
