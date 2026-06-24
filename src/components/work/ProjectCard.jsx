@@ -55,7 +55,7 @@ export default function ProjectCard({ project }) {
             </div>
           </div>
 
-          <div className="p-5 mt-auto flex items-center justify-between text-xs">
+          <div className="p-5 mt-auto flex items-center justify-center text-xs">
             <span className="text-cream/40 font-bold">Old / Archived · {project.year}</span>
           </div>
         </motion.article>
@@ -79,7 +79,7 @@ export default function ProjectCard({ project }) {
           <div className="h-1.5 bg-gradient-to-r from-violet to-cyan" />
         )}
 
-        <div className="p-5 flex flex-col gap-3 flex-1">
+        <div className="p-5 flex flex-col items-center text-center gap-3 flex-1">
           {!project.image && (
             <span className="inline-flex w-10 h-10 items-center justify-center rounded-md bg-violet text-white">
               <Icon name={project.icon} className="w-5 h-5" />
@@ -87,7 +87,7 @@ export default function ProjectCard({ project }) {
           )}
 
           {project.badges && project.badges.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap justify-center gap-1.5">
               {project.badges.map((b) => (
                 <Badge key={b} kind={b} />
               ))}
@@ -95,10 +95,10 @@ export default function ProjectCard({ project }) {
           )}
 
           <h3 className="font-display font-black text-lg text-cream">{project.title}</h3>
-          <p className="text-sm text-cream/60 leading-relaxed">{project.description}</p>
+          <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{project.description}</p>
 
           {project.tech && project.tech.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap justify-center gap-1.5">
               {project.tech.map((t) => (
                 <span
                   key={t}
@@ -110,7 +110,7 @@ export default function ProjectCard({ project }) {
             </div>
           )}
 
-          <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+          <div className="mt-auto pt-3 border-t border-white/10 w-full flex items-center justify-center gap-4 text-xs">
             <span className="text-violet font-bold">
               {categoryLabel} · {project.year}
             </span>

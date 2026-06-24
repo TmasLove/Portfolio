@@ -80,9 +80,9 @@ function ToolCard({ tool }) {
       />
 
       {/* Body */}
-      <div className="p-6 flex flex-col gap-3 flex-1">
+      <div className="p-6 flex flex-col items-center text-center gap-3 flex-1">
         {/* Icon + badge row */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center gap-3">
           <span className="inline-flex w-10 h-10 items-center justify-center rounded-md bg-violet text-white">
             <Icon name={tool.icon} className="w-5 h-5" />
           </span>
@@ -91,16 +91,16 @@ function ToolCard({ tool }) {
 
         <h3 className="font-display font-black text-xl">{tool.name}</h3>
 
-        <p className="text-sm text-cream/60 leading-relaxed">{tool.desc}</p>
+        <p className="text-sm text-cream/60 leading-relaxed line-clamp-3">{tool.desc}</p>
 
         {tool.wip && (
-          <p className="flex items-center gap-1.5 text-xs font-bold text-amber-500">
+          <p className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-500">
             <span aria-hidden="true">🚧</span> Work in progress — still building, expect rough edges.
           </p>
         )}
 
         {/* Tech pills */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap justify-center gap-1.5">
           {tool.tech.map((t) => (
             <span
               key={t}
