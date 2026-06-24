@@ -17,11 +17,13 @@ const pill =
 const STRAVA_CLUBS = [
   {
     name: 'GRVT',
+    height: 454,
     src: 'https://www.strava.com/clubs/558892/latest-rides/c36ad841324e45dd580b1fe925f8d2b30351b763?show_rides=true',
   },
   {
     name: 'Fixed Latinos',
-    src: 'https://www.strava.com/clubs/206322/latest-rides/86bb2fd6cb688a02d8925fd0b5c16234584ff381?show_rides=true',
+    height: 160,
+    src: 'https://www.strava.com/clubs/206322/latest-rides/86bb2fd6cb688a02d8925fd0b5c16234584ff381?show_rides=false',
   },
 ]
 
@@ -107,7 +109,7 @@ export default function Hobbies() {
                   <p className="mb-2 text-sm font-bold">{club.name}</p>
                   <div className="overflow-hidden rounded-sm border border-ink/10">
                     <iframe
-                      height="454"
+                      height={club.height}
                       width="100%"
                       frameBorder="0"
                       allowTransparency="true"
