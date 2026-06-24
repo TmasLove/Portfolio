@@ -10,7 +10,7 @@ export const projects = [
       'Full-stack dental benefits platform built with React Native and Expo. Members find in-network dentists, track plan usage in real time, and book visits — all from one cross-platform app.',
     tech: ['React Native', 'Expo', 'Node.js'],
     year: 2025,
-    image: null,
+    image: '/images/shots/clear-care-dental.jpg',
     icon: 'smartphone',
     url: null,
   },
