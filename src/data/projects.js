@@ -132,6 +132,19 @@ export const projects = [
     url: null,
   },
   {
+    key: 'dolce-vita-supplements',
+    title: 'Dolce Vita Supplements',
+    category: 'web',
+    badges: ['public', 'live'],
+    description:
+      'Shopify e-commerce brand for sublingual SoulStrips supplements. Bold editorial storefront with science-backed storytelling, same-day Miami shipping, and a frictionless checkout.',
+    tech: ['Shopify', 'E-commerce', 'Liquid'],
+    year: 2025,
+    image: '/images/shots/dolce-vita-supplements.jpg',
+    icon: 'layers',
+    url: 'https://www.dolcevitasupplements.com/',
+  },
+  {
     key: 'la-dolce-vita-casa',
     title: 'La Dolce Vita Casa',
     category: 'web',
