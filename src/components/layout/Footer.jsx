@@ -22,6 +22,7 @@ export default function Footer() {
               {NAV.map(([to, label]) => (
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{label}</Link>
               ))}
+              <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
           </div>
 
