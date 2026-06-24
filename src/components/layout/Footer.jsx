@@ -126,6 +126,11 @@ export default function Footer() {
             <div className="flex flex-col gap-1.5 text-xs">
               <DiscordLive />
               <OnRepeat />
+              <a href={SITE.socials.discordServer} target="_blank" rel="noopener"
+                 className="inline-flex items-center gap-2 text-cream/50 hover:text-cyan transition-colors">
+                <span aria-hidden="true">⊕</span>
+                <span>Join the Discord</span>
+              </a>
             </div>
           </div>
 

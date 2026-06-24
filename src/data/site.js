@@ -10,6 +10,7 @@ export const SITE = {
     appleMusic: 'https://music.apple.com/profile/tmizle',
     steam: 'https://steamcommunity.com/id/shlumplord/',
     discord: 'https://discord.com/users/346119932511125515',
+    discordServer: 'https://discord.gg/EJThXpcNn6',
   },
   discordId: '346119932511125515',
   stravaClubs: [

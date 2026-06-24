@@ -48,9 +48,14 @@ export default function DiscordCard() {
             <p className="text-xs text-cream/70">{failed ? 'Say hi — open to a chat' : 'Loading…'}</p>
           </div>
         </div>
-        <a href={profileUrl} target="_blank" rel="noopener" className="mt-5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white hover:underline">
-          Add on Discord →
-        </a>
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <a href={SITE.socials.discordServer} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white hover:underline">
+            Join the server →
+          </a>
+          <a href={profileUrl} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white/70 hover:text-white hover:underline">
+            Add me →
+          </a>
+        </div>
       </div>
     )
   }
@@ -76,9 +81,14 @@ export default function DiscordCard() {
           {activity && <p className="mt-0.5 text-xs text-cream/60">Playing {activity.name}</p>}
         </div>
       </div>
-      <a href={profileUrl} target="_blank" rel="noopener" className="mt-5 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white hover:underline">
-        Add on Discord →
-      </a>
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+        <a href={SITE.socials.discordServer} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white hover:underline">
+          Join the server →
+        </a>
+        <a href={profileUrl} target="_blank" rel="noopener" className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.08em] text-white/70 hover:text-white hover:underline">
+          Add me →
+        </a>
+      </div>
     </div>
   )
 }

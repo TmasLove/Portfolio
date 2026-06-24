@@ -35,8 +35,8 @@ export default function Hobbies() {
             <a href={SITE.socials.steam} target="_blank" rel="noopener" className={pill}>
               Steam →
             </a>
-            {SITE.socials.discord && (
-              <a href={SITE.socials.discord} target="_blank" rel="noopener" className={pill}>
+            {SITE.socials.discordServer && (
+              <a href={SITE.socials.discordServer} target="_blank" rel="noopener" className={pill}>
                 Discord →
               </a>
             )}
