@@ -13,7 +13,7 @@
     "prerender": "node scripts/prerender.mjs",
     "lint": "eslint .",
     "predeploy": "npm run build && npm run prerender",
-    "deploy": "gh-pages -d dist -b gh-pages --dotfiles"
+    "deploy": "npm run build && npm run prerender && gh-pages -d dist -b gh-pages --dotfiles"
   },
   "dependencies": {
     "framer-motion": "^11.11.0",
