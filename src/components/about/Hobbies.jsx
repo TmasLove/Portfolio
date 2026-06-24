@@ -86,17 +86,20 @@ export default function Hobbies() {
             </ul>
           </div>
 
-          <div className="mt-6 overflow-hidden rounded-sm border border-ink/10">
-            <iframe
-              height="454"
-              width="100%"
-              frameBorder="0"
-              allowTransparency="true"
-              scrolling="no"
-              loading="lazy"
-              title="Tommy Roldan Strava Rides"
-              src="https://www.strava.com/athletes/14197229/latest-rides/ecaa8e761943078dbf00544b2b0b4bf6abab9e60"
-            ></iframe>
+          <div className="mt-8">
+            <h4 className="text-xs uppercase tracking-[0.18em] text-ink/40">Latest GRVT club rides</h4>
+            <div className="mt-3 overflow-hidden rounded-sm border border-ink/10">
+              <iframe
+                height="454"
+                width="100%"
+                frameBorder="0"
+                allowTransparency="true"
+                scrolling="no"
+                loading="lazy"
+                title="GRVT Strava Club — Latest Rides"
+                src="https://www.strava.com/clubs/558892/latest-rides/c36ad841324e45dd580b1fe925f8d2b30351b763?show_rides=true"
+              ></iframe>
+            </div>
           </div>
         </Reveal>
       </div>
