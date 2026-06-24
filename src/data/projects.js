@@ -29,7 +29,7 @@ export const projects = [
   },
   {
     key: 'cleancare-marketing',
-    title: 'CleanCare Marketing',
+    title: "Clear Care Dental Group's Website",
     category: 'web',
     badges: ['private', 'live'],
     description:
