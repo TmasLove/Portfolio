@@ -81,7 +81,7 @@ function CapabilityRow({ name, index, isLast }) {
         <motion.div
           whileHover={{ x: 8 }}
           transition={spring}
-          className="relative flex items-center justify-between gap-6 py-7 px-1"
+          className="relative flex items-center justify-between gap-6 py-7 pl-1 pr-3 sm:pr-4"
         >
           <div className="min-w-0">
             <div className="flex items-baseline gap-4 sm:gap-5">
