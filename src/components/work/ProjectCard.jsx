@@ -76,16 +76,14 @@ export default function ProjectCard({ project }) {
             />
           </div>
         ) : (
-          <div className="h-1.5 bg-gradient-to-r from-violet to-cyan" />
+          <div className="aspect-[16/9] border-b border-white/10 bg-gradient-to-br from-violet/25 via-nightsoft to-cyan/15 grid place-items-center">
+            <span className="inline-flex w-14 h-14 items-center justify-center rounded-xl bg-violet text-white shadow-lg">
+              <Icon name={project.icon} className="w-7 h-7" />
+            </span>
+          </div>
         )}
 
         <div className="p-5 flex flex-col items-center text-center gap-3 flex-1">
-          {!project.image && (
-            <span className="inline-flex w-10 h-10 items-center justify-center rounded-md bg-violet text-white">
-              <Icon name={project.icon} className="w-5 h-5" />
-            </span>
-          )}
-
           {project.badges && project.badges.length > 0 && (
             <div className="flex flex-wrap justify-center gap-1.5">
               {project.badges.map((b) => (
