@@ -12,7 +12,7 @@ export const projects = [
     year: 2025,
     image: '/images/shots/clear-care-dental.jpg',
     icon: 'smartphone',
-    url: null,
+    url: 'https://app.clearcaredentalgroup.com/login',
   },
   {
     key: 'cleancare-enterprise',

@@ -33,6 +33,22 @@ function Badge({ kind }) {
   )
 }
 
+function CardLink({ url, projectKey, children }) {
+  const isExternal = typeof url === 'string' && /^https?:\/\//.test(url)
+  if (isExternal) {
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer" className="block h-full">
+        {children}
+      </a>
+    )
+  }
+  return (
+    <Link to={'/work/' + projectKey} className="block h-full">
+      {children}
+    </Link>
+  )
+}
+
 export default function ProjectCard({ project }) {
   const categoryLabel = CATEGORY_LABELS[project.category] || project.category
   const isArchived = project.image && project.category === 'archived'
@@ -64,7 +80,7 @@ export default function ProjectCard({ project }) {
   }
 
   return (
-    <Link to={'/work/' + project.key} className="block h-full">
+    <CardLink url={project.url} projectKey={project.key}>
       <motion.article {...HOVER} className={CARD}>
         {project.image ? (
           <div className="aspect-[16/9] overflow-hidden border-b border-white/10">
@@ -120,6 +136,6 @@ export default function ProjectCard({ project }) {
           </div>
         </div>
       </motion.article>
-    </Link>
+    </CardLink>
   )
 }
