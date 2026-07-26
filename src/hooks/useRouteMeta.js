@@ -5,6 +5,14 @@ import { projects } from '../data/projects'
 
 const BASE = 'https://tommyroldan.com'
 
+// Routes we prerender to dist/<route>/index.html. GitHub Pages serves those at
+// "/work/" and 301s "/work" → "/work/", so the canonical MUST carry the trailing
+// slash — otherwise every page declares a canonical that redirects back to itself.
+const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact'])
+
+const canonicalUrl = (pathname) =>
+  BASE + (PRERENDERED.has(pathname) ? `${pathname}/` : pathname)
+
 const META = {
   '/': {
     title: 'Tommy Roldan — Miami Web Developer & Designer',
@@ -68,10 +76,10 @@ export function useRouteMeta() {
     setMeta('description', m.desc)
     setMeta('og:title', m.title, 'property')
     setMeta('og:description', m.desc, 'property')
-    setMeta('og:url', BASE + (pathname === '/' ? '/' : pathname), 'property')
+    setMeta('og:url', canonicalUrl(pathname), 'property')
     setMeta('og:locale', (lng || 'en') === 'es' ? 'es_ES' : 'en_US', 'property')
     setMeta('twitter:title', m.title)
     setMeta('twitter:description', m.desc)
-    setCanonical(BASE + (pathname === '/' ? '/' : pathname))
+    setCanonical(canonicalUrl(pathname))
   }, [pathname, lng, t])
 }
