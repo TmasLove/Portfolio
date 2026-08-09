@@ -23,11 +23,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
+      # npm install rather than npm ci: ci refuses outright when package-lock.json
+      # has drifted from package.json, which open Dependabot PRs routinely cause.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
