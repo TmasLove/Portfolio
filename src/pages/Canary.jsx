@@ -196,8 +196,8 @@ export default function Canary() {
             </h2>
             <p className="mt-5 text-ink/60 leading-relaxed">
               Mine. An i9-13900K with an RX 7900 XTX — representative of nothing. Every check was
-              written against one machine&apos;s quirks. No idea what it does on AMD, a laptop, or
-              a clean install.
+              written against one machine&apos;s quirks. No idea what it does on an NVIDIA
+              card, an AMD CPU, a laptop, or a clean install.
             </p>
             <p className="mt-3 text-ink/60 leading-relaxed">
               It caught a real failing SSD — and threw <strong>two false alarms</strong> I only
@@ -214,7 +214,7 @@ export default function Canary() {
                 <li className="flex gap-3"><span className="text-violet font-bold">2</span>
                   <span>Tell me if a finding is <strong>confusing</strong>. If you can&apos;t tell what to do, that&apos;s my fault.</span></li>
                 <li className="flex gap-3"><span className="text-violet font-bold">3</span>
-                  <span>Anything that <strong>crashes or looks broken</strong> — especially on a laptop or AMD.</span></li>
+                  <span>Anything that <strong>crashes or looks broken</strong> — especially on a laptop or an NVIDIA card.</span></li>
               </ul>
               <div className="mt-6 pt-5 border-t border-ink/10 flex flex-wrap gap-3">
                 <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer"
