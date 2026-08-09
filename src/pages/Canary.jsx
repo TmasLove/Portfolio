@@ -99,48 +99,89 @@ export default function Canary() {
         </Reveal>
       </Section>
 
-      {/* ---------- The verdict. Full width, no card, no competition. ----------
-          This is the entire thesis in one image, so it gets a whole screen
-          rather than a panel beside the headline. */}
+      {/* ---------- Why this exists ----------
+          Written as a sequence, not a comparison. Two equal columns implied
+          both readings were equally valid, when the point is that one of them
+          told me nothing. Setup, turn, then the explanation that makes the
+          disagreement make sense - and every number glossed in plain words,
+          because "spare block pool" means nothing to most readers. */}
       <section className="bg-night text-cream border-y border-white/10">
         <div className="mx-auto w-full max-w-content px-6 md:px-10 py-16 md:py-24">
+
+          {/* Setup */}
           <Reveal>
-            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-cream/35 mb-10">
-              One drive · one afternoon · two verdicts
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-cream/35">
+              Why this exists
+            </p>
+            <h2 className="mt-6 font-display font-black text-3xl sm:text-5xl leading-[1.05] max-w-3xl">
+              My SSD&apos;s own manufacturer checked the drive
+              <span className="text-cream/40"> and told me it was fine.</span>
+            </h2>
+            <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4">
+              <span className="text-[0.62rem] uppercase tracking-[0.16em] text-cream/40">Samsung Magician</span>
+              <span className="font-display font-black text-3xl sm:text-4xl text-emerald-400 leading-none">Good</span>
+            </div>
+          </Reveal>
+
+          {/* Turn */}
+          <Reveal>
+            <p className="mt-14 text-xl sm:text-2xl font-semibold max-w-2xl leading-snug">
+              It was not fine. Here is what that verdict left out.
             </p>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 gap-10 md:gap-0 items-start">
-            <Reveal>
-              <div className="md:pr-14">
-                <p className="text-xs uppercase tracking-[0.16em] text-cream/40 mb-4">Samsung Magician</p>
-                <p className="font-display font-black text-6xl sm:text-8xl text-emerald-400 leading-none">Good</p>
-                <p className="mt-5 text-cream/45 text-sm max-w-xs">
-                  The drive&apos;s own manufacturer, reporting on the drive.
-                </p>
-              </div>
-            </Reveal>
+          {/* The evidence, each number said twice: once as data, once in English. */}
+          <motion.div className="mt-10 grid sm:grid-cols-2 gap-x-12 gap-y-10 max-w-4xl"
+                      variants={stagger(0.12, 0.1)} {...inView}>
+            <motion.div variants={fadeUp}>
+              <p className="font-display font-black text-[3.25rem] sm:text-7xl text-red-400 leading-none">
+                <Count to={252} />
+              </p>
+              <p className="mt-3 font-semibold">unrecoverable read errors</p>
+              <p className="mt-1.5 text-cream/55 text-[0.95rem] leading-relaxed">
+                Data the drive could no longer hand back — not slow, not corrupted
+                in software. Gone.
+              </p>
+            </motion.div>
 
-            <Reveal>
-              <div className="md:pl-14 md:border-l border-white/10">
-                <p className="text-xs uppercase tracking-[0.16em] text-cream/40 mb-4">Canary</p>
-                <div className="space-y-3">
-                  <p className="font-display font-black text-[2.75rem] sm:text-6xl text-red-400 leading-none">
-                    <Count to={252} />
-                  </p>
-                  <p className="text-cream/70">unrecoverable media errors</p>
-                  <p className="font-display font-black text-[2.75rem] sm:text-6xl text-red-400 leading-none pt-4">
-                    <Count to={23} suffix="%" delay={420} />
-                  </p>
-                  <p className="text-cream/70">of the spare block pool already gone</p>
-                </div>
-                <p className="mt-6 text-cream/45 text-sm max-w-xs">
-                  At <span className="text-cream/70">0% wear</span>. The drive was not worn
-                  out — blocks were failing that should not have been.
-                </p>
-              </div>
-            </Reveal>
-          </div>
+            <motion.div variants={fadeUp}>
+              <p className="font-display font-black text-[3.25rem] sm:text-7xl text-red-400 leading-none">
+                <Count to={23} suffix="%" delay={380} />
+              </p>
+              <p className="mt-3 font-semibold">of its spare blocks already used</p>
+              <p className="mt-1.5 text-cream/55 text-[0.95rem] leading-relaxed">
+                Every SSD keeps replacement blocks for when parts of it fail. Nearly
+                a quarter of mine were already spent.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          <Reveal>
+            <p className="mt-10 text-lg sm:text-xl text-cream/75 max-w-2xl leading-relaxed">
+              And it had done that at{' '}
+              <span className="text-cream font-semibold">zero percent wear</span> — barely
+              used. The drive was not worn out. It was breaking.
+            </p>
+          </Reveal>
+
+          {/* The explanation. This is the part that makes the tool make sense. */}
+          <Reveal>
+            <div className="mt-14 border-l-2 border-cyan pl-6 sm:pl-8 max-w-2xl">
+              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cyan mb-3">
+                So why did it say Good?
+              </p>
+              <p className="text-cream/75 leading-relaxed">
+                Because vendor tools report a pass/fail flag, and nothing had crossed
+                its threshold yet. Technically correct. Practically useless — the
+                counters underneath had been climbing for weeks, and it never mentioned
+                them.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                Canary reads those counters and tells you what they mean.
+                That is the whole idea.
+              </p>
+            </div>
+          </Reveal>
         </div>
       </section>
 
