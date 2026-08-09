@@ -76,9 +76,10 @@ export default function Canary() {
       <Section dark className="pt-24" containerClassName="pb-10 md:pb-14">
         <Reveal>
           <Eyebrow dark>Windows diagnostics · free · alpha</Eyebrow>
-          <div className="flex items-end gap-5 sm:gap-7">
-            <Bird size={110} className="shrink-0 drop-shadow-[0_0_40px_rgba(242,194,48,0.28)]" />
-            <h1 className="font-display font-black text-7xl sm:text-9xl leading-[0.82] tracking-tight">
+          <div className="flex items-end gap-4 sm:gap-7">
+            <Bird size={110}
+                  className="shrink-0 w-[64px] h-[64px] sm:w-[92px] sm:h-[92px] lg:w-[110px] lg:h-[110px] drop-shadow-[0_0_40px_rgba(242,194,48,0.28)]" />
+            <h1 className="font-display font-black text-[3.15rem] sm:text-8xl lg:text-9xl leading-[0.82] tracking-tight">
               Canary
             </h1>
           </div>
@@ -86,7 +87,7 @@ export default function Canary() {
             A second opinion for your PC — for when the tool that came with your
             hardware says everything is fine.
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="mt-9 sm:mt-10 flex flex-wrap items-center gap-x-5 gap-y-4">
             <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer"
                className="rounded-full bg-cyan text-night font-bold uppercase tracking-[0.08em] text-sm px-8 py-4 hover:opacity-90 transition-opacity">
               Download free
@@ -113,7 +114,7 @@ export default function Canary() {
             <Reveal>
               <div className="md:pr-14">
                 <p className="text-xs uppercase tracking-[0.16em] text-cream/40 mb-4">Samsung Magician</p>
-                <p className="font-display font-black text-7xl sm:text-8xl text-emerald-400 leading-none">Good</p>
+                <p className="font-display font-black text-6xl sm:text-8xl text-emerald-400 leading-none">Good</p>
                 <p className="mt-5 text-cream/45 text-sm max-w-xs">
                   The drive&apos;s own manufacturer, reporting on the drive.
                 </p>
@@ -124,11 +125,11 @@ export default function Canary() {
               <div className="md:pl-14 md:border-l border-white/10">
                 <p className="text-xs uppercase tracking-[0.16em] text-cream/40 mb-4">Canary</p>
                 <div className="space-y-3">
-                  <p className="font-display font-black text-5xl sm:text-6xl text-red-400 leading-none">
+                  <p className="font-display font-black text-[2.75rem] sm:text-6xl text-red-400 leading-none">
                     <Count to={252} />
                   </p>
                   <p className="text-cream/70">unrecoverable media errors</p>
-                  <p className="font-display font-black text-5xl sm:text-6xl text-red-400 leading-none pt-4">
+                  <p className="font-display font-black text-[2.75rem] sm:text-6xl text-red-400 leading-none pt-4">
                     <Count to={23} suffix="%" delay={420} />
                   </p>
                   <p className="text-cream/70">of the spare block pool already gone</p>
@@ -148,7 +149,7 @@ export default function Canary() {
         <div className="max-w-3xl">
           <Reveal>
             <Eyebrow>What it does</Eyebrow>
-            <h2 className="font-display font-black text-5xl sm:text-6xl leading-[0.92]">
+            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95]">
               Hardware, or software?
             </h2>
             <p className="mt-6 text-lg text-ink/60 leading-relaxed max-w-xl">
@@ -176,7 +177,7 @@ export default function Canary() {
       {/* ---------- The bird, at scale. The product's personality. ---------- */}
       <Section dark containerClassName="py-16 md:py-20">
         <div className="grid lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 items-center">
-          <motion.div className="flex gap-4 sm:gap-7" variants={stagger(0.09, 0.1)} {...inView}>
+          <motion.div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:flex sm:gap-7" variants={stagger(0.09, 0.1)} {...inView}>
             {STATES.map((s) => (
               <motion.div key={s.img} variants={fadeUp} className="text-center">
                 <img src={`/canary/bird-${s.img}.png`} alt="" width="72" height="72"
@@ -202,7 +203,7 @@ export default function Canary() {
         <div className="max-w-2xl">
           <Reveal>
             <Eyebrow>The part that matters</Eyebrow>
-            <h2 className="font-display font-black text-5xl sm:text-7xl leading-[0.9]">
+            <h2 className="font-display font-black text-4xl sm:text-7xl leading-[0.92]">
               What it won&apos;t do.
             </h2>
             <p className="mt-6 text-lg text-ink/60 leading-relaxed">
@@ -237,7 +238,7 @@ export default function Canary() {
         <div className="grid lg:grid-cols-[1fr_0.85fr] gap-12 lg:gap-20">
           <Reveal>
             <Eyebrow dark>Why you</Eyebrow>
-            <h2 className="font-display font-black text-5xl sm:text-6xl leading-[0.9]">
+            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.92]">
               Tested on<br />exactly one PC.
             </h2>
             <p className="mt-7 text-lg text-cream/60 leading-relaxed">
