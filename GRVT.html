@@ -71,10 +71,14 @@
   .shot{border:1px solid var(--line)}
 
   /* ---- closing note ---- */
-  .close{border-top:1px solid var(--line);padding:80px 0 110px}
-  .close p{font-size:clamp(1.25rem,2.4vw,1.7rem);line-height:1.4;max-width:30ch;
+  .close{border-top:1px solid var(--line);padding:96px 0 130px;text-align:center}
+  .close .wrap{display:flex;flex-direction:column;align-items:center}
+  .rip{position:relative;padding-top:38px}
+  .rip::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+        width:44px;height:2px;background:var(--mag)}
+  .close p{font-size:clamp(1.35rem,2.6vw,1.9rem);line-height:1.35;max-width:26ch;
         font-weight:600;margin:0;letter-spacing:-.01em}
-  .close .after{font-size:1rem;font-weight:400;color:#C9C5BE;max-width:52ch;margin-top:22px}
+  .close .after{font-size:1rem;font-weight:400;color:#C9C5BE;max-width:50ch;margin-top:26px}
   .back{display:inline-block;margin-top:40px;font-family:var(--mono);font-size:.72rem;
         letter-spacing:.18em;text-transform:uppercase;color:var(--dim);
         border-bottom:1px solid var(--line);padding-bottom:4px;text-decoration:none}
@@ -91,7 +95,7 @@
 <header class="hero">
   <div class="wrap">
     <h1 class="word">GRVT</h1>
-    <p class="dateline">Cycling streetwear &middot; Miami &middot; <b>2015 &mdash; archived</b></p>
+    <p class="dateline">Cycling streetwear &middot; Miami &middot; <b>Founded 2015 &middot; Laid to rest</b></p>
   </div>
 </header>
 
@@ -172,10 +176,12 @@
 
 <div class="close">
   <div class="wrap reveal">
-    <p>The brand didn&rsquo;t last. The designs still hold up.</p>
+    <p class="rip">Here lies GRVT.<br>The brand didn&rsquo;t last. The designs still hold up.</p>
     <p class="after">
-      This page is kept as it was &mdash; early work, left visible rather than quietly
-      deleted. Everything here is from the label&rsquo;s run; nothing has been added since.
+      No relaunch, no coming-soon, no mailing list. It ran, it stopped, and this is
+      what it left behind &mdash; kept visible rather than quietly deleted, because
+      early work you are willing to show is worth more than a portfolio with no
+      failures in it.
     </p>
     <a class="back" href="/work">&larr; Back to work</a>
   </div>
