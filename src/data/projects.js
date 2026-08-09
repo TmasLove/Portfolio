@@ -111,8 +111,8 @@ export const projects = [
     category: 'web',
     badges: ['private', 'live'],
     description:
-      'Brand site and storefront for a custom build shop. Showcases services and a project gallery, and lets clients request tailored quotes in just a few clicks.',
-    tech: ['JavaScript'],
+      'Storefront for a vehicle wrap studio, built around the 3D visualizer I developed for the shop. Customers design a wrap in the browser, browse films and services, and book the job or check out - PPF, colour-change wraps, ceramic tint and lighting all in one flow.',
+    tech: ['Next.js', 'WebGL', 'Commerce', 'CMS'],
     year: 2026,
     image: '/images/shots/versatile-customs.jpg',
     icon: 'wrench',
