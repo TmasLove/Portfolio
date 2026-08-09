@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import BirdsCanvas from '../components/home/BirdsCanvas'
 import Section from '../components/ui/Section'
 import Eyebrow from '../components/ui/Eyebrow'
 import Reveal from '../components/ui/Reveal'
@@ -31,6 +32,16 @@ const FINDINGS = [
     body: 'Nothing silently syncing to OneDrive.' },
 ]
 
+const SECURITY = [
+  { h: 'Persistence',
+    p: 'WMI event subscriptions, sign-in hijacks, launch hijacks, injected DLLs and scheduled tasks running hidden or encoded commands.' },
+  { h: 'Antivirus posture',
+    p: 'Real-time protection and tamper protection switched off, stale definitions, and scan exclusions - a favourite trick is to exclude a folder, then put the payload in it.' },
+  { h: 'Network and access',
+    p: 'Hosts-file entries blocking security or update domains, an unexpected proxy, Remote Desktop enabled, and remote-access tools like AnyDesk or TeamViewer running.' },
+  { h: 'Accounts and logs',
+    p: 'Administrator accounts you did not create, recent password changes, Defender detection history, and whether the Security log has been cleared.' },
+]
 const WONT = [
   { h: 'Clean your registry',
     p: 'It is an indexed database. Unused keys cost nothing. Microsoft does not endorse cleaners, and deleting a live key breaks things weeks later.' },
@@ -72,8 +83,16 @@ function Bird({ colour = 'canary', size = 40, className = '' }) {
 export default function Canary() {
   return (
     <>
-      {/* ---------- Hero: name, claim, action. Nothing else. ---------- */}
-      <Section dark className="pt-24" containerClassName="pb-10 md:pb-14">
+      {/* ---------- Hero: name, claim, action. Nothing else.
+           A flock of the brand-yellow birds drifts behind it - the same boid
+           canvas the home page uses, recoloured. Purely ambient: it sits under
+           the content, ignores pointer events, and the component already bails
+           out entirely under prefers-reduced-motion. ---------- */}
+      <div className="relative isolate bg-night text-cream">
+        <BirdsCanvas color={0xF2C230}
+                     className="pointer-events-none absolute inset-0 z-0 opacity-[0.28]" />
+        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-night" />
+      <Section dark className="pt-24 relative z-10 !bg-transparent" containerClassName="pb-10 md:pb-14">
         <Reveal>
           <Eyebrow dark>Windows diagnostics · free · alpha</Eyebrow>
           <div className="flex items-end gap-4 sm:gap-7">
@@ -98,6 +117,7 @@ export default function Canary() {
           </div>
         </Reveal>
       </Section>
+      </div>
 
       {/* ---------- Why this exists ----------
           Written as a sequence, not a comparison. Two equal columns implied
@@ -218,6 +238,72 @@ export default function Canary() {
             </motion.div>
           ))}
         </motion.div>
+      </Section>
+
+      {/* ---------- Compromise check ----------
+          This was only ever mentioned as a disclaimer further down, which gave a
+          real capability nothing but negative billing. It gets a section, and the
+          honest limit stays attached to it rather than living somewhere else. */}
+      <Section dark>
+        <div className="max-w-3xl">
+          <Reveal>
+            <Eyebrow dark>If you think you have been hacked</Eyebrow>
+            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95]">
+              Before you wipe<br />the whole machine.
+            </h2>
+            <p className="mt-6 text-lg text-cream/65 leading-relaxed max-w-2xl">
+              Reinstalling Windows costs you a day and everything not backed up. Not
+              reinstalling, when something really is on there, costs more. Canary looks
+              for the specific ways malware stays on a PC, so the decision is based on
+              something.
+            </p>
+          </Reveal>
+        </div>
+
+        <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-3"
+                    variants={stagger(0.08, 0.1)} {...inView}>
+          {SECURITY.map((s) => (
+            <motion.div key={s.h} variants={fadeUp}
+                        className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+              <h3 className="font-display font-bold text-base">{s.h}</h3>
+              <p className="mt-2 text-sm text-cream/55 leading-relaxed">{s.p}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <Reveal>
+          <div className="mt-12 grid lg:grid-cols-2 gap-8 lg:gap-14">
+            <div className="border-l-2 border-red-400/70 pl-6">
+              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-red-400 mb-3">
+                What it cannot do
+              </p>
+              <p className="text-cream/75 leading-relaxed">
+                It can raise suspicion. It <strong className="text-cream">cannot</strong> tell
+                you a PC is clean. Everything it does runs as an ordinary program, and
+                anything operating at kernel level hides from all of it.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                So findings mean something. An absence of findings does not. If you have
+                real reason to think you were hacked, reinstall — and this scan should not
+                talk you out of it.
+              </p>
+            </div>
+            <div className="border-l-2 border-cyan pl-6">
+              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cyan mb-3">
+                It also tells you what to do first
+              </p>
+              <p className="text-cream/75 leading-relaxed">
+                Change your passwords <strong className="text-cream">from a different
+                device</strong>, email first. Almost everyone gets this wrong — changing
+                them on the compromised machine just hands over the new ones.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                Then two-factor, sign out other sessions, offline scan, back up documents
+                only, and reinstall from media made on another PC.
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {/* ---------- The bird, at scale. The product's personality. ---------- */}
@@ -344,19 +430,18 @@ export default function Canary() {
           </Reveal>
 
           <Reveal>
-            <Eyebrow>Fair warning</Eyebrow>
+            <Eyebrow>The rule</Eyebrow>
             <h2 className="font-display font-black text-4xl sm:text-5xl leading-[0.95]">
-              What it can&apos;t tell you.
+              &ldquo;Could not verify&rdquo;<br />is not &ldquo;passed&rdquo;.
             </h2>
             <p className="mt-7 text-ink/60 leading-relaxed">
-              There is a check for signs of a compromised PC. It can raise suspicion. It{' '}
-              <strong className="text-ink">cannot</strong> tell you a machine is clean —
-              everything it does runs as an ordinary program, and anything at kernel level
-              hides from all of it.
+              When a check cannot run — Windows refuses the query, the tool lacks
+              permission, the data is simply not there — Canary says so and names the gap.
             </p>
             <p className="mt-4 text-ink/60 leading-relaxed">
-              Same rule throughout: a check that could not run says &ldquo;could not
-              verify&rdquo;, never &ldquo;passed&rdquo;.
+              It never reports a check it could not complete as one that passed. Confident
+              false reassurance is the worst thing a diagnostic tool can do, and it is the
+              exact failure that made this necessary.
             </p>
             <div className="mt-10 flex items-center gap-4">
               <Bird size={40} className="opacity-90" />

@@ -138,7 +138,7 @@ function makeBoid(THREE) {
   return Boid
 }
 
-export default function BirdsCanvas({ className = '' }) {
+export default function BirdsCanvas({ className = '', color = 0x161616 }) {
   const ref = useRef(null)
   const reduce = useReducedMotion()
 
@@ -171,7 +171,7 @@ export default function BirdsCanvas({ className = '' }) {
         boid.velocity.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1)
         boid.setAvoidWalls(true)
         boid.setWorldSize(500, 500, 400)
-        const bird = birds[i] = new THREE.Mesh(new Bird(), new THREE.MeshBasicMaterial({ color: 0x161616, side: THREE.DoubleSide }))
+        const bird = birds[i] = new THREE.Mesh(new Bird(), new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide }))
         bird.phase = Math.floor(Math.random() * 62.83)
         scene.add(bird)
       }
@@ -227,7 +227,7 @@ export default function BirdsCanvas({ className = '' }) {
         el.removeChild(renderer.domElement)
       }
     }
-  }, [reduce])
+  }, [reduce, color])
 
   return <div ref={ref} className={className} aria-hidden="true" />
 }
