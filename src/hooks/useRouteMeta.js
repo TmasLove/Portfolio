@@ -8,10 +8,12 @@ const BASE = 'https://tommyroldan.com'
 // Routes we prerender to dist/<route>/index.html. GitHub Pages serves those at
 // "/work/" and 301s "/work" → "/work/", so the canonical MUST carry the trailing
 // slash — otherwise every page declares a canonical that redirects back to itself.
-const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact'])
+const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact', '/canary'])
 
 const canonicalUrl = (pathname) =>
   BASE + (PRERENDERED.has(pathname) ? `${pathname}/` : pathname)
+
+const DEFAULT_IMAGE = `${BASE}/tr-mark.png`
 
 const META = {
   '/': {
@@ -33,6 +35,11 @@ const META = {
   '/contact': {
     title: 'Hire Tommy Roldan — Web Developer in Miami',
     desc: 'Start a project with Tommy Roldan — Miami web developer & designer. Websites, apps, e-commerce, and AI agents.',
+  },
+  '/canary': {
+    title: 'Canary - A second opinion for your PC',
+    desc: 'Free Windows diagnostic tool that finds failing drives and crash causes your vendor software calls healthy. Reads the SMART counters other tools skip.',
+    image: `${BASE}/canary/og.png`,
   },
 }
 
@@ -64,7 +71,7 @@ export function useRouteMeta() {
   useEffect(() => {
     let m = META[pathname]
     if (m) {
-      m = { title: t(`meta.${pathname}.title`, m.title), desc: t(`meta.${pathname}.desc`, m.desc) }
+      m = { title: t(`meta.${pathname}.title`, m.title), image: m.image, desc: t(`meta.${pathname}.desc`, m.desc) }
     } else if (pathname.startsWith('/work/')) {
       const key = pathname.split('/')[2]
       const p = projects.find((x) => x.key === key)
@@ -80,6 +87,10 @@ export function useRouteMeta() {
     setMeta('og:locale', (lng || 'en') === 'es' ? 'es_ES' : 'en_US', 'property')
     setMeta('twitter:title', m.title)
     setMeta('twitter:description', m.desc)
+    const img = m.image || DEFAULT_IMAGE
+    setMeta('og:image', img, 'property')
+    setMeta('twitter:image', img)
+    setMeta('twitter:card', 'summary_large_image')
     setCanonical(canonicalUrl(pathname))
   }, [pathname, lng, t])
 }
