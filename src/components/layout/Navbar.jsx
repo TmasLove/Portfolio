@@ -6,6 +6,10 @@ import LanguageSwitcher from '../ui/LanguageSwitcher'
 
 const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools', 'Tools', 'tools'], ['/contact', 'Contact', 'contact']]
 
+// Canary is a product rather than another section of the portfolio, so it sits
+// apart from LINKS with its own mark.
+const CANARY_ICON = '/canary/canary.png'
+
 // Routes whose hero is dark from the very top — nav needs light text until scrolled.
 const DARK_ROUTES = ['/contact']
 
@@ -41,7 +45,13 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
-            <span className={`${baseText} opacity-30`}>|</span>
+            <span className={`${baseText} opacity-20`}>|</span>
+            <NavLink to="/canary" className={({ isActive }) =>
+              `group flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
+              <img src={CANARY_ICON} alt="" width="18" height="18" className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+              Canary
+            </NavLink>
+            <span className={`${baseText} opacity-20`}>|</span>
             <LanguageSwitcher baseText={baseText} />
           </div>
           <div className="md:hidden flex items-center gap-3">
@@ -68,6 +78,12 @@ export default function Navbar() {
                   <Link to={to} onClick={() => setOpen(false)} className="font-display font-black text-5xl">{t(`nav.${key}`, label)}</Link>
                 </motion.div>
               ))}
+              <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * LINKS.length }}>
+                <Link to="/canary" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3">
+                  <img src={CANARY_ICON} alt="" width="46" height="46" />
+                  Canary
+                </Link>
+              </motion.div>
             </div>
             <div className="px-8 pb-10">
               <LanguageSwitcher baseText="text-cream" className="text-base" />
