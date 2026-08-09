@@ -7,7 +7,7 @@ import Reveal from '../ui/Reveal'
 import Icon from '../ui/Icon'
 import { projects } from '../../data/projects'
 
-const FEATURED_KEYS = ['clear-care-dental', 'nst-redesign', 'geo', 'cuatro-group']
+const FEATURED_KEYS = ['clear-care-dental', 'wrapme', 'build-roldan', 'world-resort-rescue', 'canary']
 const featured = FEATURED_KEYS.map((k) => projects.find((p) => p.key === k)).filter(Boolean)
 
 const spring = { type: 'spring', stiffness: 300, damping: 28 }
@@ -23,10 +23,13 @@ export default function FeaturedWork() {
 
       <div className="mt-12">
         {featured.map((p, i) => {
-          const external = Boolean(p.url)
+          // A url starting with '/' is an internal route - sending it through
+          // <a target=_blank> would open a new tab and bypass the router.
+          const internal = p.url && p.url.startsWith('/')
+          const external = Boolean(p.url) && !internal
           const linkProps = external
             ? { href: p.url, target: '_blank', rel: 'noopener noreferrer' }
-            : { to: '/work' }
+            : { to: internal ? p.url : '/work' }
           const LinkEl = external ? 'a' : Link
 
           return (
