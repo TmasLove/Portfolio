@@ -34,6 +34,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      # prerender.mjs uses puppeteer-core, which ships no browser of its own and
+      # defaults to a macOS Chrome path. The runner has Chrome preinstalled;
+      # resolve it and hand the location to the script it already looks for.
+      - name: Locate Chrome
+        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which google-chrome || which google-chrome-stable || which chromium-browser)" >> $GITHUB_ENV
+
       - name: Prerender routes
         run: npm run prerender
 

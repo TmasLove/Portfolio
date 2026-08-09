@@ -11,7 +11,7 @@ import puppeteer from 'puppeteer-core'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DIST = join(__dirname, '..', 'dist')
 const PORT = 4178
-const ROUTES = ['/', '/work', '/about', '/tools', '/contact']
+const ROUTES = ['/', '/work', '/about', '/tools', '/contact', '/canary']
 
 const CHROME =
   process.env.PUPPETEER_EXECUTABLE_PATH ||
