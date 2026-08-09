@@ -270,7 +270,7 @@ export const projects = [
       'Custom Shopify website that made GRVT designs available to the public.',
     tech: [],
     year: 2015,
-    image: '/images/gravity-cycles.png',
+    image: '/images/grvt/shopify.jpg',
     icon: null,
     url: null,
   },
