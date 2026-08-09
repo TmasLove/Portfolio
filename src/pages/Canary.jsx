@@ -41,6 +41,8 @@ const SECURITY = [
     p: 'Hosts-file entries blocking security or update domains, an unexpected proxy, Remote Desktop enabled, and remote-access tools like AnyDesk or TeamViewer running.' },
   { h: 'Accounts and logs',
     p: 'Administrator accounts you did not create, recent password changes, Defender detection history, and whether the Security log has been cleared.' },
+  { h: 'Network exposure',
+    p: 'The same surface an attacker scans first - SMBv1 / EternalBlue, exposed Remote Desktop, open ports, missing account lockout, failed-login spikes - checked from the inside, before anyone tries.' },
 ]
 const WONT = [
   { h: 'Clean your registry',
@@ -260,7 +262,7 @@ export default function Canary() {
           </Reveal>
         </div>
 
-        <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-3"
+        <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-3"
                     variants={stagger(0.08, 0.1)} {...inView}>
           {SECURITY.map((s) => (
             <motion.div key={s.h} variants={fadeUp}
