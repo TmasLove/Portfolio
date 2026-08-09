@@ -10,11 +10,13 @@ const DOWNLOAD = 'https://drive.google.com/file/d/13jyO3t6n8ksKIRr4b2UshMSnlWlsE
 const DISCORD  = 'https://discord.com/users/346119932511125515'
 
 // The bird colour is earned by the scan result, never chosen by the user.
+// Same artwork the app ships, one per state - pixel-identical geometry so the
+// row reads as one bird changing, not four different birds.
 const STATES = [
-  { c: '#4E9BE8', label: 'Not scanned' },
-  { c: '#3ECF8E', label: 'Nothing found' },
-  { c: '#F2C230', label: 'Worth a look' },
-  { c: '#FF5F56', label: 'Needs attention' },
+  { img: 'blue',   label: 'Not scanned' },
+  { img: 'green',  label: 'Nothing found' },
+  { img: 'yellow', label: 'Worth a look' },
+  { img: 'red',    label: 'Needs attention' },
 ]
 
 const FINDINGS = [
@@ -106,7 +108,7 @@ export default function Canary() {
           {STATES.map((s) => (
             <motion.div key={s.label} variants={fadeUp}
               className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-5 text-center">
-              <span className="mx-auto block h-8 w-8 rounded-full" style={{ background: s.c }} />
+              <img src={`/canary/bird-${s.img}.png`} alt="" width="56" height="56" className="mx-auto block" />
               <span className="mt-3 block text-[0.68rem] uppercase tracking-[0.1em] text-cream/50">{s.label}</span>
             </motion.div>
           ))}
