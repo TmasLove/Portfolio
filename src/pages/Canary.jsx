@@ -196,7 +196,12 @@ export default function Canary() {
             <p className="mt-6 text-lg text-ink/60 leading-relaxed max-w-xl">
               It scans for real faults — failing drives, crash patterns, driver problems —
               and turns Event Viewer codes into plain English. It tunes settings too, but
-              that is the smaller half. The answer decides whether you spend money.
+              that is the smaller half.
+            </p>
+            <p className="mt-5 text-lg text-ink/60 leading-relaxed max-w-xl">
+              It matters because hardware costs money and software does not. A failing
+              drive stalling a game load shows up as a graphics driver crash — and people
+              buy a new GPU to fix a dying SSD.
             </p>
           </Reveal>
         </div>
