@@ -338,5 +338,56 @@ export const projects = [
     icon: 'activity',
     url: '/canary',
   },
-]
+  {
+    key: 'versatile-customs',
+    title: 'Versatile Customs',
+    category: 'web',
+    badges: ['public', 'live'],
+    description:
+      'Site for a vehicle wrap shop. Showcases finished work, explains the wrap process, and routes enquiries to the shop, with a CMS so the team can add new builds without touching code.',
+    tech: ['Next.js', 'CMS'],
+    year: 2026,
+    image: '/images/shots/versatile-customs.jpg',
+    icon: 'wrench',
+    url: 'https://versatile-customs.vercel.app',
+  },
+  {
+    key: 'build-roldan',
+    title: 'Roldan Group',
+    category: 'web',
+    badges: ['public', 'live'],
+    description:
+      'Site for a family exterior construction and remodelling business, built to turn homeowner interest into booked work. Includes Pool Vision, an AI feature that lets a visitor picture the finished result on their own property, plus a CMS for the team to run it themselves.',
+    tech: ['Next.js', 'AI', 'CMS'],
+    year: 2026,
+    image: '/images/shots/build-roldan.jpg',
+    icon: 'home',
+    url: 'https://buildroldan.com',
+  },
+  {
+    key: 'world-resort-rescue',
+    title: 'World Resort Rescue',
+    category: 'web',
+    badges: ['public', 'live'],
+    description:
+      'Full redesign of a consumer-facing resort services site - rebuilt structure, clearer navigation, and a modern front end that reads properly on phones.',
+    tech: ['JavaScript', 'Responsive'],
+    year: 2026,
+    image: '/images/shots/world-resort-rescue.jpg',
+    icon: 'globe',
+    url: 'https://worldresortrescue.com',
+  },
+  {
+    key: 'alexandra-rossi',
+    title: 'Alexandra Rossi Portal',
+    category: 'web',
+    badges: ['public', 'live'],
+    description:
+      'Redesign of a client-facing portal, rebuilt around a cleaner layout and faster load so returning visitors reach what they came for in fewer steps.',
+    tech: ['React', 'Vite'],
+    year: 2026,
+    image: '/images/shots/alexandra-rossi.jpg',
+    icon: 'globe',
+    url: 'https://alexandrarossi.vercel.app/',
+  },]
 
