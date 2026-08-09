@@ -312,4 +312,31 @@ export const projects = [
     icon: null,
     url: null,
   },
+  {
+    key: 'wrapme',
+    title: 'WrapMe',
+    category: 'apps',
+    badges: ['public', 'live'],
+    description:
+      'Quoting engine for vehicle wrap shops. Specialists composite a wrap onto a customer photo with a canvas overlay - no AI, no guesswork - so the client sees the finished job before committing to a booking.',
+    tech: ['Next.js', 'Neon', 'Canvas'],
+    year: 2026,
+    image: '/images/shots/wrapme.jpg',
+    icon: 'layers',
+    url: 'https://wrapme.app',
+  },
+  {
+    key: 'canary',
+    title: 'Canary',
+    category: 'tool',
+    badges: ['public', 'live'],
+    description:
+      'Windows diagnostic tool that finds failing drives and crash causes vendor software reports as healthy. Reads the SMART counters other tools skip, explains every finding in plain English, and says "could not verify" rather than pretending a check passed.',
+    tech: ['PowerShell', 'WPF', 'WMI/CIM'],
+    year: 2026,
+    image: '/canary/og.png',
+    icon: 'activity',
+    url: '/canary',
+  },
 ]
+
