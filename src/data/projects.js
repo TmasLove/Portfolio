@@ -389,5 +389,7 @@ export const projects = [
     image: '/images/shots/alexandra-rossi.jpg',
     icon: 'globe',
     url: 'https://alexandrarossi.vercel.app/',
-  },]
+  },
+]
+
 
