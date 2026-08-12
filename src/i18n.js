@@ -52,6 +52,52 @@ const es = {
     },
     tags: { Utilities: 'Utilidades', Automation: 'Automatización' },
   },
+  faq: {
+    eyebrow: 'Preguntas',
+    heading: 'Respuestas directas a lo que más me preguntan.',
+    items: {
+      who: {
+        q: '¿Quién hace páginas web para pequeñas empresas en Miami?',
+        a: 'Soy Tommy Roldan, desarrollador y diseñador web radicado en Miami, Florida. Creo sitios web, tiendas de e-commerce, apps móviles y agentes de IA para startups y pequeñas empresas, y llevo lanzando proyectos en producción desde 2015.',
+      },
+      services: {
+        q: '¿Qué tipo de proyectos aceptas?',
+        a: 'Cuatro tipos: sitios web rápidos, tiendas de e-commerce y Shopify, apps para iOS y Android, y agentes de IA y automatización de flujos a medida. Si vive en la web o en una tienda de apps, probablemente entra.',
+      },
+      cost: {
+        q: '¿Cuánto cuesta una página web?',
+        a: 'Depende del alcance, porque un sitio de marketing, una tienda Shopify y una aplicación web a medida son proyectos muy distintos. Cuéntame lo que tienes en mente por el formulario de contacto y recibirás una respuesta clara sobre alcance y costo antes de empezar.',
+      },
+      timeline: {
+        q: '¿Cuánto tiempo toma crear una página web?',
+        a: 'El plazo depende del alcance y de qué tan rápido lleguen el contenido y los comentarios. Un sitio de marketing enfocado avanza más rápido que un e-commerce o una aplicación a medida. Comparte tu fecha límite al escribirme y te diré con honestidad si es realista.',
+      },
+      shopify: {
+        q: '¿Creas tiendas en Shopify?',
+        a: 'Sí. Construyo y personalizo tiendas Shopify, incluyendo trabajo de tema a medida, flujos de producto y checkout, y el diseño de marca alrededor. Dolce Vita Supplements es una tienda Shopify mía que está en vivo.',
+      },
+      apps: {
+        q: '¿Desarrollas apps móviles para iOS y Android?',
+        a: 'Sí, ambas desde un solo código usando React Native y Expo. Clear Care Dental es una plataforma full-stack de beneficios dentales hecha así, donde los miembros encuentran dentistas en red, controlan su plan y reservan citas desde una sola app.',
+      },
+      ai: {
+        q: '¿Qué es un agente de IA y los desarrollas?',
+        a: 'Un agente de IA es software que ejecuta trabajo de varios pasos por su cuenta en vez de solo responder una pregunta: investiga, llama APIs y actualiza tus sistemas. Sí, creo agentes a medida y automatización de flujos, incluido un agente de voz que atiende llamadas en vivo.',
+      },
+      redesign: {
+        q: '¿Puedes rediseñar o retomar un sitio web existente?',
+        a: 'Sí, los rediseños y reconstrucciones son parte habitual del trabajo. NST Pharma y World Resort Rescue fueron rediseños completos de sitios existentes, reconstruidos por estructura, velocidad y cómo se ven en el móvil.',
+      },
+      spanish: {
+        q: '¿Trabajas con clientes de habla hispana?',
+        a: 'Sí. Hablo español e inglés con fluidez, así que todo el proyecto puede llevarse en cualquiera de los dos idiomas, y este sitio está publicado en ambos. Para negocios de Miami con clientes bilingües, también puedo construir el sitio así.',
+      },
+      available: {
+        q: '¿Estás disponible para nuevos proyectos?',
+        a: 'Sí, actualmente estoy tomando nuevos proyectos. La forma más rápida de empezar es el formulario de contacto, donde puedes describir el proyecto, el tipo de desarrollo y tu rango de presupuesto.',
+      },
+    },
+  },
   footer: {
     available: 'Disponible para nuevos proyectos',
     onRepeat: 'En repetición:',

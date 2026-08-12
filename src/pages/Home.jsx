@@ -4,6 +4,7 @@ import FeaturedWork from '../components/home/FeaturedWork'
 import Stats from '../components/home/Stats'
 import AboutTeaser from '../components/home/AboutTeaser'
 import Capabilities from '../components/home/Capabilities'
+import Faq from '../components/home/Faq'
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Stats />
       <AboutTeaser />
       <Capabilities />
+      <Faq />
     </>
   )
 }
