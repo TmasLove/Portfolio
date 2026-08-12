@@ -195,14 +195,20 @@ export default function Canary() {
                 And it was not just the software
               </p>
               <p className="text-cream/75 leading-relaxed">
-                I took the machine into Micro Center. Their techs ran their own checks
-                and reached the same verdict: the drive was healthy. Then they offered
-                me an extended warranty on my own parts.
+                I took the machine into Micro Center. Their techs ran OCCT — hours of
+                stress testing across CPU, RAM, GPU and power supply — and it came back
+                clean. Same verdict: healthy. Then they offered me an extended warranty
+                on my own parts.
               </p>
               <p className="mt-4 text-cream/75 leading-relaxed">
-                I turned it down. Buying coverage on a drive I had already watched fail
-                would have turned their miss into a free NVMe at their expense. It was
-                the easy move. It was not the honest one.
+                OCCT is a good tool. It just does not test the drive. It hammers compute
+                and power hunting for instability under load; it never asks what the SSD
+                has been logging about itself. Clean result, wrong question.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                I turned the warranty down. Buying coverage on a drive I had already
+                watched fail would have turned their miss into a free NVMe at their
+                expense. It was the easy move. It was not the honest one.
               </p>
               <p className="mt-4 text-cream/75 leading-relaxed">
                 Two opinions, one machine, one verdict — and it was wrong both times.
