@@ -28,3 +28,6 @@ User-agent: Applebot-Extended
 Allow: /
 
 Sitemap: https://tommyroldan.com/sitemap.xml
+
+# Curated site map for LLMs — see https://llmstxt.org
+# https://tommyroldan.com/llms.txt
