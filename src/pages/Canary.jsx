@@ -186,6 +186,30 @@ export default function Canary() {
             </p>
           </Reveal>
 
+          {/* Second opinion. This escalates the setup before the explanation lands:
+              it was not one bad tool, it was everything reading the same flag. Kept
+              factual about what happened and aimed at the tooling, not the techs. */}
+          <Reveal>
+            <div className="mt-14 max-w-2xl">
+              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cream/35 mb-3">
+                And it was not just the software
+              </p>
+              <p className="text-cream/75 leading-relaxed">
+                I took the machine into Micro Center. Their techs ran their own checks
+                and reached the same verdict: the drive was healthy. Then they offered
+                me an extended warranty on my own parts.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                I turned it down. Buying coverage on a drive I had already watched fail
+                would have turned their miss into a free NVMe at their expense. It was
+                the easy move. It was not the honest one.
+              </p>
+              <p className="mt-4 text-cream/75 leading-relaxed">
+                Two opinions, one machine, one verdict — and it was wrong both times.
+              </p>
+            </div>
+          </Reveal>
+
           {/* The explanation. This is the part that makes the tool make sense. */}
           <Reveal>
             <div className="mt-14 border-l-2 border-cyan pl-6 sm:pl-8 max-w-2xl">
