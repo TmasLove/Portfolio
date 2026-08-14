@@ -3,6 +3,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
+import Logo, { LogoMark } from '../ui/Logo'
 
 const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools', 'Tools', 'tools'], ['/contact', 'Contact', 'contact']]
 
@@ -33,7 +34,7 @@ export default function Navbar() {
     <>
       <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${scrolled ? 'bg-cream/90 backdrop-blur border-b border-ink/10' : 'bg-transparent'}`}>
         <nav className="mx-auto max-w-content px-6 md:px-10 h-16 flex items-center justify-between">
-          <Link to="/" className={`font-display font-black text-lg tracking-tight ${baseText}`}>TR</Link>
+          <Logo dark={onDark} size={34} />
           <div className="hidden md:flex items-center gap-4">
             <ul className="flex items-center gap-1">
               {LINKS.map(([to, label, key]) => (
@@ -69,7 +70,7 @@ export default function Navbar() {
           <motion.div className="fixed inset-0 z-[60] bg-night text-cream flex flex-col"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="flex justify-between items-center px-6 h-16">
-              <span className="font-display font-black">TR</span>
+              <LogoMark dark size={32} />
               <button className="text-xs uppercase tracking-[0.1em]" onClick={() => setOpen(false)}>{t('nav.close', 'Close')}</button>
             </div>
             <div className="flex-1 flex flex-col justify-center gap-2 px-8">

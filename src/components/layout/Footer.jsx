@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { SITE } from '../../data/site'
+import Logo from '../ui/Logo'
 
 // Live Miami time — ticks every second, no API needed.
 function MiamiClock() {
@@ -140,10 +141,7 @@ export default function Footer() {
           {/* Brand + nav */}
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <Link to="/" aria-label="Home"
-                    className="font-display font-black text-2xl tracking-tight hover:text-cyan transition-colors w-fit">
-                TR
-              </Link>
+              <Logo dark size={42} />
               <RotatingTagline />
             </div>
             <nav className="flex flex-wrap gap-x-5 gap-y-2.5 text-xs font-bold uppercase tracking-[0.1em] text-cream/60">
