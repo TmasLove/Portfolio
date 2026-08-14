@@ -6,7 +6,7 @@ import Eyebrow from '../components/ui/Eyebrow'
 import Reveal from '../components/ui/Reveal'
 import { fadeUp, stagger, inView } from '../lib/motion'
 
-const DOWNLOAD = 'https://drive.google.com/file/d/13jyO3t6n8ksKIRr4b2UshMSnlWlsEJTl/view?usp=drive_link'
+const DOWNLOAD = 'https://drive.google.com/file/d/1cwvx38tHZI7k8lu-QlPx2Kx4oteWXbuz/view?usp=sharing'
 const DISCORD = 'https://discord.com/users/346119932511125515'
 
 // The bird's colour is earned by the scan result, never chosen by the user.
@@ -117,7 +117,7 @@ export default function Canary() {
               Download free
             </a>
             <span className="text-xs uppercase tracking-[0.14em] text-cream/40">
-              135&nbsp;KB · Windows 10/11 · nothing installed
+              150&nbsp;KB · Windows 10/11 · nothing installed
             </span>
           </div>
         </Reveal>
