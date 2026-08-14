@@ -12,7 +12,10 @@ const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools
 const CANARY_ICON = '/canary/canary.png'
 
 // Routes whose hero is dark from the very top — nav needs light text until scrolled.
-const DARK_ROUTES = ['/contact']
+// Routes whose hero is dark, so the transparent (unscrolled) bar needs light
+// text and the dark-ground logo. Miss one and the nav renders near-invisible -
+// dark ink on a dark hero, which is exactly what /canary did until this.
+const DARK_ROUTES = ['/contact', '/canary']
 
 export default function Navbar() {
   const { t } = useTranslation()
