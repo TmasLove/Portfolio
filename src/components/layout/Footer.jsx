@@ -115,29 +115,58 @@ const NAV = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools',
 export default function Footer() {
   const { t } = useTranslation()
   return (
-    <footer className="bg-black text-cream">
-      <div className="mx-auto max-w-content px-6 md:px-10 py-12">
-        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+    /*  The footer was pure #000 - a value that appears nowhere else in the
+        palette, whose darkest brand colour is night (#0E0E10). Every page
+        therefore ended on a hard seam where content stopped and a black slab
+        began, which reads as a rendering fault rather than a boundary.
+
+        It now descends from just above night to just below it, so on dark
+        pages the join is imperceptible and on light pages it arrives as a
+        deliberate close. A hairline fading in from both edges marks the
+        transition, instead of the colour change having to do that job.
+
+        Layout moves from two crowded columns to three, so the live
+        "currently" block - the part with any personality - stops being an
+        afterthought wedged beneath the nav.  */
+    <footer className="relative text-cream bg-gradient-to-b from-[#141519] via-[#0E0E10] to-[#0A0A0C]">
+      <div aria-hidden className="absolute inset-x-0 top-0 h-px
+                                  bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40"
+           style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(0,224,198,0.07), transparent 70%)' }} />
+
+      <div className="relative mx-auto max-w-content px-6 md:px-10 py-14 md:py-16">
+        <div className="grid gap-10 md:gap-8 md:grid-cols-3">
+
           {/* Brand + nav */}
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1">
-              <Link to="/" aria-label="Home" className="font-display font-black text-xl tracking-tight">TR</Link>
+            <div className="flex flex-col gap-1.5">
+              <Link to="/" aria-label="Home"
+                    className="font-display font-black text-2xl tracking-tight hover:text-cyan transition-colors w-fit">
+                TR
+              </Link>
               <RotatingTagline />
             </div>
-            <nav className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.1em] text-cream/70">
+            <nav className="flex flex-wrap gap-x-5 gap-y-2.5 text-xs font-bold uppercase tracking-[0.1em] text-cream/60">
               {NAV.map(([to, label, key]) => (
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{t(`nav.${key}`, label)}</Link>
               ))}
+              <Link to="/canary" className="hover:text-cyan transition-colors">Canary</Link>
               <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
+          </div>
 
-            {/* Live "currently" status */}
-            <div className="flex flex-col gap-1.5 text-xs">
+          {/* Live "currently" - its own panel, so it reads as a signal rather
+              than three stray links. */}
+          <div className="md:px-6 md:border-x md:border-white/[0.07]">
+            <p className="text-[0.6rem] font-bold uppercase tracking-[0.18em] text-cream/30 mb-3.5">
+              {t('footer.currently', 'Currently')}
+            </p>
+            <div className="flex flex-col gap-2.5 text-xs">
               <DiscordLive />
               <OnRepeat />
               <a href={SITE.socials.discordServer} target="_blank" rel="noopener"
-                 className="inline-flex items-center gap-2 text-cream/50 hover:text-cyan transition-colors">
-                <span aria-hidden="true">⊕</span>
+                 className="inline-flex items-center gap-2 text-cream/50 hover:text-cyan transition-colors w-fit">
+                <span aria-hidden="true">&#8853;</span>
                 <span>{t('footer.joinDiscord', 'Join the Discord')}</span>
               </a>
             </div>
@@ -152,13 +181,17 @@ export default function Footer() {
               </span>
               {t('footer.available', 'Available for new projects')}
             </span>
-            <Link to="/contact" className="text-sm font-bold uppercase tracking-[0.08em] text-cyan hover:underline">
+            <Link to="/contact"
+                  className="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/[0.07]
+                             px-5 py-2.5 text-sm font-bold uppercase tracking-[0.08em] text-cyan
+                             hover:bg-cyan hover:text-night transition-colors w-fit">
               {t('common.getInTouch', 'Get in touch →')}
             </Link>
             <div className="flex gap-2">
               {SOCIALS.map(([key, label]) => (
                 <a key={key} href={SITE.socials[key]} target="_blank" rel="noopener" aria-label={label}
-                   className="w-9 h-9 grid place-items-center rounded-full border border-white/15 hover:border-cyan hover:text-cyan transition-colors">
+                   className="w-9 h-9 grid place-items-center rounded-full border border-white/[0.12] text-cream/70
+                              hover:border-cyan hover:text-cyan hover:bg-cyan/[0.06] transition-colors">
                   {ICONS[key]}
                 </a>
               ))}
@@ -166,8 +199,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-cream/40">
-          <span>© {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
+        <div className="mt-12 pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-cream/35">
+          <span>&copy; {new Date().getFullYear()} {SITE.name}. {SITE.location}.</span>
           <MiamiClock />
           <a href="/privacy.html" className="hover:text-cream/70 transition-colors">{t('footer.privacy', 'Privacy')}</a>
         </div>
