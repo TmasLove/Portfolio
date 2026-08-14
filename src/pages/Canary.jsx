@@ -240,6 +240,49 @@ export default function Canary() {
         </div>
       </section>
 
+      {/* ---------- The app itself ----------
+          Placed immediately after the story, because the reader has just been
+          told what the tool found and this is the tool saying it. A real
+          screenshot rather than a render: the page argues that Canary measures
+          instead of estimating, and a stylised mock-up of a UI would quietly
+          contradict that. Machine name and user path are redacted; nothing
+          else is staged - those are real findings on a real machine. */}
+      <section className="bg-night text-cream border-b border-white/10">
+        <div className="mx-auto w-full max-w-content px-6 md:px-10 py-16 md:py-24">
+          <Reveal>
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-cream/35">
+              The app
+            </p>
+            <h2 className="mt-6 font-display font-black text-3xl sm:text-5xl leading-[1.05] max-w-2xl">
+              This is the whole thing.
+            </h2>
+            <p className="mt-5 text-lg text-cream/65 max-w-2xl leading-relaxed">
+              One window. No account, no subscription, no upsell, and nothing
+              left running when you close it.
+            </p>
+          </Reveal>
+
+          <Reveal>
+            <figure className="mt-10 md:mt-12">
+              <div className="rounded-xl overflow-hidden border border-white/10 bg-black/40
+                              shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
+                <img
+                  src="/canary/app-screenshot.png"
+                  alt="The Canary app after a scan: the bird is red, and the findings list shows an unexpected shutdown and a Samsung SSD that has consumed 23% of its spare blocks at 0% wear."
+                  width={1240} height={820} loading="lazy"
+                  className="w-full h-auto block"
+                />
+              </div>
+              <figcaption className="mt-4 text-sm text-cream/45 max-w-2xl leading-relaxed">
+                An actual scan, not a mock-up. The only thing edited out is the
+                computer name and file path. That second finding is the drive
+                described above &mdash; the one its manufacturer called Good.
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ---------- What it does — narrow column, findings do the talking ---------- */}
       <Section>
         <div className="max-w-3xl">
