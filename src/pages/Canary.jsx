@@ -1,68 +1,66 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import BirdsCanvas from '../components/home/BirdsCanvas'
-import Section from '../components/ui/Section'
-import Eyebrow from '../components/ui/Eyebrow'
 import Reveal from '../components/ui/Reveal'
 import { fadeUp, stagger, inView } from '../lib/motion'
 
+/*  Canary — product page.
+
+    Deliberately does not inherit the portfolio's design system. The rest of the
+    site is a case-study layout: long measured prose on a dark ground, read by
+    someone who already decided to look. This page has to survive a stranger
+    who arrived from a search result and will leave in four seconds.
+
+    Three rules drove the rebuild:
+
+    1. Show the thing before explaining it. The screenshot now sits directly
+       under the hero. Previously a reader met ~700 words before seeing what
+       they were downloading.
+    2. Alternate light and dark. Nine dark sections in a row read as one
+       undifferentiated wall and hid every boundary between ideas; contrast is
+       what makes a page feel navigable rather than long.
+    3. Cut prose to the load-bearing sentence. Nearly everything here was true
+       and worth saying - and unread, which makes it worth nothing. The detail
+       lives in the app and the report, where someone has already opted in.  */
+
 const DOWNLOAD = 'https://drive.google.com/file/d/1cwvx38tHZI7k8lu-QlPx2Kx4oteWXbuz/view?usp=sharing'
-const DISCORD = 'https://discord.com/users/346119932511125515'
+const DISCORD  = 'https://discord.com/users/346119932511125515'
 
-// The bird's colour is earned by the scan result, never chosen by the user.
-const STATES = [
-  { img: 'blue', label: 'Not scanned', hex: '#4E9BE8' },
-  { img: 'green', label: 'Nothing found', hex: '#3ECF8E' },
-  { img: 'yellow', label: 'Worth a look', hex: '#F2C230' },
-  { img: 'red', label: 'Needs attention', hex: '#FF5F56' },
+const INK   = '#0E1116'   // near-black ground
+const PAPER = '#F4F2ED'   // warm off-white, the contrast break
+const GOLD  = '#F2C230'
+
+// Six checks, stated as outcomes. The old page described mechanisms.
+const CHECKS = [
+  { t: 'Failing drives',
+    d: 'Reads the counters inside the drive itself — not the pass/fail badge a vendor tool shows you.' },
+  { t: 'Silent crashes',
+    d: 'Finds the freezes Windows records but never puts in Event Viewer. Most tools never look here.' },
+  { t: 'Why it boots slowly',
+    d: 'Every startup program, in plain words, with what actually happens if you turn it off.' },
+  { t: 'Signs of compromise',
+    d: 'The specific ways malware stays on a PC: hijacked sign-ins, disabled antivirus, hidden tasks.' },
+  { t: 'Your attack surface',
+    d: 'What an attacker on your network could reach — exposed Remote Desktop, SMBv1, open ports.' },
+  { t: 'Files quietly in the cloud',
+    d: 'Whether your Desktop and Documents actually live on this PC, or in OneDrive without you asking.' },
 ]
 
-const FINDINGS = [
-  { sev: 'Critical', tone: 'bg-red-500/15 text-red-400',
-    title: '252 unrecoverable media errors',
-    body: 'Reads the drive could not recover, even with its own error correction.' },
-  { sev: 'Warning', tone: 'bg-amber-400/15 text-amber-300',
-    title: '7 unexpected shutdowns — none in 20 days',
-    body: 'Downgraded because it stopped happening, and it tells you that is why.' },
-  { sev: 'Warning', tone: 'bg-amber-400/15 text-amber-300',
-    title: 'Drive health could not be verified',
-    body: 'Windows refused the query. That is a gap — not a pass.' },
-  { sev: 'Warning', tone: 'bg-amber-400/15 text-amber-300',
-    title: 'GPU reporting 8 GB of VRAM, not 24 GB',
-    body: 'Windows had the card at a third of its actual memory. Flagged, then corrected.' },
-  { sev: 'Healthy', tone: 'bg-emerald-400/15 text-emerald-300',
-    title: 'Folders stored locally',
-    body: 'Nothing silently syncing to OneDrive.' },
-]
-
-const SECURITY = [
-  { h: 'Persistence',
-    p: 'WMI event subscriptions, sign-in hijacks, launch hijacks, injected DLLs and scheduled tasks running hidden or encoded commands.' },
-  { h: 'Antivirus posture',
-    p: 'Real-time protection and tamper protection switched off, stale definitions, and scan exclusions - a favourite trick is to exclude a folder, then put the payload in it.' },
-  { h: 'Network and access',
-    p: 'Hosts-file entries blocking security or update domains, an unexpected proxy, Remote Desktop enabled, and remote-access tools like AnyDesk or TeamViewer running.' },
-  { h: 'Accounts and logs',
-    p: 'Administrator accounts you did not create, recent password changes, Defender detection history, and whether the Security log has been cleared.' },
-  { h: 'Network exposure',
-    p: 'The same surface an attacker scans first - SMBv1 / EternalBlue, exposed Remote Desktop, open ports, missing account lockout, failed-login spikes - checked from the inside, before anyone tries.' },
-]
 const WONT = [
-  { h: 'Clean your registry',
-    p: 'It is an indexed database. Unused keys cost nothing. Microsoft does not endorse cleaners, and deleting a live key breaks things weeks later.' },
-  { h: '"Free up" your RAM',
-    p: 'Unused RAM is wasted RAM. Windows caches on purpose. Emptying it makes the next few minutes slower, not faster.' },
-  { h: 'Disable services in bulk',
-    p: 'Most sit idle using no CPU. The ones that matter — Update, Defender, audio — break in ways you will never trace back.' },
-  { h: 'Promise "30% faster"',
-    p: 'A number with no methodology is marketing. Be sceptical of any figure a tool will not show its working for.' },
+  { t: 'Clean your registry',
+    d: 'Unused keys cost nothing. Deleting a live one breaks something weeks later.' },
+  { t: '“Free up” your RAM',
+    d: 'Windows caches on purpose. Emptying it makes the next few minutes slower.' },
+  { t: 'Disable services in bulk',
+    d: 'The ones that matter break in ways you will never trace back.' },
+  { t: 'Promise “30% faster”',
+    d: 'A number with no method behind it is marketing. Be sceptical of any tool that shows one.' },
 ]
 
-/* One tool glanced and stopped. The other kept counting — so the numbers climb
-   while "Good" just sits there. The whole argument, in motion. */
-function Count({ to, suffix = '', duration = 1200, delay = 0 }) {
+/* One tool glanced and stopped. The other kept counting. */
+function Count({ to, suffix = '', duration = 1100, delay = 0 }) {
   const ref = useRef(null)
-  const seen = useInView(ref, { once: true, margin: '-80px' })
+  const seen = useInView(ref, { once: true, margin: '-70px' })
   const [n, setN] = useState(0)
   useEffect(() => {
     if (!seen) return
@@ -80,456 +78,263 @@ function Count({ to, suffix = '', duration = 1200, delay = 0 }) {
   return <span ref={ref} className="tabular-nums">{n}{suffix}</span>
 }
 
-function Bird({ colour = 'canary', size = 40, className = '' }) {
-  const src = colour === 'canary' ? '/canary/canary.png' : `/canary/bird-${colour}.png`
-  return <img src={src} alt="" width={size} height={size} className={className} />
+function Download({ big = false, light = false }) {
+  return (
+    <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer"
+       className={`inline-flex items-center gap-2.5 rounded-full font-bold uppercase
+                   tracking-[0.08em] transition-transform hover:scale-[1.03] active:scale-100
+                   ${big ? 'text-base px-10 py-5' : 'text-sm px-8 py-4'}
+                   ${light ? 'bg-[#0E1116] text-[#F4F2ED]' : 'bg-[#F2C230] text-[#0E1116]'}`}>
+      Download free
+      <span aria-hidden className="text-[1.1em] leading-none">↓</span>
+    </a>
+  )
 }
 
 export default function Canary() {
   return (
-    <>
-      {/* ---------- Hero: name, claim, action. Nothing else.
-           A flock of the brand-yellow birds drifts behind it - the same boid
-           canvas the home page uses, recoloured. Purely ambient: it sits under
-           the content, ignores pointer events, and the component already bails
-           out entirely under prefers-reduced-motion. ---------- */}
-      <div className="relative isolate bg-night text-cream">
+    <div style={{ background: INK }}>
+
+      {/* ============ HERO ============ */}
+      <div className="relative isolate" style={{ background: INK }}>
         <BirdsCanvas color={0xF2C230}
-                     className="pointer-events-none absolute inset-0 z-0 opacity-[0.28]" />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-transparent via-transparent to-night" />
-      <Section dark className="pt-24 relative z-10 !bg-transparent" containerClassName="pb-10 md:pb-14">
-        <Reveal>
-          <Eyebrow dark>Windows diagnostics · free · alpha</Eyebrow>
-          <div className="flex items-end gap-4 sm:gap-7">
-            <Bird size={110}
-                  className="shrink-0 w-[64px] h-[64px] sm:w-[92px] sm:h-[92px] lg:w-[110px] lg:h-[110px] drop-shadow-[0_0_40px_rgba(242,194,48,0.28)]" />
-            <h1 className="font-display font-black text-[3.15rem] sm:text-8xl lg:text-9xl leading-[0.82] tracking-tight">
-              Canary
-            </h1>
-          </div>
-          <p className="mt-8 text-2xl sm:text-3xl text-cream/75 max-w-2xl leading-[1.25]">
-            A second opinion for your PC — for when the tool that came with your
-            hardware says everything is fine.
-          </p>
-          <div className="mt-9 sm:mt-10 flex flex-wrap items-center gap-x-5 gap-y-4">
-            <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer"
-               className="rounded-full bg-cyan text-night font-bold uppercase tracking-[0.08em] text-sm px-8 py-4 hover:opacity-90 transition-opacity">
-              Download free
-            </a>
-            <span className="text-xs uppercase tracking-[0.14em] text-cream/40">
-              150&nbsp;KB · Windows 10/11 · nothing installed
-            </span>
-          </div>
-        </Reveal>
-      </Section>
-      </div>
+                     className="pointer-events-none absolute inset-0 z-0 opacity-[0.22]" />
+        <div className="pointer-events-none absolute inset-0 z-0"
+             style={{ background: `linear-gradient(to bottom, transparent 40%, ${INK} 100%)` }} />
 
-      {/* ---------- Why this exists ----------
-          Written as a sequence, not a comparison. Two equal columns implied
-          both readings were equally valid, when the point is that one of them
-          told me nothing. Setup, turn, then the explanation that makes the
-          disagreement make sense - and every number glossed in plain words,
-          because "spare block pool" means nothing to most readers. */}
-      <section className="bg-night text-cream border-y border-white/10">
-        <div className="mx-auto w-full max-w-content px-6 md:px-10 py-16 md:py-24">
-
-          {/* Setup */}
+        <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 pt-20 pb-14 md:pt-28 md:pb-20">
           <Reveal>
-            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-cream/35">
-              Why this exists
-            </p>
-            <h2 className="mt-6 font-display font-black text-3xl sm:text-5xl leading-[1.05] max-w-3xl">
-              My SSD&apos;s own manufacturer checked the drive
-              <span className="text-cream/40"> and told me it was fine.</span>
-            </h2>
-            <div className="mt-8 inline-flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.04] px-5 py-4">
-              <span className="text-[0.62rem] uppercase tracking-[0.16em] text-cream/40">Samsung Magician</span>
-              <span className="font-display font-black text-3xl sm:text-4xl text-emerald-400 leading-none">Good</span>
+            <div className="flex items-center gap-4 sm:gap-6">
+              <img src="/canary/canary.png" alt="" width={110} height={110}
+                   className="w-14 h-14 sm:w-20 sm:h-20 lg:w-[104px] lg:h-[104px] shrink-0
+                              drop-shadow-[0_0_44px_rgba(242,194,48,0.3)]" />
+              <h1 className="font-display font-black text-[#F4F2ED] tracking-tight leading-[0.82]
+                             text-[3.4rem] sm:text-7xl lg:text-[7.5rem]">
+                Canary
+              </h1>
             </div>
-          </Reveal>
 
-          {/* Turn */}
-          <Reveal>
-            <p className="mt-14 text-xl sm:text-2xl font-semibold max-w-2xl leading-snug">
-              It was not fine. Here is what that verdict left out.
+            <p className="mt-7 sm:mt-9 font-display font-bold text-[#F4F2ED]
+                          text-[1.75rem] sm:text-4xl lg:text-[3.1rem] leading-[1.1] max-w-[19ch]">
+              Your PC is fine.<br />
+              <span style={{ color: GOLD }}>Are you sure?</span>
             </p>
-          </Reveal>
 
-          {/* The evidence, each number said twice: once as data, once in English. */}
-          <motion.div className="mt-10 grid sm:grid-cols-2 gap-x-12 gap-y-10 max-w-4xl"
-                      variants={stagger(0.12, 0.1)} {...inView}>
-            <motion.div variants={fadeUp}>
-              <p className="font-display font-black text-[3.25rem] sm:text-7xl text-red-400 leading-none">
-                <Count to={252} />
-              </p>
-              <p className="mt-3 font-semibold">unrecoverable read errors</p>
-              <p className="mt-1.5 text-cream/55 text-[0.95rem] leading-relaxed">
-                Data the drive could no longer hand back — not slow, not corrupted
-                in software. Gone.
-              </p>
-            </motion.div>
-
-            <motion.div variants={fadeUp}>
-              <p className="font-display font-black text-[3.25rem] sm:text-7xl text-red-400 leading-none">
-                <Count to={23} suffix="%" delay={380} />
-              </p>
-              <p className="mt-3 font-semibold">of its spare blocks already used</p>
-              <p className="mt-1.5 text-cream/55 text-[0.95rem] leading-relaxed">
-                Every SSD keeps replacement blocks for when parts of it fail. Nearly
-                a quarter of mine were already spent.
-              </p>
-            </motion.div>
-          </motion.div>
-
-          <Reveal>
-            <p className="mt-10 text-lg sm:text-xl text-cream/75 max-w-2xl leading-relaxed">
-              And it had done that at{' '}
-              <span className="text-cream font-semibold">zero percent wear</span> — barely
-              used. The drive was not worn out. It was breaking.
+            <p className="mt-6 text-lg sm:text-xl text-[#F4F2ED]/60 max-w-xl leading-relaxed">
+              Free Windows diagnostics that reads what your hardware actually
+              reports — and tells you plainly what it means.
             </p>
-          </Reveal>
 
-          {/* Second opinion. This escalates the setup before the explanation lands:
-              it was not one bad tool, it was everything reading the same flag. Kept
-              factual about what happened and aimed at the tooling, not the techs. */}
-          <Reveal>
-            <div className="mt-14 max-w-2xl">
-              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cream/35 mb-3">
-                And it was not just the software
-              </p>
-              <p className="text-cream/75 leading-relaxed">
-                I took the machine into Micro Center. Their techs ran OCCT — hours of
-                stress testing across CPU, RAM, GPU and power supply — and it came back
-                clean. Same verdict: healthy. Then they offered me an extended warranty
-                on my own parts.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                OCCT is a good tool. It just does not test the drive. It hammers compute
-                and power hunting for instability under load; it never asks what the SSD
-                has been logging about itself. Clean result, wrong question.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                I turned the warranty down. Buying coverage on a drive I had already
-                watched fail would have turned their miss into a free NVMe at their
-                expense. It was the easy move. It was not the honest one.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                Two opinions, one machine, one verdict — and it was wrong both times.
-              </p>
-            </div>
-          </Reveal>
-
-          {/* The explanation. This is the part that makes the tool make sense. */}
-          <Reveal>
-            <div className="mt-14 border-l-2 border-cyan pl-6 sm:pl-8 max-w-2xl">
-              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cyan mb-3">
-                So why did it say Good?
-              </p>
-              <p className="text-cream/75 leading-relaxed">
-                Because vendor tools report a pass/fail flag, and nothing had crossed
-                its threshold yet. Technically correct. Practically useless — the
-                counters underneath had been climbing for weeks, and it never mentioned
-                them.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                Canary reads those counters and tells you what they mean.
-                That is the whole idea.
-              </p>
+            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Download />
+              <span className="text-xs uppercase tracking-[0.14em] text-[#F4F2ED]/40">
+                150&nbsp;KB · Windows 10/11 · nothing installed
+              </span>
             </div>
           </Reveal>
         </div>
-      </section>
+      </div>
 
-      {/* ---------- The app itself ----------
-          Placed immediately after the story, because the reader has just been
-          told what the tool found and this is the tool saying it. A real
-          screenshot rather than a render: the page argues that Canary measures
-          instead of estimating, and a stylised mock-up of a UI would quietly
-          contradict that. Machine name and user path are redacted; nothing
-          else is staged - those are real findings on a real machine. */}
-      <section className="bg-night text-cream border-b border-white/10">
-        <div className="mx-auto w-full max-w-content px-6 md:px-10 py-16 md:py-24">
+      {/* ============ THE PRODUCT, IMMEDIATELY ============
+          Before any argument. A stranger should see what they are downloading
+          within one scroll, not after seven hundred words of preamble. */}
+      <section className="relative z-10" style={{ background: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 pb-16 md:pb-24">
           <Reveal>
-            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-cream/35">
-              The app
-            </p>
-            <h2 className="mt-6 font-display font-black text-3xl sm:text-5xl leading-[1.05] max-w-2xl">
-              This is the whole thing.
-            </h2>
-            <p className="mt-5 text-lg text-cream/65 max-w-2xl leading-relaxed">
-              One window. No account, no subscription, no upsell, and nothing
-              left running when you close it.
-            </p>
-          </Reveal>
-
-          <Reveal>
-            <figure className="mt-10 md:mt-12">
+            <figure>
               <div className="rounded-xl overflow-hidden border border-white/10 bg-black/40
-                              shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]">
-                <img
-                  src="/canary/app-screenshot.png"
-                  alt="The Canary app after a scan: the bird is red, and the findings list shows an unexpected shutdown and a Samsung SSD that has consumed 23% of its spare blocks at 0% wear."
-                  width={1240} height={820} loading="lazy"
-                  className="w-full h-auto block"
-                />
+                              shadow-[0_40px_100px_-24px_rgba(0,0,0,0.9)]">
+                <img src="/canary/app-screenshot.png"
+                     alt="The Canary app after a scan: a red bird, and findings showing an unexpected shutdown and an SSD that has used 23% of its spare blocks at 0% wear."
+                     width={1240} height={820} loading="lazy"
+                     className="w-full h-auto block" />
               </div>
-              <figcaption className="mt-4 text-sm text-cream/45 max-w-2xl leading-relaxed">
-                An actual scan, not a mock-up. The only thing edited out is the
-                computer name and file path. That second finding is the drive
-                described above &mdash; the one its manufacturer called Good.
+              <figcaption className="mt-4 text-sm text-[#F4F2ED]/40 max-w-2xl leading-relaxed">
+                A real scan on a real machine. Only the computer name is edited out.
+                One window — no account, no subscription, nothing left running when you close it.
               </figcaption>
             </figure>
           </Reveal>
         </div>
       </section>
 
-      {/* ---------- What it does — narrow column, findings do the talking ---------- */}
-      <Section>
-        <div className="max-w-3xl">
+      {/* ============ THE PROOF — light, and almost wordless ============
+          The contrast break. This is the single most persuasive thing on the
+          page, so it gets the loudest treatment and the fewest words. */}
+      <section style={{ background: PAPER, color: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
           <Reveal>
-            <Eyebrow>What it does</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95]">
-              Hardware, or software?
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] opacity-45">Why it exists</p>
+            <h2 className="mt-5 font-display font-black text-[2.1rem] sm:text-5xl lg:text-6xl
+                           leading-[1.02] max-w-[20ch]">
+              Samsung’s own tool called this drive
+              <span className="text-emerald-600"> Good</span>.
             </h2>
-            <p className="mt-6 text-lg text-ink/60 leading-relaxed max-w-xl">
-              It scans for real faults — failing drives, crash patterns, driver problems —
-              and turns Event Viewer codes into plain English. It tunes settings too, but
-              that is the smaller half.
-            </p>
-            <p className="mt-5 text-lg text-ink/60 leading-relaxed max-w-xl">
-              It matters because hardware costs money and software does not. A failing
-              drive stalling a game load shows up as a graphics driver crash — and people
-              buy a new GPU to fix a dying SSD.
+          </Reveal>
+
+          <motion.div className="mt-14 grid sm:grid-cols-2 gap-x-14 gap-y-12 max-w-4xl"
+                      variants={stagger(0.12, 0.1)} {...inView}>
+            <motion.div variants={fadeUp}>
+              <p className="font-display font-black text-6xl sm:text-8xl leading-none text-red-600">
+                <Count to={252} />
+              </p>
+              <p className="mt-3 text-lg font-bold">unrecoverable read errors</p>
+              <p className="mt-1.5 opacity-60 leading-relaxed">
+                Data the drive could no longer hand back. Not slow — gone.
+              </p>
+            </motion.div>
+            <motion.div variants={fadeUp}>
+              <p className="font-display font-black text-6xl sm:text-8xl leading-none text-red-600">
+                <Count to={23} suffix="%" delay={340} />
+              </p>
+              <p className="mt-3 text-lg font-bold">of its spare blocks used up</p>
+              <p className="mt-1.5 opacity-60 leading-relaxed">
+                At zero percent wear. The drive wasn’t worn out. It was breaking.
+              </p>
+            </motion.div>
+          </motion.div>
+
+          <Reveal>
+            <p className="mt-14 text-xl sm:text-2xl font-semibold max-w-2xl leading-snug">
+              Vendor tools report a pass/fail flag. Canary reads the counters
+              underneath it — and tells you what they mean.
             </p>
           </Reveal>
         </div>
+      </section>
 
-        <motion.div className="mt-14 grid sm:grid-cols-2 gap-3" variants={stagger(0.07, 0.1)} {...inView}>
-          {FINDINGS.map((f) => (
-            <motion.div key={f.title} variants={fadeUp}
-              className="rounded-xl border border-ink/10 bg-white/60 px-5 py-4">
-              <span className={`inline-block rounded-full px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.09em] ${f.tone}`}>
-                {f.sev}
-              </span>
-              <p className="mt-3 font-semibold text-sm leading-snug">{f.title}</p>
-              <p className="mt-1 text-sm text-ink/55 leading-snug">{f.body}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
-
-      {/* ---------- Compromise check ----------
-          This was only ever mentioned as a disclaimer further down, which gave a
-          real capability nothing but negative billing. It gets a section, and the
-          honest limit stays attached to it rather than living somewhere else. */}
-      <Section dark>
-        <div className="max-w-3xl">
+      {/* ============ WHAT IT CHECKS — scannable, six tiles ============ */}
+      <section style={{ background: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
           <Reveal>
-            <Eyebrow dark>If you think you have been hacked</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95]">
-              Before you wipe<br />the whole machine.
+            <h2 className="font-display font-black text-[#F4F2ED]
+                           text-[2.1rem] sm:text-5xl leading-[1.02] max-w-[16ch]">
+              What it looks at.
             </h2>
-            <p className="mt-6 text-lg text-cream/65 leading-relaxed max-w-2xl">
-              Reinstalling Windows costs you a day and everything not backed up. Not
-              reinstalling, when something really is on there, costs more. Canary looks
-              for the specific ways malware stays on a PC, so the decision is based on
-              something.
-            </p>
           </Reveal>
-        </div>
-
-        <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-3"
-                    variants={stagger(0.08, 0.1)} {...inView}>
-          {SECURITY.map((s) => (
-            <motion.div key={s.h} variants={fadeUp}
-                        className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-              <h3 className="font-display font-bold text-base">{s.h}</h3>
-              <p className="mt-2 text-sm text-cream/55 leading-relaxed">{s.p}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <Reveal>
-          <div className="mt-12 grid lg:grid-cols-2 gap-8 lg:gap-14">
-            <div className="border-l-2 border-red-400/70 pl-6">
-              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-red-400 mb-3">
-                What it cannot do
-              </p>
-              <p className="text-cream/75 leading-relaxed">
-                It can raise suspicion. It <strong className="text-cream">cannot</strong> tell
-                you a PC is clean. Everything it does runs as an ordinary program, and
-                anything operating at kernel level hides from all of it.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                So findings mean something. An absence of findings does not. If you have
-                real reason to think you were hacked, reinstall — and this scan should not
-                talk you out of it.
-              </p>
-            </div>
-            <div className="border-l-2 border-cyan pl-6">
-              <p className="text-[0.62rem] uppercase tracking-[0.18em] text-cyan mb-3">
-                It also tells you what to do first
-              </p>
-              <p className="text-cream/75 leading-relaxed">
-                Change your passwords <strong className="text-cream">from a different
-                device</strong>, email first. Almost everyone gets this wrong — changing
-                them on the compromised machine just hands over the new ones.
-              </p>
-              <p className="mt-4 text-cream/75 leading-relaxed">
-                Then two-factor, sign out other sessions, offline scan, back up documents
-                only, and reinstall from media made on another PC.
-              </p>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* ---------- The bird, at scale. The product's personality. ---------- */}
-      <Section dark containerClassName="py-16 md:py-20">
-        <div className="grid lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 items-center">
-          <motion.div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:flex sm:gap-7" variants={stagger(0.09, 0.1)} {...inView}>
-            {STATES.map((s) => (
-              <motion.div key={s.img} variants={fadeUp} className="text-center">
-                <img src={`/canary/bird-${s.img}.png`} alt="" width="72" height="72"
-                     className="mx-auto block w-12 h-12 sm:w-[72px] sm:h-[72px]" />
-                <span className="mt-3 block text-[0.6rem] sm:text-[0.66rem] uppercase tracking-[0.08em]"
-                      style={{ color: s.hex }}>
-                  {s.label}
-                </span>
+          <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px
+                                 bg-white/10 border border-white/10 rounded-xl overflow-hidden"
+                      variants={stagger(0.06, 0.08)} {...inView}>
+            {CHECKS.map((c) => (
+              <motion.div key={c.t} variants={fadeUp} className="p-7" style={{ background: INK }}>
+                <h3 className="font-display font-bold text-lg text-[#F4F2ED]">{c.t}</h3>
+                <p className="mt-2.5 text-[0.95rem] text-[#F4F2ED]/55 leading-relaxed">{c.d}</p>
               </motion.div>
             ))}
           </motion.div>
-          <Reveal>
-            <p className="text-xl sm:text-2xl text-cream/70 leading-snug max-w-lg">
-              The bird does not change colour because you picked a favourite.
-              It changes because it found something.
-            </p>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* ---------- What it won't do ---------- */}
-      <Section>
-        <div className="max-w-2xl">
-          <Reveal>
-            <Eyebrow>The part that matters</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-7xl leading-[0.92]">
-              What it won&apos;t do.
-            </h2>
-            <p className="mt-6 text-lg text-ink/60 leading-relaxed">
-              &ldquo;PC optimizer&rdquo; has a deserved reputation. Here is what is missing
-              on purpose — so you can judge any tool that offers it. Including this one.
-            </p>
-          </Reveal>
-        </div>
-
-        <motion.div className="mt-14 grid sm:grid-cols-2 gap-x-10 gap-y-9" variants={stagger(0.08, 0.12)} {...inView}>
-          {WONT.map((w) => (
-            <motion.div key={w.h} variants={fadeUp} className="border-t border-ink/15 pt-5">
-              <h3 className="font-display font-bold text-xl line-through decoration-red-400/70 decoration-2 decoration-from-font">
-                {w.h}
-              </h3>
-              <p className="mt-3 text-[0.94rem] text-ink/60 leading-relaxed">{w.p}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <Reveal>
-          <p className="mt-14 text-xl sm:text-2xl leading-snug max-w-3xl border-l-2 border-violet pl-7">
-            Every change says what it does and why, records the old value, and writes an
-            undo script. If a change cannot be explained in one sentence, it should not
-            ship — and you should not trust a tool that will not explain it.
-          </p>
-        </Reveal>
-      </Section>
-
-      {/* ---------- The ask ---------- */}
-      <Section dark>
-        <div className="grid lg:grid-cols-[1fr_0.85fr] gap-12 lg:gap-20">
-          <Reveal>
-            <Eyebrow dark>Why you</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.92]">
-              Tested on<br />exactly one PC.
-            </h2>
-            <p className="mt-7 text-lg text-cream/60 leading-relaxed">
-              Mine. An i9-13900K with an RX 7900 XTX — representative of nothing. Every
-              check was written against one machine&apos;s quirks. No idea what it does on
-              an NVIDIA card, an AMD CPU, a laptop, or a clean install.
-            </p>
-            <p className="mt-4 text-lg text-cream/60 leading-relaxed">
-              It caught a real failing SSD. It also threw <strong className="text-cream">two
-              false alarms</strong> I only spotted because I already knew the answer. That is
-              what other machines will shake out.
-            </p>
-          </Reveal>
 
           <Reveal>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-7">
-              <h3 className="font-display font-bold text-lg">What helps most</h3>
-              <ul className="mt-5 space-y-4 text-sm text-cream/65">
-                <li><span className="text-cyan font-bold mr-2">01</span>Tell me if a finding is <strong className="text-cream">wrong</strong>. A warning about something you know is fine is the best bug report there is.</li>
-                <li><span className="text-cyan font-bold mr-2">02</span>Tell me if a finding is <strong className="text-cream">confusing</strong>. If you cannot tell what to do, that is my fault.</li>
-                <li><span className="text-cyan font-bold mr-2">03</span>Anything that <strong className="text-cream">crashes or looks broken</strong> — especially on a laptop or an NVIDIA card.</li>
-              </ul>
-              <div className="mt-7 pt-6 border-t border-white/10 flex flex-wrap gap-3">
-                <a href={DOWNLOAD} target="_blank" rel="noopener noreferrer"
-                   className="rounded-full bg-cream text-night font-bold uppercase tracking-[0.08em] text-xs px-5 py-2.5 hover:bg-cyan transition-colors">
-                  Download
-                </a>
-                <a href={DISCORD} target="_blank" rel="noopener noreferrer"
-                   className="rounded-full border border-white/25 font-bold uppercase tracking-[0.08em] text-xs px-5 py-2.5 hover:border-cyan hover:text-cyan transition-colors">
-                  Message me on Discord
-                </a>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* ---------- Setup + the honest limit ---------- */}
-      <Section>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-          <Reveal>
-            <Eyebrow>Sixty seconds</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-5xl leading-[0.95]">
-              Nothing installed.
-            </h2>
-            <ol className="mt-7 space-y-4 text-[0.94rem] text-ink/65">
-              <li><span className="font-display font-black text-violet mr-2">01</span>Download and unzip. Right-click the ZIP → Properties → <strong>Unblock</strong> first.</li>
-              <li><span className="font-display font-black text-violet mr-2">02</span>Double-click <code className="bg-ink/8 px-1.5 py-0.5 rounded text-xs">Run Canary.bat</code>, accept the admin prompt.</li>
-              <li><span className="font-display font-black text-violet mr-2">03</span>Hit <strong>Run Scan Only</strong> — the outlined button under Optimize.</li>
-              <li><span className="font-display font-black text-violet mr-2">04</span>Read the Health tab. Tell me what looks wrong.</li>
-            </ol>
-            <p className="mt-7 text-sm text-ink/50 leading-relaxed">
-              It is a PowerShell script — nothing added to your system, nothing to
-              uninstall. Admin is needed to read drive health.{' '}
-              <strong className="text-ink/75">Scanning changes nothing.</strong>
-            </p>
-          </Reveal>
-
-          <Reveal>
-            <Eyebrow>The rule</Eyebrow>
-            <h2 className="font-display font-black text-4xl sm:text-5xl leading-[0.95]">
-              &ldquo;Could not verify&rdquo;<br />is not &ldquo;passed&rdquo;.
-            </h2>
-            <p className="mt-7 text-ink/60 leading-relaxed">
-              When a check cannot run — Windows refuses the query, the tool lacks
-              permission, the data is simply not there — Canary says so and names the gap.
-            </p>
-            <p className="mt-4 text-ink/60 leading-relaxed">
-              It never reports a check it could not complete as one that passed. Confident
-              false reassurance is the worst thing a diagnostic tool can do, and it is the
-              exact failure that made this necessary.
-            </p>
-            <div className="mt-10 flex items-center gap-4">
-              <Bird size={40} className="opacity-90" />
-              <span className="text-xs uppercase tracking-[0.14em] text-ink/40 leading-relaxed">
-                Every number measured on a real machine.<br />Not estimated.
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Download />
+              <span className="text-sm text-[#F4F2ED]/40">
+                Scanning changes nothing. Nothing is applied unless you tick it and confirm.
               </span>
             </div>
           </Reveal>
         </div>
-      </Section>
-    </>
+      </section>
+
+      {/* ============ WHAT IT WON'T DO — light again ============
+          The trust argument, and the one thing no competitor will print. */}
+      <section style={{ background: PAPER, color: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
+          <Reveal>
+            <h2 className="font-display font-black text-[2.1rem] sm:text-5xl lg:text-6xl
+                           leading-[1.02] max-w-[18ch]">
+              Four things it refuses to do.
+            </h2>
+            <p className="mt-5 text-lg opacity-60 max-w-2xl leading-relaxed">
+              Every one of these is standard in paid “PC optimizers”. All four are
+              placebo at best.
+            </p>
+          </Reveal>
+          <motion.div className="mt-12 grid sm:grid-cols-2 gap-x-12 gap-y-9 max-w-4xl"
+                      variants={stagger(0.08, 0.1)} {...inView}>
+            {WONT.map((w) => (
+              <motion.div key={w.t} variants={fadeUp} className="border-t-2 border-[#0E1116]/15 pt-5">
+                <h3 className="font-display font-bold text-lg line-through decoration-red-500/70 decoration-2">
+                  {w.t}
+                </h3>
+                <p className="mt-2 opacity-65 leading-relaxed">{w.d}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ============ COMPROMISE ============ */}
+      <section style={{ background: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+            <Reveal>
+              <p className="text-[0.68rem] uppercase tracking-[0.2em] text-[#F4F2ED]/35">
+                If you think you’ve been hacked
+              </p>
+              <h2 className="mt-5 font-display font-black text-[#F4F2ED]
+                             text-[2.1rem] sm:text-5xl leading-[1.02]">
+                Before you wipe the whole machine.
+              </h2>
+              <p className="mt-6 text-lg text-[#F4F2ED]/60 leading-relaxed">
+                Reinstalling Windows costs you a day. Not reinstalling, when
+                something really is on there, costs more. Canary looks for the
+                specific ways malware stays on a PC — so the decision is based
+                on something.
+              </p>
+            </Reveal>
+
+            <Reveal>
+              <div className="rounded-xl border border-red-400/25 bg-red-500/[0.06] p-6 sm:p-7">
+                <p className="text-[0.62rem] uppercase tracking-[0.18em] text-red-400 mb-3">
+                  And the honest limit
+                </p>
+                <p className="text-[#F4F2ED]/80 leading-relaxed">
+                  It can raise suspicion. It <strong className="text-[#F4F2ED]">cannot</strong> prove
+                  a PC is clean — anything running at kernel level hides from it.
+                </p>
+                <p className="mt-4 text-[#F4F2ED]/80 leading-relaxed">
+                  So findings mean something. An absence of findings does not.
+                  If you have real reason to think you were hacked, reinstall —
+                  and this scan should not talk you out of it.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ CLOSE ============ */}
+      <section className="relative isolate overflow-hidden" style={{ background: INK }}>
+        <div className="absolute inset-0 z-0 opacity-[0.14] pointer-events-none"
+             style={{ background: `radial-gradient(circle at 50% 120%, ${GOLD}, transparent 62%)` }} />
+        <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 py-24 md:py-32 text-center">
+          <Reveal>
+            <img src="/canary/canary.png" alt="" width={96} height={96}
+                 className="mx-auto w-16 h-16 sm:w-24 sm:h-24 drop-shadow-[0_0_50px_rgba(242,194,48,0.35)]" />
+            <h2 className="mt-8 font-display font-black text-[#F4F2ED]
+                           text-[2.3rem] sm:text-6xl leading-[1.0] max-w-[16ch] mx-auto">
+              Find out what your PC isn’t telling you.
+            </h2>
+            <p className="mt-6 text-lg text-[#F4F2ED]/55 max-w-xl mx-auto leading-relaxed">
+              Takes about a minute. Nothing is installed, and nothing keeps
+              running afterwards.
+            </p>
+            <div className="mt-10 flex flex-col items-center gap-5">
+              <Download big />
+              <p className="text-xs uppercase tracking-[0.14em] text-[#F4F2ED]/35">
+                Free · no account · alpha
+              </p>
+            </div>
+            <p className="mt-12 text-sm text-[#F4F2ED]/40">
+              Found a bug, or something it got wrong?{' '}
+              <a href={DISCORD} target="_blank" rel="noopener noreferrer"
+                 className="underline underline-offset-4 hover:text-[#F2C230] transition-colors">
+                Tell me on Discord
+              </a>
+              {' '}— especially if it warned about something you know is fine.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+    </div>
   )
 }
