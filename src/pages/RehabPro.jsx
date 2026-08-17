@@ -259,7 +259,7 @@ export default function RehabPro() {
           The whole argument for this app in one section. It goes before the
           features because it is the reason to believe them. */}
       <section style={{ background: PAPER }}>
-        <div className="mx-auto max-w-4xl px-6 md:px-10 py-20 md:py-32">
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-32">
           <Reveal>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em]" style={{ color: BLUE }}>
               Why this exists
@@ -267,7 +267,7 @@ export default function RehabPro() {
           </Reveal>
 
           <Reveal>
-            <h2 className="mt-6 font-display font-black text-[2.1rem] sm:text-5xl lg:text-6xl leading-[1.03]"
+            <h2 className="mt-6 max-w-4xl font-display font-black text-[2.1rem] sm:text-5xl lg:text-6xl leading-[1.03]"
                 style={{ color: INK }}>
               Three herniated discs,
               <span style={{ color: BLUE }}> and a sheet of exercises</span> that
@@ -275,36 +275,57 @@ export default function RehabPro() {
             </h2>
           </Reveal>
 
-          <motion.div className="mt-10 space-y-6 text-lg sm:text-xl leading-relaxed max-w-2xl"
-                      variants={stagger(0.1, 0.05)} {...inView}>
-            <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
-              I have ridden for over a decade — fixed gear through Miami traffic
-              first, then road, then years working the floor at Mack Cycle and
-              City Bikes. Then three herniated discs, an L5–S1 that went badly,
-              and about half the nerve function in my left foot.
-            </motion.p>
-            <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
-              What you get after an appointment is a printout. It is good advice,
-              written once, for the version of you sitting in that room. Some
-              mornings I could do the whole set. Most I could not — and nothing
-              on that page told me which of those was fine and which was a reason
-              to stop.
-            </motion.p>
-            <motion.p variants={fadeUp} className="font-semibold" style={{ color: INK }}>
-              So I built the thing I wanted at 6am on a bad morning: something
-              that asks how today actually is before it decides what you should do.
-            </motion.p>
-            <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
-              I am still in it. Stretching every day, walking most days — and
-              recently, back on the bike on a Wahoo Rollr. Indoors, easy, nothing
-              like it was. But it is pedalling, and for a long stretch that was
-              not on the table.
-            </motion.p>
-            <motion.p variants={fadeUp} className="font-semibold" style={{ color: INK }}>
-              That is who this is built for: anyone whose recovery is a daily job
-              rather than a finished story.
-            </motion.p>
-          </motion.div>
+          {/*  The photo carries the paragraph that used to open this section —
+               a decade of fixed-gear riding in Miami, brakeless, at speed. Prose
+               cannot establish that faster than one picture of it, so the copy
+               beside it starts at the injury instead of the résumé.  */}
+          <div className="mt-12 grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-start">
+            <Reveal>
+              <figure>
+                <div className="overflow-hidden rounded-2xl shadow-[0_30px_70px_-30px_rgba(15,27,32,0.55)]">
+                  <motion.img
+                    src="/images/grvt/hero.jpg"
+                    alt="Riding a brakeless fixed-gear bike along the water in Miami at golden hour, palm trees behind."
+                    width={1200} height={1200} loading="lazy"
+                    className="w-full h-auto block"
+                    initial={reduce ? undefined : { scale: 1.06 }}
+                    whileInView={reduce ? undefined : { scale: 1 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 1.2, ease: EASE }} />
+                </div>
+                <figcaption className="mt-3 text-sm leading-relaxed" style={{ color: `${INK}80` }}>
+                  Before. Fixed gear, no brakes, Miami — the riding this was all
+                  built on, and what the injury interrupted.
+                </figcaption>
+              </figure>
+            </Reveal>
+
+            <motion.div className="space-y-6 text-lg leading-relaxed"
+                        variants={stagger(0.1, 0.05)} {...inView}>
+              <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
+                A decade on the bike — fixed gear first, then road, then years on
+                the shop floor at Mack Cycle and City Bikes. Then three herniated
+                discs, an L5–S1 that went badly, and about half the nerve function
+                in my left foot.
+              </motion.p>
+              <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
+                What you get after an appointment is a printout — good advice,
+                written once, for the version of you sitting in that room. Some
+                mornings I could do the whole set. Most I could not, and nothing
+                on that page told me which was which.
+              </motion.p>
+              <motion.p variants={fadeUp} className="font-semibold" style={{ color: INK }}>
+                So I built the thing I wanted at 6am on a bad morning: something
+                that asks how today actually is before deciding what you should do.
+              </motion.p>
+              <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
+                I am still in it. Stretching daily, walking most days — and
+                recently back on the bike on a Wahoo Rollr. Indoors, easy, nothing
+                like it was. But it is pedalling, and for a long stretch that was
+                not on the table.
+              </motion.p>
+            </motion.div>
+          </div>
 
           <Reveal>
             <MilesPanel />
