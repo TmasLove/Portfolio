@@ -122,8 +122,12 @@ function MilesPanel() {
       </div>
 
       <p className="mt-4 text-lg text-white/60 max-w-lg leading-relaxed">
-        Five bikes, logged on Strava — more than once around the Earth
+        Five bikes, recorded on Strava — more than once around the Earth
         <span className="text-white/35"> ({EARTH_MI.toLocaleString('en-US')} mi at the equator)</span>.
+      </p>
+      <p className="mt-2 text-[0.95rem] text-white/40 max-w-lg leading-relaxed">
+        The real figure is higher. This counts only what got recorded — no
+        unlogged rides, and none of the trainer.
       </p>
 
       {/* One series, one hue, so no legend — the heading names it. */}
@@ -291,10 +295,14 @@ export default function RehabPro() {
               that asks how today actually is before it decides what you should do.
             </motion.p>
             <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
-              I am still in it. Stretching every day, walking most days, working
-              back toward the bike — because the plan is to ride again, not to
-              manage a limit. That is who this is built for: anyone whose recovery
-              is a daily job rather than a finished story.
+              I am still in it. Stretching every day, walking most days — and
+              recently, back on the bike on a Wahoo Rollr. Indoors, easy, nothing
+              like it was. But it is pedalling, and for a long stretch that was
+              not on the table.
+            </motion.p>
+            <motion.p variants={fadeUp} className="font-semibold" style={{ color: INK }}>
+              That is who this is built for: anyone whose recovery is a daily job
+              rather than a finished story.
             </motion.p>
           </motion.div>
 
