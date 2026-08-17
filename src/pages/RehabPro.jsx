@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { motion, useScroll, useSpring, useInView, useReducedMotion } from 'framer-motion'
 import Reveal from '../components/ui/Reveal'
 import { fadeUp, stagger, inView, EASE } from '../lib/motion'
 
@@ -40,6 +40,36 @@ const STEPS = [
   { n: '04', t: 'Watch it done',          d: 'A demonstration video for anything you are unsure about.' },
 ]
 
+/*  Lifetime mileage, read off Strava's gear screen (3 active + 2 retired).
+    27,639 miles total — 1.11× the Earth's equatorial circumference (24,901 mi),
+    which is the comparison that makes the number mean something.
+
+    Chart decisions, per the dataviz method: the job is magnitude, so it is bars,
+    and because the bikes are nominal (reordering them changes no meaning) every
+    bar takes the SAME hue rather than a ramp keyed to its value — colouring
+    nominal bars by magnitude spends the identity channel for nothing. One
+    series, so no legend: the heading names it. #17A899 validated against this
+    panel's #0F1B20 surface (lightness, chroma, 3:1 contrast all pass).  */
+const BIKES = [
+  { name: 'FIXED',               miles: 14099 },
+  { name: 'Supersix Evo HM Ui2', miles: 7386, retired: true },
+  { name: 'Lab71',               miles: 3832, retired: true },
+  { name: 'Team R',              miles: 2054 },
+  { name: 'Cinelli Histogram',   miles: 268 },
+]
+const TOTAL_MILES = BIKES.reduce((s, b) => s + b.miles, 0)   // 27,639
+const EARTH_MI = 24901
+
+/*  The app shows a different welcome pose each time it opens, so the page does
+    the same on each visit. pose1 is byte-identical to the App Store icon, so
+    the set is four distinct images rather than five.
+
+    Picked in a lazy useState initialiser rather than during render: the
+    prerendered HTML ships pose1, and swapping on mount keeps hydration from
+    mismatching. */
+const POSES = ['/rehabpro/pose1.png', '/rehabpro/pose2.png',
+               '/rehabpro/pose3.png', '/rehabpro/pose4.png']
+
 const LIMITS = [
   { t: 'Diagnose you',
     d: 'It does not know what is wrong with you. It works from what you tell it about pain and mobility.' },
@@ -48,6 +78,83 @@ const LIMITS = [
   { t: 'Push you through pain',
     d: 'If the screening finds symptoms that need a doctor, the plan holds to the gentlest options and says so.' },
 ]
+
+/* Counts up once, when scrolled into view. Static under reduced motion. */
+function Count({ to, duration = 1600 }) {
+  const ref = useRef(null)
+  const seen = useInView(ref, { once: true, margin: '-60px' })
+  const reduce = useReducedMotion()
+  const [n, setN] = useState(0)
+  useEffect(() => {
+    if (!seen) return
+    if (reduce) { setN(to); return }
+    let raf
+    const start = performance.now()
+    const tick = (now) => {
+      const p = Math.min((now - start) / duration, 1)
+      setN(Math.round(to * (1 - Math.pow(1 - p, 3))))
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [seen, to, duration, reduce])
+  // Proportional figures deliberately: tabular-nums makes a display-size
+  // number look loose. Tabular is for the value column below, which must align.
+  return <span ref={ref}>{n.toLocaleString('en-US')}</span>
+}
+
+/*  What the injury interrupted, as a number rather than an adjective.
+    Hero figure + one-hue bars; see the BIKES comment for the colour reasoning. */
+function MilesPanel() {
+  const reduce = useReducedMotion()
+  const max = BIKES[0].miles
+  return (
+    <div className="mt-14 rounded-3xl p-8 sm:p-10 lg:p-12" style={{ background: INK }}>
+      <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em]" style={{ color: TEAL }}>
+        What I am working back to
+      </p>
+
+      <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <span className="font-display font-black text-white leading-[0.9] text-[3.6rem] sm:text-7xl lg:text-8xl">
+          <Count to={TOTAL_MILES} />
+        </span>
+        <span className="font-display font-bold text-2xl sm:text-3xl text-white/45">miles</span>
+      </div>
+
+      <p className="mt-4 text-lg text-white/60 max-w-lg leading-relaxed">
+        Five bikes, logged on Strava — more than once around the Earth
+        <span className="text-white/35"> ({EARTH_MI.toLocaleString('en-US')} mi at the equator)</span>.
+      </p>
+
+      {/* One series, one hue, so no legend — the heading names it. */}
+      <div className="mt-9 space-y-4">
+        {BIKES.map((b, i) => (
+          <div key={b.name}>
+            <div className="flex items-baseline justify-between gap-4">
+              <p className="text-[0.95rem] text-white/75">
+                {b.name}
+                {b.retired && <span className="ml-2 text-[0.7rem] uppercase tracking-[0.12em] text-white/30">retired</span>}
+              </p>
+              <p className="text-[0.95rem] text-white/55 tabular-nums shrink-0">
+                {b.miles.toLocaleString('en-US')}
+              </p>
+            </div>
+            {/* Track + fill. Square at the baseline, 4px rounded at the data end. */}
+            <div className="mt-2 h-2.5 w-full rounded-[2px] bg-white/[0.07] overflow-hidden">
+              <motion.div
+                className="h-full rounded-r-[4px]"
+                style={{ background: TEAL }}
+                initial={{ width: reduce ? `${(b.miles / max) * 100}%` : 0 }}
+                whileInView={{ width: `${(b.miles / max) * 100}%` }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 1, ease: EASE, delay: reduce ? 0 : 0.12 * i }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 /* Thin scroll indicator. Cheap, and it makes a long page feel navigable. */
 function ScrollProgress() {
@@ -62,6 +169,7 @@ function ScrollProgress() {
 
 export default function RehabPro() {
   const reduce = useReducedMotion()
+  const [pose] = useState(() => POSES[Math.floor(Math.random() * POSES.length)])
 
   // The timeline rule draws itself down the steps as they scroll past.
   const stepsRef = useRef(null)
@@ -102,7 +210,7 @@ export default function RehabPro() {
         <motion.div className="relative z-10 mx-auto max-w-6xl px-6 md:px-10 pt-24 pb-16 md:pt-32 md:pb-24"
                     variants={stagger(0.11, 0.05)} initial="hidden" animate="visible">
           <div className="flex items-center gap-4 sm:gap-6">
-            <motion.img src="/rehabpro/icon.png" alt="" width={104} height={104}
+            <motion.img src={pose} alt="" width={104} height={104}
               className="w-16 h-16 sm:w-20 sm:h-20 lg:w-[104px] lg:h-[104px] shrink-0 rounded-[22%]
                          shadow-[0_18px_50px_-10px_rgba(0,0,0,0.55)]"
               variants={{ hidden: { opacity: 0, scale: 0.82, rotate: -6 },
@@ -189,6 +297,10 @@ export default function RehabPro() {
               is a daily job rather than a finished story.
             </motion.p>
           </motion.div>
+
+          <Reveal>
+            <MilesPanel />
+          </Reveal>
 
           {/* The signature line, set apart. */}
           <Reveal>
@@ -367,6 +479,13 @@ export default function RehabPro() {
                 app. No analytics, no advertising, no account to create, and nothing
                 collected for tracking.
               </p>
+              <a href="/rehabpro/privacy"
+                 className="mt-6 inline-flex items-center gap-1.5 text-sm font-bold uppercase
+                            tracking-[0.08em] underline underline-offset-4 transition-colors"
+                 style={{ color: TEAL }}>
+                Read the privacy policy
+                <span aria-hidden>→</span>
+              </a>
             </Reveal>
 
             <Reveal>
