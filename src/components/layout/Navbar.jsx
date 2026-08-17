@@ -15,7 +15,7 @@ const CANARY_ICON = '/canary/canary.png'
 // Routes whose hero is dark, so the transparent (unscrolled) bar needs light
 // text and the dark-ground logo. Miss one and the nav renders near-invisible -
 // dark ink on a dark hero, which is exactly what /canary did until this.
-const DARK_ROUTES = ['/contact', '/canary']
+const DARK_ROUTES = ['/contact', '/canary', '/rehabpro']
 
 export default function Navbar() {
   const { t } = useTranslation()
@@ -30,7 +30,13 @@ export default function Navbar() {
   }, [])
 
   // Light text when sitting (unscrolled) over a dark hero; dark text otherwise / once the cream bar appears.
-  const onDark = !scrolled && DARK_ROUTES.includes(pathname)
+  //
+  // The trailing slash matters: GitHub Pages serves these routes at "/canary/",
+  // so a direct load or a refresh gives a pathname the bare-string list never
+  // matched — the nav went dark-on-dark again the moment you did not arrive by
+  // client-side navigation. Normalise before comparing.
+  const routeKey = pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
+  const onDark = !scrolled && DARK_ROUTES.includes(routeKey)
   const baseText = onDark ? 'text-cream' : 'text-ink'
 
   return (

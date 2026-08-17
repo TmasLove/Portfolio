@@ -11,6 +11,7 @@ import ProjectDetail from './pages/ProjectDetail'
 import About from './pages/About'
 import Tools from './pages/Tools'
 import Canary from './pages/Canary'
+import RehabPro from './pages/RehabPro'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 import { useRouteMeta } from './hooks/useRouteMeta'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/about" element={<PageTransition><About /></PageTransition>} />
           <Route path="/tools" element={<PageTransition><Tools /></PageTransition>} />
           <Route path="/canary" element={<PageTransition><Canary /></PageTransition>} />
+          <Route path="/rehabpro" element={<PageTransition><RehabPro /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>

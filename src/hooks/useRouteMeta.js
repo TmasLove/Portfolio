@@ -8,7 +8,7 @@ const BASE = 'https://tommyroldan.com'
 // Routes we prerender to dist/<route>/index.html. GitHub Pages serves those at
 // "/work/" and 301s "/work" → "/work/", so the canonical MUST carry the trailing
 // slash — otherwise every page declares a canonical that redirects back to itself.
-const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact', '/canary'])
+const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact', '/canary', '/rehabpro'])
 
 const canonicalUrl = (pathname) =>
   BASE + (PRERENDERED.has(pathname) ? `${pathname}/` : pathname)
@@ -35,6 +35,11 @@ const META = {
   '/contact': {
     title: 'Hire Tommy Roldan — Web Developer in Miami',
     desc: 'Start a project with Tommy Roldan — Miami web developer & designer. Websites, apps, e-commerce, and AI agents.',
+  },
+  '/rehabpro': {
+    title: 'Rehab Pro — Recovery, built around you',
+    desc: 'iPhone app that builds a daily rehab plan around where it hurts, how it hurts today, and the time you have. Syncs with Apple Health to suggest recovery stretches after your workouts.',
+    image: `${BASE}/rehabpro/icon.png`,
   },
   '/canary': {
     title: 'Canary - A second opinion for your PC',
