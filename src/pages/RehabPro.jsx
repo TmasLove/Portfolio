@@ -168,8 +168,8 @@ export default function RehabPro() {
             <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
               I have ridden for over a decade — fixed gear through Miami traffic
               first, then road, then years working the floor at Mack Cycle and
-              City Bikes. Then three herniated discs took me off the bike
-              completely.
+              City Bikes. Then three herniated discs, an L5–S1 that went badly,
+              and about half the nerve function in my left foot.
             </motion.p>
             <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
               What you get after an appointment is a printout. It is good advice,
@@ -182,6 +182,12 @@ export default function RehabPro() {
               So I built the thing I wanted at 6am on a bad morning: something
               that asks how today actually is before it decides what you should do.
             </motion.p>
+            <motion.p variants={fadeUp} style={{ color: `${INK}B3` }}>
+              I am still in it. Stretching every day, walking most days, working
+              back toward the bike — because the plan is to ride again, not to
+              manage a limit. That is who this is built for: anyone whose recovery
+              is a daily job rather than a finished story.
+            </motion.p>
           </motion.div>
 
           {/* The signature line, set apart. */}
@@ -191,8 +197,13 @@ export default function RehabPro() {
               <span className="h-9 w-1 rounded-full"
                     style={{ background: `linear-gradient(${TEAL}, ${BLUE})` }} />
               <p className="text-[0.95rem] leading-snug" style={{ color: `${INK}8C` }}>
-                Built by an athlete in recovery, not a wellness brand.<br />
-                <span style={{ color: `${INK}66` }}>Tommy Roldan · Miami, FL</span>
+                Built by an athlete mid-recovery, not a wellness brand.<br />
+                <span style={{ color: `${INK}66` }}>Tommy Roldan · Miami, FL · </span>
+                <a href="https://www.strava.com/athletes/14197229" target="_blank" rel="noopener noreferrer"
+                   className="underline underline-offset-2 transition-colors hover:text-[#1E7FB8]"
+                   style={{ color: `${INK}66` }}>
+                  a decade on Strava
+                </a>
               </p>
             </div>
           </Reveal>
