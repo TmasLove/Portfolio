@@ -9,6 +9,28 @@ import { fadeUp, stagger, inView } from '../lib/motion'
 
 const TOOLS = [
   {
+    key: 'canary',
+    name: 'Canary',
+    icon: 'activity',
+    badge: 'Free',
+    url: '/canary',
+    external: false,
+    cta: 'Open Canary',
+    desc: 'Windows diagnostics that reads the counters inside your hardware rather than the pass/fail badge a vendor tool shows you. Finds failing drives and silent crashes, and explains every finding in plain English.',
+    tech: ['PowerShell', 'WPF', 'WMI/CIM', 'No install'],
+  },
+  {
+    key: 'rehabpro',
+    name: 'Rehab Pro',
+    icon: 'smartphone',
+    badge: 'Coming soon',
+    url: '/rehabpro',
+    external: false,
+    cta: 'See Rehab Pro',
+    desc: 'iPhone app that builds a daily rehab plan around where it hurts, how it hurts today, and the time you actually have. Reads Apple Health to suggest recovery stretches after a workout.',
+    tech: ['iOS', 'SwiftData', 'HealthKit', 'On-device'],
+  },
+  {
     key: 'ppt-speech',
     name: 'PowerPoint Speech Tool',
     icon: 'presentation',
@@ -40,18 +62,6 @@ const TOOLS = [
     cta: 'Launch KOM Memorial',
     desc: 'Log every King of the Mountain segment you hold. When someone steals your crown, give it the send-off it deserves — auto-generated funny obituary, days-held counter, and a shareable 1080×1080 PNG memorial card ready for Instagram. No Strava API needed.',
     tech: ['Node.js', 'Express', 'Vercel', 'No API', 'PNG Export'],
-  },
-  {
-    key: 'domain-hub',
-    name: 'Domain Hub',
-    icon: 'globe',
-    badge: 'In Progress',
-    wip: true,
-    url: 'https://domain-hub-khaki.vercel.app',
-    external: true,
-    cta: 'Preview Domain Hub',
-    desc: "Find, evaluate, and manage domain names for flipping. Auto-generate TLD combinations and score each domain's resale potential with a valuation engine, bulk-register via a simulated Namecheap checkout, and track your portfolio in one dashboard.",
-    tech: ['React', 'Vite', 'Node.js', 'Namecheap API', 'WHOIS', 'Vercel'],
   },
 ]
 

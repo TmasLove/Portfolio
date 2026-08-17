@@ -149,6 +149,7 @@ export default function Footer() {
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{t(`nav.${key}`, label)}</Link>
               ))}
               <Link to="/canary" className="hover:text-cyan transition-colors">Canary</Link>
+              <Link to="/rehabpro" className="hover:text-cyan transition-colors">Rehab Pro</Link>
               <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
           </div>

@@ -5,11 +5,16 @@ import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
 import Logo, { LogoMark } from '../ui/Logo'
 
-const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools', 'Tools', 'tools'], ['/contact', 'Contact', 'contact']]
+// Tools is deliberately absent: its entries are filtered under Work, and the
+// nav has two products to carry now. It stays linked from the footer.
+const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/contact', 'Contact', 'contact']]
 
-// Canary is a product rather than another section of the portfolio, so it sits
-// apart from LINKS with its own mark.
+// The two products sit apart from LINKS, each with its own mark. Both are the
+// real app icon rather than a drawn glyph: a hand-authored figure for Rehab Pro
+// collapsed into an unreadable blob at 18px, and the actual icon is better
+// branding anyway - people recognise the thing they are about to download.
 const CANARY_ICON = '/canary/canary.png'
+const REHAB_ICON  = '/rehabpro/icon.png'
 
 // Routes whose hero is dark from the very top — nav needs light text until scrolled.
 // Routes whose hero is dark, so the transparent (unscrolled) bar needs light
@@ -57,9 +62,14 @@ export default function Navbar() {
             </ul>
             <span className={`${baseText} opacity-20`}>|</span>
             <NavLink to="/canary" className={({ isActive }) =>
-              `group flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
+              `group flex shrink-0 items-center gap-1.5 whitespace-nowrap px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
               <img src={CANARY_ICON} alt="" width="18" height="18" className="transition-transform duration-300 group-hover:-translate-y-0.5" />
               Canary
+            </NavLink>
+            <NavLink to="/rehabpro" className={({ isActive }) =>
+              `group flex shrink-0 items-center gap-1.5 whitespace-nowrap px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
+              <img src={REHAB_ICON} alt="" width="18" height="18" className="rounded-[4px] transition-transform duration-300 group-hover:-translate-y-0.5" />
+              Rehab Pro
             </NavLink>
             <span className={`${baseText} opacity-20`}>|</span>
             <LanguageSwitcher baseText={baseText} />
@@ -92,6 +102,12 @@ export default function Navbar() {
                 <Link to="/canary" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3">
                   <img src={CANARY_ICON} alt="" width="46" height="46" />
                   Canary
+                </Link>
+              </motion.div>
+              <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * (LINKS.length + 1) }}>
+                <Link to="/rehabpro" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3 whitespace-nowrap">
+                  <img src={REHAB_ICON} alt="" width="46" height="46" className="rounded-[10px]" />
+                  Rehab Pro
                 </Link>
               </motion.div>
             </div>
