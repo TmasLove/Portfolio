@@ -83,7 +83,7 @@
         <img src="/rehabpro/icon.png" alt="">
         <h1>Privacy Policy</h1>
       </div>
-      <p class="updated">Last updated: August 16, 2026</p>
+      <p class="updated">Last updated: August 18, 2026</p>
     </div>
   </div>
 
@@ -115,8 +115,40 @@
       <h2>Profile information</h2>
       <p>
         During setup you provide a first name, pain level, mobility level, recovery
-        goal, and daily time budget. This is stored only on your device (using Apple&rsquo;s
+        goal, and daily time budget. You may also optionally add a diagnosis in your
+        own words (for example &ldquo;L5-S1 disc herniation&rdquo;), any restrictions a
+        doctor or physical therapist gave you, and which direction of movement feels
+        better to you. All of it is stored only on your device (using Apple&rsquo;s
         SwiftData framework) and is never transmitted anywhere.
+      </p>
+
+      <h2>Your records (X-rays, MRIs, documents)</h2>
+      <p>
+        Rehab Pro lets you attach your own medical files — X-ray or MRI photos, PDF
+        reports, physical therapy notes — under <strong>Settings &gt; My Records</strong>.
+        These are the most sensitive files the app touches, so to be explicit about what
+        happens to them:
+      </p>
+      <ul>
+        <li>They are saved only in the app&rsquo;s private storage on your iPhone.</li>
+        <li>They are never uploaded, sent to a server of ours, or transmitted anywhere.</li>
+        <li>
+          <strong>The app does not open, read, interpret, or analyze them.</strong>
+          Rehab Pro does not attempt to diagnose anything from an X-ray or scan, and your
+          exercise plan is not derived from these files in any way. They are stored purely
+          so you have them on hand and can show them to your doctor or physical therapist.
+        </li>
+        <li>Deleting a record in the app deletes the file from your device.</li>
+      </ul>
+
+      <h2>On-device text recognition and AI</h2>
+      <p>
+        If you choose to scan a doctor&rsquo;s note, Rehab Pro can read the printed text
+        from that photo using Apple&rsquo;s Vision framework, and can suggest which
+        restriction checkboxes match it using Apple&rsquo;s on-device Foundation Models.
+        Both run entirely on your iPhone — the image and the text are never sent to us,
+        to Apple, or to any other service. Suggestions are always shown to you for review
+        and are never applied to your plan unless you confirm them.
       </p>
 
       <h2>Video search</h2>
@@ -131,9 +163,11 @@
 
       <h2>Notifications</h2>
       <p>
-        If you allow it, the app sends a local notification after it detects a new
-        workout in Health, suggesting recovery exercises. This notification is
-        generated entirely on your device — no push notification server is involved.
+        If you allow it, Rehab Pro sends two kinds of notification: one after it detects
+        a new workout in Health, suggesting recovery exercises, and — only if you switch
+        it on in Settings — a single daily reminder at a time you choose. Both are
+        generated entirely on your device. No push notification server is involved, and
+        nothing about your activity is reported anywhere in order to send them.
       </p>
 
       <h2>What we don&rsquo;t do</h2>
