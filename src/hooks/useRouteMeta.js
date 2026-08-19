@@ -10,8 +10,18 @@ const BASE = 'https://tommyroldan.com'
 // slash — otherwise every page declares a canonical that redirects back to itself.
 const PRERENDERED = new Set(['/work', '/about', '/tools', '/contact', '/canary', '/rehabpro'])
 
-const canonicalUrl = (pathname) =>
-  BASE + (PRERENDERED.has(pathname) ? `${pathname}/` : pathname)
+const canonicalUrl = (routeKey) =>
+  BASE + (PRERENDERED.has(routeKey) ? `${routeKey}/` : routeKey)
+
+/*  GitHub Pages serves every prerendered route from a directory, so a direct
+    load or a refresh lands on "/rehabpro/" - with the slash - while every key
+    in META is written without one. The lookup missed, fell through to the
+    home-page defaults, and the moment React mounted it overwrote the correct
+    prerendered <title> and og:image with the portfolio's. Every product link
+    shared from a real URL carried the wrong title and the wrong preview image.
+    Normalise once, then use the normalised key everywhere below.  */
+const toRouteKey = (pathname) =>
+  pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
 
 const DEFAULT_IMAGE = `${BASE}/tr-mark.png`
 
@@ -74,11 +84,12 @@ export function useRouteMeta() {
   const { t, i18n } = useTranslation()
   const lng = i18n.resolvedLanguage
   useEffect(() => {
-    let m = META[pathname]
+    const routeKey = toRouteKey(pathname)
+    let m = META[routeKey]
     if (m) {
-      m = { title: t(`meta.${pathname}.title`, m.title), image: m.image, desc: t(`meta.${pathname}.desc`, m.desc) }
-    } else if (pathname.startsWith('/work/')) {
-      const key = pathname.split('/')[2]
+      m = { title: t(`meta.${routeKey}.title`, m.title), image: m.image, desc: t(`meta.${routeKey}.desc`, m.desc) }
+    } else if (routeKey.startsWith('/work/')) {
+      const key = routeKey.split('/')[2]
       const p = projects.find((x) => x.key === key)
       if (p) m = { title: `${p.title} — Tommy Roldan`, desc: t(`data.projects.${p.key}`, p.description) }
     }
@@ -88,7 +99,7 @@ export function useRouteMeta() {
     setMeta('description', m.desc)
     setMeta('og:title', m.title, 'property')
     setMeta('og:description', m.desc, 'property')
-    setMeta('og:url', canonicalUrl(pathname), 'property')
+    setMeta('og:url', canonicalUrl(routeKey), 'property')
     setMeta('og:locale', (lng || 'en') === 'es' ? 'es_ES' : 'en_US', 'property')
     setMeta('twitter:title', m.title)
     setMeta('twitter:description', m.desc)
@@ -96,6 +107,6 @@ export function useRouteMeta() {
     setMeta('og:image', img, 'property')
     setMeta('twitter:image', img)
     setMeta('twitter:card', 'summary_large_image')
-    setCanonical(canonicalUrl(pathname))
+    setCanonical(canonicalUrl(routeKey))
   }, [pathname, lng, t])
 }
