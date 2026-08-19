@@ -79,28 +79,28 @@ const LIMITS = [
     d: 'If the screening finds symptoms that need a doctor, the plan holds to the gentlest options and says so.' },
 ]
 
-/* Counts up once, when scrolled into view. Static under reduced motion. */
-function Count({ to, duration = 1600 }) {
-  const ref = useRef(null)
-  const seen = useInView(ref, { once: true, margin: '-60px' })
+/*  Counts up once its panel is in view. `start` is passed in rather than
+    observed here, so the number and the bars share a single trigger - two
+    observers on the same panel is two chances to miss. */
+function Count({ to, start, duration = 1600 }) {
   const reduce = useReducedMotion()
   const [n, setN] = useState(0)
   useEffect(() => {
-    if (!seen) return
+    if (!start) return
     if (reduce) { setN(to); return }
     let raf
-    const start = performance.now()
+    const t0 = performance.now()          // not `start`: that is the prop above
     const tick = (now) => {
-      const p = Math.min((now - start) / duration, 1)
+      const p = Math.min((now - t0) / duration, 1)
       setN(Math.round(to * (1 - Math.pow(1 - p, 3))))
       if (p < 1) raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [seen, to, duration, reduce])
+  }, [start, to, duration, reduce])
   // Proportional figures deliberately: tabular-nums makes a display-size
   // number look loose. Tabular is for the value column below, which must align.
-  return <span ref={ref}>{n.toLocaleString('en-US')}</span>
+  return <span>{n.toLocaleString('en-US')}</span>
 }
 
 /*  What the injury interrupted, as a number rather than an adjective.
@@ -108,15 +108,28 @@ function Count({ to, duration = 1600 }) {
 function MilesPanel() {
   const reduce = useReducedMotion()
   const max = BIKES[0].miles
+
+  /*  One observer for the whole panel, not one per bar.
+      Each bar used to own a whileInView with a -60px inset. On a phone the
+      panel is ~750px tall and scrolling is fast, so individual bars could miss
+      their trigger and stay at their initial value forever - which, because
+      that value was a bare 0 rather than '0%', also gave Framer a number and a
+      percentage to interpolate between. The result was a chart that rendered
+      its tracks, labels and totals but no bars at all.
+      Now: one trigger, matching units on both ends, and the bars are driven by
+      state so a missed frame cannot leave them empty.  */
+  const panelRef = useRef(null)
+  const seen = useInView(panelRef, { once: true, margin: '-15% 0px' })
+  const shown = seen || reduce
   return (
-    <div className="mt-14 rounded-3xl p-8 sm:p-10 lg:p-12" style={{ background: INK }}>
+    <div ref={panelRef} className="mt-14 rounded-3xl p-8 sm:p-10 lg:p-12" style={{ background: INK }}>
       <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em]" style={{ color: TEAL }}>
         What I am working back to
       </p>
 
       <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-display font-black text-white leading-[0.9] text-[3.6rem] sm:text-7xl lg:text-8xl">
-          <Count to={TOTAL_MILES} />
+          <Count to={TOTAL_MILES} start={shown} />
         </span>
         <span className="font-display font-bold text-2xl sm:text-3xl text-white/45">miles</span>
       </div>
@@ -148,10 +161,9 @@ function MilesPanel() {
               <motion.div
                 className="h-full rounded-r-[4px]"
                 style={{ background: TEAL }}
-                initial={{ width: reduce ? `${(b.miles / max) * 100}%` : 0 }}
-                whileInView={{ width: `${(b.miles / max) * 100}%` }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 1, ease: EASE, delay: reduce ? 0 : 0.12 * i }} />
+                initial={{ width: '0%' }}
+                animate={{ width: shown ? `${(b.miles / max) * 100}%` : '0%' }}
+                transition={{ duration: reduce ? 0 : 1, ease: EASE, delay: reduce ? 0 : 0.12 * i }} />
             </div>
           </div>
         ))}
