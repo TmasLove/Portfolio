@@ -8,7 +8,7 @@ import Logo, { LogoMark } from '../ui/Logo'
 
 // Tools is deliberately absent: its entries are filtered under Work, and the
 // nav has two products to carry now. It stays linked from the footer.
-const LINKS = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/contact', 'Contact', 'contact']]
+const LINKS = [['/work/', 'Work', 'work'], ['/about/', 'About', 'about'], ['/contact/', 'Contact', 'contact']]
 
 // The two products sit apart from LINKS, each with its own mark. Both are the
 // real app icon rather than a drawn glyph: a hand-authored figure for Rehab Pro
@@ -66,12 +66,12 @@ export default function Navbar() {
               ))}
             </ul>
             <span className={`${baseText} opacity-20`}>|</span>
-            <NavLink to="/canary" className={({ isActive }) =>
+            <NavLink to="/canary/" className={({ isActive }) =>
               `group flex shrink-0 items-center gap-1.5 whitespace-nowrap px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
               <img src={CANARY_ICON} alt="" width="18" height="18" className="transition-transform duration-300 group-hover:-translate-y-0.5" />
               Canary
             </NavLink>
-            <NavLink to="/rehabpro" className={({ isActive }) =>
+            <NavLink to="/rehabpro/" className={({ isActive }) =>
               `group flex shrink-0 items-center gap-1.5 whitespace-nowrap px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] transition-colors ${isActive ? 'text-violet' : `${baseText} hover:text-violet`}`}>
               <img src={REHAB_ICON} alt="" width="18" height="18" className="rounded-[4px] transition-transform duration-300 group-hover:-translate-y-0.5" />
               Rehab Pro
@@ -81,7 +81,7 @@ export default function Navbar() {
           </div>
           <div className="md:hidden flex items-center gap-3">
             <LanguageSwitcher baseText={baseText} />
-            <button className={`text-xs font-bold uppercase tracking-[0.1em] ${baseText}`} onClick={() => setOpen(true)}>{t('nav.menu', 'Menu')}</button>
+            <button className={`-mr-2 px-2 py-3 text-xs font-bold uppercase tracking-[0.1em] ${baseText}`} onClick={() => setOpen(true)}>{t('nav.menu', 'Menu')}</button>
           </div>
         </nav>
       </header>
@@ -104,13 +104,13 @@ export default function Navbar() {
                 </motion.div>
               ))}
               <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * LINKS.length }}>
-                <Link to="/canary" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3">
+                <Link to="/canary/" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3">
                   <img src={CANARY_ICON} alt="" width="46" height="46" />
                   Canary
                 </Link>
               </motion.div>
               <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05 * (LINKS.length + 1) }}>
-                <Link to="/rehabpro" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3 whitespace-nowrap">
+                <Link to="/rehabpro/" onClick={() => setOpen(false)} className="font-display font-black text-5xl flex items-center gap-3 whitespace-nowrap">
                   <img src={REHAB_ICON} alt="" width="46" height="46" className="rounded-[10px]" />
                   Rehab Pro
                 </Link>

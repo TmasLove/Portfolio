@@ -538,7 +538,7 @@ export default function RehabPro() {
                   Rehab Pro is built in Miami by Tommy Roldan. It is launching on the
                   App Store shortly.
                 </p>
-                <motion.a href="/contact"
+                <motion.a href="/contact/"
                   whileHover={reduce ? undefined : { scale: 1.03 }} whileTap={{ scale: 0.98 }}
                   className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm
                              font-bold uppercase tracking-[0.08em] text-white"

@@ -87,7 +87,7 @@ export default function FeaturedWork() {
       </div>
 
       <div className="mt-10">
-        <Link to="/work" className="text-cyan text-sm font-bold uppercase tracking-[0.08em]">
+        <Link to="/work/" className="text-cyan text-sm font-bold uppercase tracking-[0.08em]">
           {t('common.seeAllWork', 'See all work →')}
         </Link>
       </div>

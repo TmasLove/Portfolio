@@ -27,32 +27,39 @@ const DEFAULT_IMAGE = `${BASE}/tr-mark.png`
 
 const META = {
   '/': {
-    title: 'Tommy Roldan — Miami Web Developer & Designer',
-    desc: 'Miami web developer & designer for hire — React apps, fast websites, e-commerce, and AI agents for startups and small businesses.',
+    title: 'Miami Web Developer & Designer | Tommy Roldan',
+    ogTitle: 'I build websites, apps & AI agents for Miami businesses',
+    desc: 'Freelance Miami web developer building React websites, Shopify e-commerce, iOS apps, and AI agents for startups and small businesses. Available for hire.',
   },
   '/work': {
-    title: 'Work — Tommy Roldan',
-    desc: 'Selected projects — apps, web platforms, AI agents, and tools, plus archived early work.',
+    title: 'Web & App Projects in Miami | Tommy Roldan',
+    ogTitle: 'A decade of apps, websites, and AI agents',
+    desc: 'Portfolio of shipped work — React & Next.js websites, Shopify stores, React Native apps, and AI agents for real businesses across Miami and beyond.',
   },
   '/about': {
-    title: 'About — Tommy Roldan',
-    desc: 'Developer & creative bridging business, sales, and technology. Miami native, cyclist, builder since 2015.',
+    title: 'About Tommy Roldan — Miami Developer Since 2015',
+    ogTitle: 'Builder, rider, Miami native',
+    desc: 'Miami-based developer and designer building since 2015 — bridging product, sales, and engineering. React, React Native, Shopify, and AI, in English and Spanish.',
   },
   '/tools': {
-    title: 'Tools — Tommy Roldan',
-    desc: 'Practical utilities built to solve real problems — PPT Speech, Strava tools, and more.',
+    title: 'Free Web Tools by Tommy Roldan',
+    ogTitle: 'Free browser tools that solve real problems',
+    desc: 'Free, no-signup browser utilities — a PowerPoint reader, Strava effort tracker, and more. Built to solve real problems, running entirely in your browser.',
   },
   '/contact': {
-    title: 'Hire Tommy Roldan — Web Developer in Miami',
-    desc: 'Start a project with Tommy Roldan — Miami web developer & designer. Websites, apps, e-commerce, and AI agents.',
+    title: 'Hire a Miami Web Developer | Tommy Roldan',
+    ogTitle: "Got a project? Let's build it.",
+    desc: 'Start a website, app, e-commerce store, or AI agent with a Miami-based developer. Tell me the project and get a straight answer on scope and cost.',
   },
   '/rehabpro': {
     title: 'Rehab Pro — Recovery, built around you',
+    ogTitle: 'Rehab Pro — a recovery plan that reads how today feels',
     desc: 'iPhone app that builds a daily rehab plan around where it hurts, how it hurts today, and the time you have. Syncs with Apple Health to suggest recovery stretches after your workouts.',
     image: `${BASE}/rehabpro/icon.png`,
   },
   '/canary': {
-    title: 'Canary - A second opinion for your PC',
+    title: 'Canary — Free Windows Diagnostic Tool',
+    ogTitle: 'Canary — a second opinion for your PC',
     desc: 'Free Windows diagnostic tool that finds failing drives and crash causes your vendor software calls healthy. Reads the SMART counters other tools skip.',
     image: `${BASE}/canary/og.png`,
   },
@@ -87,7 +94,7 @@ export function useRouteMeta() {
     const routeKey = toRouteKey(pathname)
     let m = META[routeKey]
     if (m) {
-      m = { title: t(`meta.${routeKey}.title`, m.title), image: m.image, desc: t(`meta.${routeKey}.desc`, m.desc) }
+      m = { title: t(`meta.${routeKey}.title`, m.title), ogTitle: m.ogTitle, image: m.image, desc: t(`meta.${routeKey}.desc`, m.desc) }
     } else if (routeKey.startsWith('/work/')) {
       const key = routeKey.split('/')[2]
       const p = projects.find((x) => x.key === key)
@@ -96,12 +103,13 @@ export function useRouteMeta() {
     if (!m) m = { title: t('meta./.title', META['/'].title), desc: t('meta./.desc', META['/'].desc) }
 
     document.title = m.title
+    const ogTitle = m.ogTitle || m.title
     setMeta('description', m.desc)
-    setMeta('og:title', m.title, 'property')
+    setMeta('og:title', ogTitle, 'property')
     setMeta('og:description', m.desc, 'property')
     setMeta('og:url', canonicalUrl(routeKey), 'property')
     setMeta('og:locale', (lng || 'en') === 'es' ? 'es_ES' : 'en_US', 'property')
-    setMeta('twitter:title', m.title)
+    setMeta('twitter:title', ogTitle)
     setMeta('twitter:description', m.desc)
     const img = m.image || DEFAULT_IMAGE
     setMeta('og:image', img, 'property')

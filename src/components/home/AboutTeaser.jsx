@@ -40,7 +40,7 @@ export default function AboutTeaser() {
             {t('aboutTeaser.p2', "Off the keyboard, you'll find me on a bike. Cycling shaped how I work: steady output, sharp lines, and a love for the long ride.")}
           </p>
           <Link
-            to="/about"
+            to="/about/"
             className="mt-8 inline-block text-violet font-bold uppercase text-sm tracking-[0.08em]"
           >
             {t('common.moreAboutMe', 'More about me →')}

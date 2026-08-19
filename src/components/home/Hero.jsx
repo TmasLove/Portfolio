@@ -60,7 +60,7 @@ export default function Hero() {
 
         <motion.div className="mt-10" variants={fadeUp} {...inView}>
           <Link
-            to="/work"
+            to="/work/"
             className="inline-flex items-center gap-2 bg-ink text-cream px-7 py-4 rounded-full text-sm font-bold uppercase tracking-[0.08em] transition-colors hover:bg-violet"
           >
             {t('common.viewWork', 'View the work →')}

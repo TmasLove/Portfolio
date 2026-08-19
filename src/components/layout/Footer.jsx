@@ -111,7 +111,7 @@ const ICONS = {
   appleMusic: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-5v-6l5 3z"/></svg>,
 }
 const SOCIALS = [['linkedin', 'LinkedIn'], ['instagram', 'Instagram'], ['strava', 'Strava'], ['appleMusic', 'Apple Music']]
-const NAV = [['/work', 'Work', 'work'], ['/about', 'About', 'about'], ['/tools', 'Tools', 'tools'], ['/contact', 'Contact', 'contact']]
+const NAV = [['/work/', 'Work', 'work'], ['/about/', 'About', 'about'], ['/tools/', 'Tools', 'tools'], ['/contact/', 'Contact', 'contact']]
 
 export default function Footer() {
   const { t } = useTranslation()
@@ -148,8 +148,8 @@ export default function Footer() {
               {NAV.map(([to, label, key]) => (
                 <Link key={to} to={to} className="hover:text-cyan transition-colors">{t(`nav.${key}`, label)}</Link>
               ))}
-              <Link to="/canary" className="hover:text-cyan transition-colors">Canary</Link>
-              <Link to="/rehabpro" className="hover:text-cyan transition-colors">Rehab Pro</Link>
+              <Link to="/canary/" className="hover:text-cyan transition-colors">Canary</Link>
+              <Link to="/rehabpro/" className="hover:text-cyan transition-colors">Rehab Pro</Link>
               <a href="/GRVT.html" className="hover:text-cyan transition-colors">GRVT</a>
             </nav>
           </div>
@@ -180,7 +180,7 @@ export default function Footer() {
               </span>
               {t('footer.available', 'Available for new projects')}
             </span>
-            <Link to="/contact"
+            <Link to="/contact/"
                   className="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/[0.07]
                              px-5 py-2.5 text-sm font-bold uppercase tracking-[0.08em] text-cyan
                              hover:bg-cyan hover:text-night transition-colors w-fit">

@@ -13,25 +13,25 @@ const META = {
     desc: 'iOS & Android apps with React Native & Expo.',
     icon: 'smartphone',
     tags: ['React Native', 'Expo', 'iOS', 'Android'],
-    href: '/work',
+    href: '/work/',
   },
   Web: {
     desc: 'Fast websites, e-commerce & Shopify for small businesses.',
     icon: 'globe',
     tags: ['React', 'Shopify', 'E-commerce', 'SEO'],
-    href: '/work',
+    href: '/work/',
   },
   'AI Agents': {
     desc: 'Custom AI agents & workflow automation.',
     icon: 'bot',
     tags: ['AI Agents', 'Automation', 'LLMs'],
-    href: '/work',
+    href: '/work/',
   },
   Tools: {
     desc: 'Practical web tools that solve real problems.',
     icon: 'wrench',
     tags: ['Utilities', 'Web Speech', 'APIs'],
-    href: '/tools',
+    href: '/tools/',
   },
 }
 
@@ -39,7 +39,7 @@ const spring = { type: 'spring', stiffness: 300, damping: 28 }
 
 function CapabilityRow({ name, index, isLast }) {
   const { t } = useTranslation()
-  const meta = META[name] || { desc: '', icon: 'layers', tags: [], href: '/work' }
+  const meta = META[name] || { desc: '', icon: 'layers', tags: [], href: '/work/' }
   const displayName = t(`capabilities.names.${name}`, name)
   const desc = t(`capabilities.desc.${name}`, meta.desc)
   const rowRef = useRef(null)

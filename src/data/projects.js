@@ -12,7 +12,7 @@ export const projects = [
     year: 2026,
     image: '/canary/og.png',
     icon: 'activity',
-    url: '/canary',
+    url: '/canary/',
   },
   {
     key: 'wrapme',
@@ -259,7 +259,7 @@ export const projects = [
     year: 2026,
     image: '/images/shots/powerpoint-speech-tool.jpg',
     icon: 'presentation',
-    url: '/tools',
+    url: '/tools/',
   },
   {
     key: 'gravity-cycles',

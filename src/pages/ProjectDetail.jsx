@@ -33,7 +33,7 @@ export default function ProjectDetail() {
           {t('detail.notFoundBody', "We couldn't find that project.")}
         </p>
         <Link
-          to="/work"
+          to="/work/"
           className="inline-block mt-6 text-sm font-bold text-violet hover:underline"
         >
           {t('detail.allWork', '← All work')}
@@ -47,7 +47,7 @@ export default function ProjectDetail() {
   return (
     <Section className="pt-24">
       <Link
-        to="/work"
+        to="/work/"
         className="inline-block text-sm font-bold text-violet hover:underline"
       >
         {t('detail.allWork', '← All work')}

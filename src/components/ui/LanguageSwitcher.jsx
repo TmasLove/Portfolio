@@ -8,8 +8,8 @@ export default function LanguageSwitcher({ className = '', baseText = 'text-ink'
   const set = (l) => () => i18n.changeLanguage(l)
   const item = (l, label) =>
     lng === l
-      ? <span className="text-violet">{label}</span>
-      : <button type="button" onClick={set(l)} className={`${baseText} hover:text-violet transition-colors`}>{label}</button>
+      ? <span className="px-1.5 py-2 text-violet">{label}</span>
+      : <button type="button" onClick={set(l)} className={`px-1.5 py-2 ${baseText} hover:text-violet transition-colors`}>{label}</button>
 
   return (
     <div className={`inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.1em] ${className}`} aria-label={t('lang.switch', 'Change language')}>
