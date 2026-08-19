@@ -67,6 +67,32 @@ const MAC_CHECKS = [
     d: 'Publisher and Apple notarisation, reported separately. Unsigned reads as “unverified”, never as “malicious”.' },
 ]
 
+// Everything that differs between the two products. Kept as data rather than
+// scattered through the JSX so it is obvious at a glance what a platform
+// actually claims — and so a claim cannot be true on one tab and stale on the
+// other.
+const PLATFORMS = {
+  windows: {
+    label: 'Windows',
+    headline: ['Your PC is fine.', 'Are you sure?'],
+    sub: 'Free Windows diagnostics that reads what your hardware actually reports — and tells you plainly what it means.',
+    meta: '150\u00a0KB · Windows 10/11 · nothing installed',
+    checks: null,     // filled below
+    shipping: true,
+  },
+  mac: {
+    label: 'macOS',
+    headline: ['Your Mac keeps notes.', 'It never shows you.'],
+    sub: 'Every crash, hang and stalled shutdown is written to disk and surfaced nowhere. macOS gives you one word about your SSD: Verified.',
+    meta: 'Apple silicon · macOS 14+ · reads only, changes nothing',
+    checks: null,
+    shipping: false,  // no build to download yet, so no download button
+  },
+}
+
+PLATFORMS.windows.checks = CHECKS
+PLATFORMS.mac.checks = MAC_CHECKS
+
 const WONT = [
   { t: 'Clean your registry',
     d: 'Unused keys cost nothing. Deleting a live one breaks something weeks later.' },
@@ -112,7 +138,60 @@ function Download({ big = false, light = false }) {
   )
 }
 
+/// The platform switch.
+///
+/// Two products that answer the same question on machines which record
+/// completely different things. A toggle rather than two pages: the argument —
+/// read what the machine actually reports, say plainly when you could not — is
+/// identical, and splitting it across two URLs would halve the case and double
+/// the maintenance.
+/// What stands in for the download button on a platform that has no build yet.
+///
+/// A CTA that goes nowhere costs more trust than a missing one, and offering a
+/// Windows .exe under a macOS tab would be worse than either.
+function TestCTA({ big = false }) {
+  return (
+    <a href={DISCORD} target="_blank" rel="noopener noreferrer"
+       className={`inline-flex items-center gap-2.5 rounded-full border border-white/15
+                   bg-white/[0.05] font-semibold text-[#F4F2ED]/85 hover:bg-white/[0.09]
+                   transition ${big ? 'px-7 py-4 text-base' : 'px-5 py-3 text-sm'}`}>
+      <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: GOLD }} />
+      In development — ask to test it
+    </a>
+  )
+}
+
+function PlatformSwitch({ value, onChange }) {
+  return (
+    <div role="tablist" aria-label="Platform"
+         className="inline-flex items-center gap-1 p-1 rounded-full
+                    border border-white/12 bg-white/[0.04] backdrop-blur">
+      {Object.entries(PLATFORMS).map(([key, p]) => {
+        const on = key === value
+        return (
+          <button key={key} role="tab" aria-selected={on} onClick={() => onChange(key)}
+                  className={`relative px-4 sm:px-5 py-1.5 rounded-full text-sm font-semibold
+                              transition-colors duration-200
+                              ${on ? 'text-[#0E1116]' : 'text-[#F4F2ED]/55 hover:text-[#F4F2ED]/85'}`}>
+            {on && (
+              <motion.span layoutId="platform-pill" className="absolute inset-0 rounded-full"
+                           style={{ background: GOLD }}
+                           transition={{ type: 'spring', stiffness: 420, damping: 34 }} />
+            )}
+            <span className="relative z-10">{p.label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function Canary() {
+  // Windows first: it is the product that actually ships, and defaulting to the
+  // one a visitor can download respects why most of them arrived.
+  const [platform, setPlatform] = useState('windows')
+  const P = PLATFORMS[platform]
+
   return (
     <div style={{ background: INK }}>
 
@@ -135,21 +214,30 @@ export default function Canary() {
               </h1>
             </div>
 
-            <p className="mt-7 sm:mt-9 font-display font-bold text-[#F4F2ED]
-                          text-[1.75rem] sm:text-4xl lg:text-[3.1rem] leading-[1.1] max-w-[19ch]">
-              Your PC is fine.<br />
-              <span style={{ color: GOLD }}>Are you sure?</span>
-            </p>
+            <div className="mt-8">
+              <PlatformSwitch value={platform} onChange={setPlatform} />
+            </div>
 
-            <p className="mt-6 text-lg sm:text-xl text-[#F4F2ED]/60 max-w-xl leading-relaxed">
-              Free Windows diagnostics that reads what your hardware actually
-              reports — and tells you plainly what it means.
-            </p>
+            <motion.p key={platform + '-h'}
+               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+               className="mt-7 sm:mt-8 font-display font-bold text-[#F4F2ED]
+                          text-[1.75rem] sm:text-4xl lg:text-[3.1rem] leading-[1.1] max-w-[19ch]">
+              {P.headline[0]}<br />
+              <span style={{ color: GOLD }}>{P.headline[1]}</span>
+            </motion.p>
+
+            <motion.p key={platform + '-s'}
+               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+               transition={{ duration: 0.3, delay: 0.05 }}
+               className="mt-6 text-lg sm:text-xl text-[#F4F2ED]/60 max-w-xl leading-relaxed">
+              {P.sub}
+            </motion.p>
 
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Download />
+              {P.shipping ? <Download /> : <TestCTA />}
               <span className="text-xs uppercase tracking-[0.14em] text-[#F4F2ED]/40">
-                150&nbsp;KB · Windows 10/11 · nothing installed
+                {P.meta}
               </span>
             </div>
           </Reveal>
@@ -179,6 +267,13 @@ export default function Canary() {
         </div>
       </section>
 
+      {/* The proof is a Samsung SMART readout. Apple silicon hides the SSD's
+          counters behind its own storage fabric, so this evidence simply does
+          not exist on Mac — showing it under the macOS tab would be claiming a
+          capability the product does not have, which is the one thing this
+          page cannot afford to do. */}
+      {P.shipping && (
+      <>
       {/* ============ THE PROOF — light, and almost wordless ============
           The contrast break. This is the single most persuasive thing on the
           page, so it gets the loudest treatment and the fewest words. */}
@@ -224,6 +319,9 @@ export default function Canary() {
         </div>
       </section>
 
+      </>
+      )}
+
       {/* ============ WHAT IT CHECKS — scannable, six tiles ============ */}
       <section style={{ background: INK }}>
         <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
@@ -236,7 +334,7 @@ export default function Canary() {
           <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px
                                  bg-white/10 border border-white/10 rounded-xl overflow-hidden"
                       variants={stagger(0.06, 0.08)} {...inView}>
-            {CHECKS.map((c) => (
+            {P.checks.map((c) => (
               <motion.div key={c.t} variants={fadeUp} className="p-7" style={{ background: INK }}>
                 <h3 className="font-display font-bold text-lg text-[#F4F2ED]">{c.t}</h3>
                 <p className="mt-2.5 text-[0.95rem] text-[#F4F2ED]/55 leading-relaxed">{c.d}</p>
@@ -246,7 +344,7 @@ export default function Canary() {
 
           <Reveal>
             <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Download />
+              {P.shipping ? <Download /> : <TestCTA />}
               <span className="text-sm text-[#F4F2ED]/40">
                 Scanning changes nothing. Nothing is applied unless you tick it and confirm.
               </span>
@@ -283,67 +381,6 @@ export default function Canary() {
         </div>
       </section>
 
-
-      {/* ============ CANARY FOR MAC ============
-          Placed after the Windows checks, not woven through them. The two
-          products answer the same question on machines that record completely
-          different things, and blending the lists would imply feature parity
-          that does not exist. */}
-      <section style={{ background: INK }}>
-        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28
-                        border-t border-white/10">
-          <Reveal>
-            <div className="flex items-center gap-4 sm:gap-5">
-              <img src="/canary/canary-mac-icon.png" alt="" width={72} height={72}
-                   className="w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-[18px] shrink-0
-                              drop-shadow-[0_0_40px_rgba(242,194,48,0.22)]" />
-              <div>
-                <span className="text-xs uppercase tracking-[0.16em]" style={{ color: GOLD }}>
-                  In development
-                </span>
-                <h2 className="mt-1 font-display font-black text-[#F4F2ED]
-                               text-[2.1rem] sm:text-5xl leading-[1.02]">
-                  Canary for Mac.
-                </h2>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal>
-            <p className="mt-7 text-lg sm:text-xl text-[#F4F2ED]/60 max-w-2xl leading-relaxed">
-              Your Mac keeps a detailed record of its own failures — every crash,
-              hang and stalled shutdown — and shows you none of it. macOS gives you
-              one word about your SSD: <em>Verified</em>. Canary reads what is
-              actually there.
-            </p>
-          </Reveal>
-
-          <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px
-                                 bg-white/10 border border-white/10 rounded-xl overflow-hidden"
-                      variants={stagger(0.06, 0.08)} {...inView}>
-            {MAC_CHECKS.map((c) => (
-              <motion.div key={c.t} variants={fadeUp} className="p-7" style={{ background: INK }}>
-                <h3 className="font-display font-bold text-lg text-[#F4F2ED]">{c.t}</h3>
-                <p className="mt-2.5 text-[0.95rem] text-[#F4F2ED]/55 leading-relaxed">{c.d}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <Reveal>
-            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <span className="text-sm text-[#F4F2ED]/40">
-                Apple silicon · macOS 14 and later · reads only, changes nothing
-              </span>
-              <a href={DISCORD} target="_blank" rel="noopener noreferrer"
-                 className="text-sm font-semibold underline underline-offset-4
-                            decoration-white/25 hover:decoration-white/60 transition"
-                 style={{ color: GOLD }}>
-                Ask to test it
-              </a>
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
       {/* ============ COMPROMISE ============ */}
       <section style={{ background: INK }}>
@@ -402,7 +439,7 @@ export default function Canary() {
               running afterwards.
             </p>
             <div className="mt-10 flex flex-col items-center gap-5">
-              <Download big />
+              {P.shipping ? <Download big /> : <TestCTA big />}
               <p className="text-xs uppercase tracking-[0.14em] text-[#F4F2ED]/35">
                 Free · no account · alpha
               </p>
