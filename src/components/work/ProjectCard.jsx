@@ -35,23 +35,32 @@ function Badge({ kind }) {
   )
 }
 
-function CardLink({ url, projectKey, children }) {
+/*  The anchor stays a real anchor even when a click opens the spotlight.
+    onOpen only preventDefaults a plain left click, so crawlers still see the
+    href, and cmd/ctrl/middle-click still open a new tab as expected. */
+function CardLink({ url, projectKey, onOpen, children }) {
   const isExternal = typeof url === 'string' && /^https?:\/\//.test(url)
+  const intercept = (e) => {
+    if (!onOpen) return
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+    e.preventDefault()
+    onOpen()
+  }
   if (isExternal) {
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className="block h-full">
+      <a href={url} target="_blank" rel="noopener noreferrer" onClick={intercept} className="block h-full">
         {children}
       </a>
     )
   }
   return (
-    <Link to={'/work/' + projectKey} className="block h-full">
+    <Link to={'/work/' + projectKey} onClick={intercept} className="block h-full">
       {children}
     </Link>
   )
 }
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, onOpen }) {
   const { t } = useTranslation()
   const categoryLabel = t(`filter.${project.category}`, CATEGORY_LABELS[project.category] || project.category)
   const description = t(`data.projects.${project.key}`, project.description)
@@ -84,7 +93,7 @@ export default function ProjectCard({ project }) {
   }
 
   return (
-    <CardLink url={project.url} projectKey={project.key}>
+    <CardLink url={project.url} projectKey={project.key} onOpen={onOpen}>
       <motion.article {...HOVER} className={CARD}>
         {project.image ? (
           <div className="aspect-[16/9] overflow-hidden border-b border-white/10">

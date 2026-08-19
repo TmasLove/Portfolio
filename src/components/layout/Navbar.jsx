@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
+import { subscribeDarkHero, getDarkHero, getDarkHeroServer } from '../../lib/darkHero'
 import Logo, { LogoMark } from '../ui/Logo'
 
 // Tools is deliberately absent: its entries are filtered under Work, and the
@@ -40,8 +41,12 @@ export default function Navbar() {
   // so a direct load or a refresh gives a pathname the bare-string list never
   // matched — the nav went dark-on-dark again the moment you did not arrive by
   // client-side navigation. Normalise before comparing.
+  // Some heroes are conditional (the /work corridor plays once per session), so
+  // a component can declare one at runtime instead of being listed by route.
+  const heroDark = useSyncExternalStore(subscribeDarkHero, getDarkHero, getDarkHeroServer)
+
   const routeKey = pathname === '/' ? '/' : pathname.replace(/\/+$/, '')
-  const onDark = !scrolled && DARK_ROUTES.includes(routeKey)
+  const onDark = !scrolled && (DARK_ROUTES.includes(routeKey) || heroDark)
   const baseText = onDark ? 'text-cream' : 'text-ink'
 
   return (

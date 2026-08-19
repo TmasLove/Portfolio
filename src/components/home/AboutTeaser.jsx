@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import Section from '../ui/Section'
 import Eyebrow from '../ui/Eyebrow'
 import Reveal from '../ui/Reveal'
+import Tilt from '../ui/Tilt'
 import { EASE } from '../../lib/motion'
 
 export default function AboutTeaser() {
@@ -18,11 +19,13 @@ export default function AboutTeaser() {
           viewport={{ once: true }}
           transition={{ duration: 0.9, ease: EASE }}
         >
-          <img
-            src="/images/tomcat.jpeg"
-            alt="Tommy Roldan"
-            className="aspect-[4/5] object-cover w-full rounded-sm"
-          />
+          <Tilt className="group" max={7} scale={1.03}>
+            <img
+              src="/images/tomcat.jpeg"
+              alt="Tommy Roldan"
+              className="aspect-[4/5] object-cover w-full rounded-sm"
+            />
+          </Tilt>
         </motion.div>
 
         <Reveal>
