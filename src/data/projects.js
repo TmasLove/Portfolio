@@ -78,6 +78,7 @@ export const projects = [
     image: null,
     icon: 'building',
     url: 'https://portal.worldresortrescue.com',
+    nofollow: true,
   },
   {
     key: 'alexandra-rossi',

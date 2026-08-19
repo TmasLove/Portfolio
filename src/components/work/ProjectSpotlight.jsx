@@ -129,7 +129,8 @@ export default function ProjectSpotlight({ project, onClose, onOpenProject }) {
               route rather than leaving the site. */}
           {project.url && (
             external ? (
-              <a href={project.url} target="_blank" rel="noopener noreferrer"
+              <a href={project.url} target="_blank"
+                 rel={project.nofollow ? 'noopener noreferrer nofollow' : 'noopener noreferrer'}
                  className={CTA}>{t('detail.visitLive', 'Visit live →')}</a>
             ) : (
               <Link to={project.url} className={CTA}>
