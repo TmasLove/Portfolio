@@ -30,7 +30,7 @@ export const projects = [
   {
     key: 'versatile-customs',
     title: 'Versatile Customs',
-    category: 'web',
+    category: 'apps',
     badges: ['private', 'live'],
     description:
       'Storefront for a vehicle wrap studio, built around the 3D visualizer I developed for the shop. Customers design a wrap in the browser, browse films and services, and book the job or check out - PPF, colour-change wraps, ceramic tint and lighting all in one flow.',
@@ -43,7 +43,7 @@ export const projects = [
   {
     key: 'build-roldan',
     title: 'Roldan Group',
-    category: 'web',
+    category: 'apps',
     badges: ['public', 'live'],
     description:
       'Site for a family exterior construction and remodelling business, built to turn homeowner interest into booked work. Includes Pool Vision, an AI feature that lets a visitor picture the finished result on their own property, plus a CMS for the team to run it themselves.',
@@ -69,11 +69,11 @@ export const projects = [
   {
     key: 'alexandra-rossi',
     title: 'Alexandra Rossi Portal',
-    category: 'web',
+    category: 'apps',
     badges: ['public', 'live'],
     description:
       'Redesign of a client-facing portal, rebuilt around a cleaner layout and faster load so returning visitors reach what they came for in fewer steps.',
-    tech: ['React', 'Vite'],
+    tech: ['Next.js', 'React'],
     year: 2026,
     image: '/images/shots/alexandra-rossi.jpg',
     icon: 'globe',
@@ -95,7 +95,7 @@ export const projects = [
   {
     key: 'cleancare-enterprise',
     title: "Clear Care Dental's Enterprise Website",
-    category: 'web',
+    category: 'apps',
     badges: ['public', 'live'],
     description:
       'Enterprise dashboard powering the Clear Care platform. Handles benefits administration, member management, and practice operations at scale through a fast, data-dense React interface.',
@@ -108,7 +108,7 @@ export const projects = [
   {
     key: 'cleancare-marketing',
     title: "Clear Care Dental Group's Website",
-    category: 'web',
+    category: 'apps',
     badges: ['private', 'live'],
     description:
       'Conversion-focused marketing site for the Clear Care Dental group. Tells the brand story, breaks down plan options, and funnels visitors smoothly into member sign-up.',
@@ -160,7 +160,7 @@ export const projects = [
   {
     key: 'nst-redesign',
     title: 'NST Redesign',
-    category: 'web',
+    category: 'apps',
     badges: ['private', 'live'],
     description:
       'Ground-up redesign of the NST Pharma site, built in React + Vite with Tailwind. Home of the product card system that inspired this very page.',
@@ -186,11 +186,11 @@ export const projects = [
   {
     key: 'cuatro-group',
     title: 'Cuatro Group',
-    category: 'web',
+    category: 'apps',
     badges: ['private', 'live'],
     description:
       'Multilingual corporate site for Cuatro Group. Clean, fast, and fully internationalized — built to present the company to a global, multi-language audience.',
-    tech: ['TypeScript', 'i18n'],
+    tech: ['Next.js', 'TypeScript', 'i18n'],
     year: 2026,
     image: '/images/shots/cuatro-group.jpg',
     icon: 'globe',
@@ -225,11 +225,11 @@ export const projects = [
   {
     key: 'la-dolce-vita-casa',
     title: 'La Dolce Vita Casa',
-    category: 'web',
+    category: 'apps',
     badges: ['private', 'live'],
     description:
       'Italian-inspired home and lifestyle brand site. Warm, editorial, and product-forward — designed to make browsing the collection feel like flipping through a design magazine.',
-    tech: ['TypeScript'],
+    tech: ['Next.js', 'TypeScript'],
     year: 2026,
     image: '/images/shots/la-dolce-vita-casa.jpg',
     icon: 'home',

@@ -170,6 +170,7 @@ const es = {
     notFoundBody: 'No pudimos encontrar ese proyecto.',
     allWork: '← Todo el trabajo',
     visitLive: 'Visitar sitio →',
+    related: 'Más en {{category}}',
   },
   story: {
     eyebrow: 'Historia de origen',

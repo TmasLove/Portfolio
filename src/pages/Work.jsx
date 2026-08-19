@@ -96,7 +96,7 @@ export default function Work() {
       )}
 
       <AnimatePresence>
-        {open && <ProjectSpotlight key={open.key} project={open} onClose={() => setOpen(null)} />}
+        {open && <ProjectSpotlight key={open.key} project={open} onClose={() => setOpen(null)} onOpenProject={setOpen} />}
       </AnimatePresence>
     </Section>
     </div>

@@ -6,6 +6,19 @@ import { useTranslation } from 'react-i18next'
 import Icon from '../ui/Icon'
 import { EASE } from '../../lib/motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { projects } from '../../data/projects'
+
+/*  Sibling work in the same category - keeps a reader moving laterally
+    through the portfolio rather than bouncing after one project. Live,
+    linkable projects surface first; capped at three so the panel stays a
+    project view, not an index. */
+function relatedTo(project) {
+  const scored = projects.filter(
+    (p) => p.key !== project.key && p.category === project.category,
+  )
+  const rank = (p) => (p.badges?.includes('live') ? 0 : 1) + (p.url ? 0 : 1)
+  return scored.sort((a, b) => rank(a) - rank(b)).slice(0, 3)
+}
 
 /*  The 3D "open" for a project.
 
@@ -22,7 +35,7 @@ const CTA = `mt-8 inline-flex items-center gap-2 rounded-full bg-cream px-7 py-3
              text-sm font-bold uppercase tracking-[0.08em] text-night
              transition-colors hover:bg-violet hover:text-white`
 
-export default function ProjectSpotlight({ project, onClose }) {
+export default function ProjectSpotlight({ project, onClose, onOpenProject }) {
   const { t } = useTranslation()
   const reduce = useReducedMotion()
 
@@ -41,7 +54,9 @@ export default function ProjectSpotlight({ project, onClose }) {
   if (!project) return null
   const external = typeof project.url === 'string' && /^https?:\/\//.test(project.url)
   const desc = t(`data.projects.${project.key}`, project.description)
-  const category = t(`filter.${project.category}`, project.category)
+  const CAT_LABELS = { all: 'All', apps: 'Apps', web: 'Web', ai: 'AI / Agents', tool: 'Tools', archived: 'Archived' }
+  const category = t(`filter.${project.category}`, CAT_LABELS[project.category] || project.category)
+  const related = relatedTo(project)
 
   /*  Rendered into <body>.
 
@@ -121,6 +136,40 @@ export default function ProjectSpotlight({ project, onClose }) {
                 {t('common.view', 'View →')}
               </Link>
             )
+          )}
+
+          {/*  Lateral links into sibling work. These swap the open project in
+               place rather than navigating, so the panel stays put and the
+               reader keeps browsing the same category.  */}
+          {related.length > 0 && onOpenProject && (
+            <div className="mt-10 border-t border-white/10 pt-6">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-cream/40">
+                {t('detail.related', 'More in {{category}}', { category })}
+              </p>
+              <ul className="mt-4 flex flex-col gap-1.5">
+                {related.map((r) => (
+                  <li key={r.key}>
+                    <button
+                      onClick={() => onOpenProject(r)}
+                      className="group flex w-full items-center gap-3 rounded-lg border border-white/10 bg-night/40 px-3.5 py-3 text-left transition-colors hover:border-white/25 hover:bg-night/70"
+                    >
+                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-violet/90 text-white">
+                        <Icon name={r.icon || 'layers'} className="h-4 w-4" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-bold text-sm text-cream group-hover:text-white">
+                          {r.title}
+                        </span>
+                        <span className="block truncate text-xs text-cream/45">
+                          {(r.tech || []).slice(0, 3).join(' · ')}
+                        </span>
+                      </span>
+                      <span className="shrink-0 text-cream/30 transition-colors group-hover:text-violet" aria-hidden="true">→</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       </motion.article>
