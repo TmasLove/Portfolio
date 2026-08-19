@@ -46,6 +46,27 @@ const CHECKS = [
     d: 'Whether your Desktop and Documents actually live on this PC, or in OneDrive without you asking.' },
 ]
 
+// Canary for Mac. Deliberately NOT a translation of the Windows list: the
+// interesting data is somewhere else entirely. Apple silicon hides SMART behind
+// its own storage fabric, so "read the drive's own counters" — the Windows
+// headline — is not available and pretending otherwise would be the exact
+// dishonesty this tool exists to avoid. What macOS does keep is a detailed
+// record of its own failures that nothing in the interface ever shows you.
+const MAC_CHECKS = [
+  { t: 'Why is this running?',
+    d: 'Forty-one processes called “Google Chrome” is normal. Whether all forty-one are the same signed binary is the check that actually matters.' },
+  { t: 'The diary macOS keeps',
+    d: 'Every crash, hang and failed shutdown is written to disk and shown to nobody. Canary reads it and names the function that failed.' },
+  { t: 'What starts by itself',
+    d: 'Launch agents and daemons — the only durable way for software to keep coming back after you close it.' },
+  { t: 'Why memory feels tight',
+    d: 'macOS reports memory it has already compressed or moved to disk as “free”, so the number looks best exactly when the machine is working hardest.' },
+  { t: 'Why the fans are up',
+    d: 'Sustained load against your actual core count, and whether macOS ever had to slow the machine down to cool it.' },
+  { t: 'Who signed it',
+    d: 'Publisher and Apple notarisation, reported separately. Unsigned reads as “unverified”, never as “malicious”.' },
+]
+
 const WONT = [
   { t: 'Clean your registry',
     d: 'Unused keys cost nothing. Deleting a live one breaks something weeks later.' },
@@ -259,6 +280,68 @@ export default function Canary() {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+
+      {/* ============ CANARY FOR MAC ============
+          Placed after the Windows checks, not woven through them. The two
+          products answer the same question on machines that record completely
+          different things, and blending the lists would imply feature parity
+          that does not exist. */}
+      <section style={{ background: INK }}>
+        <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28
+                        border-t border-white/10">
+          <Reveal>
+            <div className="flex items-center gap-4 sm:gap-5">
+              <img src="/canary/canary-mac-icon.png" alt="" width={72} height={72}
+                   className="w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-[18px] shrink-0
+                              drop-shadow-[0_0_40px_rgba(242,194,48,0.22)]" />
+              <div>
+                <span className="text-xs uppercase tracking-[0.16em]" style={{ color: GOLD }}>
+                  In development
+                </span>
+                <h2 className="mt-1 font-display font-black text-[#F4F2ED]
+                               text-[2.1rem] sm:text-5xl leading-[1.02]">
+                  Canary for Mac.
+                </h2>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <p className="mt-7 text-lg sm:text-xl text-[#F4F2ED]/60 max-w-2xl leading-relaxed">
+              Your Mac keeps a detailed record of its own failures — every crash,
+              hang and stalled shutdown — and shows you none of it. macOS gives you
+              one word about your SSD: <em>Verified</em>. Canary reads what is
+              actually there.
+            </p>
+          </Reveal>
+
+          <motion.div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-px
+                                 bg-white/10 border border-white/10 rounded-xl overflow-hidden"
+                      variants={stagger(0.06, 0.08)} {...inView}>
+            {MAC_CHECKS.map((c) => (
+              <motion.div key={c.t} variants={fadeUp} className="p-7" style={{ background: INK }}>
+                <h3 className="font-display font-bold text-lg text-[#F4F2ED]">{c.t}</h3>
+                <p className="mt-2.5 text-[0.95rem] text-[#F4F2ED]/55 leading-relaxed">{c.d}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <Reveal>
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <span className="text-sm text-[#F4F2ED]/40">
+                Apple silicon · macOS 14 and later · reads only, changes nothing
+              </span>
+              <a href={DISCORD} target="_blank" rel="noopener noreferrer"
+                 className="text-sm font-semibold underline underline-offset-4
+                            decoration-white/25 hover:decoration-white/60 transition"
+                 style={{ color: GOLD }}>
+                Ask to test it
+              </a>
+            </div>
+          </Reveal>
         </div>
       </section>
 
