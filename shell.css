@@ -402,3 +402,16 @@ body.mc-open .windows{visibility:hidden}
 .tour-btns{display:flex;justify-content:flex-end;gap:8px}
 .tour-spot{outline:3px solid #FEBC2E;outline-offset:6px;border-radius:14px;box-shadow:0 0 0 9999px rgba(10,8,20,.35)}
 @media (max-width:768px){.gb{grid-template-columns:1fr}.stickies,.panels,.toasts{display:none}}
+
+/* light cycles */
+.cyc-host{background:#07090c}
+.cyc{position:relative;width:100%;max-width:720px;aspect-ratio:1}
+.cyc-canvas{display:block;width:100%;height:100%;background:#07090c;outline:none;touch-action:none;border-radius:6px}
+.cyc-hud{position:absolute;top:8px;left:10px;right:10px;display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;color:#9ff5e9;text-shadow:0 0 6px rgba(0,224,198,.6);pointer-events:none;letter-spacing:.04em}
+.cyc-ui{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(7,9,12,.78)}
+.cyc-menu{text-align:center;color:#e8fffb;font-family:var(--font-display);max-width:340px;padding:20px}
+.cyc-menu h2{color:#00E0C6;letter-spacing:.12em;text-shadow:0 0 14px rgba(0,224,198,.7);margin-bottom:8px;font-size:1.5rem}
+.cyc-menu p{color:#b8d9d4;font-size:.9rem;margin:0 0 10px}
+.cyc-small{font-size:.75rem;color:#6c8b86}
+.cyc-btn{background:transparent;color:#00E0C6;border:2px solid #00E0C6;border-radius:4px;padding:10px 20px;font:inherit;font-weight:600;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 16px rgba(0,224,198,.35)}
+.cyc-btn:hover{background:#00E0C6;color:#07090c}

@@ -57,12 +57,13 @@ var ART={
  contact:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#00A88F"/><rect x="10" y="18" width="44" height="30" rx="5" fill="#fff"/><path d="M12 22l20 14 20-14" stroke="#00A88F" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>',
  tools:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#2B2350"/><path d="M40 14a10 10 0 0 0-9.6 12.7L14 43l7 7 16.3-16.4A10 10 0 0 0 50 24l-6 6-5-1-1-5 6-6a10 10 0 0 0-4-4z" fill="#F2B07A"/></svg>',
  launchpad:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F7"/><stop offset="1" stop-color="#C9CAD2"/></linearGradient></defs><rect width="64" height="64" fill="url(#lpg)"/><g><rect x="12" y="12" width="11" height="11" rx="3" fill="#FF5F57"/><rect x="26.5" y="12" width="11" height="11" rx="3" fill="#FEBC2E"/><rect x="41" y="12" width="11" height="11" rx="3" fill="#28C840"/><rect x="12" y="26.5" width="11" height="11" rx="3" fill="#4A54DC"/><rect x="26.5" y="26.5" width="11" height="11" rx="3" fill="#00A88F"/><rect x="41" y="26.5" width="11" height="11" rx="3" fill="#F2B07A"/><rect x="12" y="41" width="11" height="11" rx="3" fill="#8B7DFF"/><rect x="26.5" y="41" width="11" height="11" rx="3" fill="#FC3C44"/><rect x="41" y="41" width="11" height="11" rx="3" fill="#3E9DE8"/></g></svg>',
+ cycles:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#07090c"/><path d="M8 8h48v48H8z" fill="none" stroke="rgba(0,224,198,.35)" stroke-width="1.5"/><path d="M12 40h18V20h14v24" fill="none" stroke="#00E0C6" stroke-width="4" stroke-linejoin="miter"/><path d="M52 16v22H38" fill="none" stroke="#FF5F57" stroke-width="4" stroke-linejoin="miter"/><rect x="42" y="42" width="5" height="5" fill="#fff"/></svg>',
  guestbook:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FEBC2E"/><rect x="12" y="10" width="40" height="44" rx="5" fill="#fff"/><path d="M20 22h24M20 30h24M20 38h16" stroke="#161616" stroke-width="3" stroke-linecap="round"/><path d="M44 44l-4 2 1-4 8-8 3 3z" fill="#4A54DC"/></svg>',
  doc:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 6h22l12 12v40H16z" fill="#fff" stroke="#9a9aa6" stroke-width="2"/><path d="M38 6v12h12" fill="#e6e6ec" stroke="#9a9aa6" stroke-width="2"/><path d="M22 30h20M22 38h20M22 46h14" stroke="#b8b8c4" stroke-width="3" stroke-linecap="round"/></svg>',
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
 };
-var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'meme',title:'Meme Maker',art:'meme'}];
+var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'cycles',title:'Light Cycles',art:'cycles'},{key:'meme',title:'Meme Maker',art:'meme'}];
 var REG={};
 /* the desktop is grouped into folders (Tommy: "I kinda want to group them. And the games should be under a games folder") */
 var FOLDERS=[
@@ -168,7 +169,7 @@ tick();setInterval(tick,30000);
 var menubar=document.getElementById('menubar');
 var MENUS={
  apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['New Sticky Note',function(){TR.extras&&TR.extras.addSticky()}],['Reset Stickies',function(){TR.extras&&TR.extras.resetStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
+ go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Light Cycles',function(){openApp('cycles')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
@@ -338,7 +339,7 @@ function openApp(key){
   if(isPhone())return openSheet(key);
   var app=appByKey(key);
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
-  var fn={finder:openWork,launchpad:openLP,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
+  var fn={finder:openWork,launchpad:openLP,cycles:openCycles,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
   if(fn)return fn();
   if(REG[key])return REG[key].open();
 }
@@ -384,6 +385,7 @@ function openBrave(){
 function musicHTML(){return '<div class="music"><div class="music-head"><span class="sq art sm">'+ART.music+'</span><div><strong>'+esc(MUSIC.title)+'</strong><a href="'+MUSIC.profile+'" target="_blank" rel="noopener">'+esc(MUSIC.handle)+' on Apple Music →</a></div><a class="btn btn-primary sm music-open" href="'+MUSIC.page+'" target="_blank" rel="noopener">Open in Apple Music ↗</a></div><p class="t3 music-note">Apple plays 30-second previews here until you sign in to Apple Music inside the player.</p><iframe allow="autoplay *; encrypted-media *; clipboard-write" frameborder="0" height="450" loading="lazy" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="'+MUSIC.embed+'" title="Apple Music — '+esc(MUSIC.title)+' playlist"></iframe></div>'}
 function openMusic(){var w=createWindow('music','Music',{w:720,h:560,dockKey:'music',appName:'Music'});w.body.innerHTML=musicHTML()}
 function openPaint(){var w=createWindow('paint','Paint',{w:900,h:620,dockKey:'paint',appName:'Paint'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);window.initPaint(d)}
+function openCycles(){var w=createWindow('cycles','Light Cycles',{w:760,h:820,dockKey:'cycles',appName:'Light Cycles',minW:420,minH:420});var d=document.createElement('div');d.className='game-host cyc-host';w.body.appendChild(d);var g=window.initCycles(d);w.onclose=function(){g&&g.stop()}}
 function openBrick(){var w=createWindow('brick','Brick Breaker',{w:740,h:620,dockKey:'brick',appName:'Brick Breaker',minW:420,minH:360});var d=document.createElement('div');d.className='game-host';w.body.appendChild(d);var g=window.initBrick(d);w.onclose=function(){g&&g.stop()}}
 function openMeme(){var w=createWindow('meme','Meme Maker',{w:940,h:640,dockKey:'meme',appName:'Meme Maker'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);window.initMeme(d)}
 
@@ -394,7 +396,7 @@ function termRun(cmd){
   if(!c)return '';
   if(c==='help')return TERM_HELP;
   if(c==='whoami')return ME.name+' — '+ME.role+' · '+ME.location;
-  if(c==='ls')return FOLDERS.map(function(f){return f.label+'/'}).concat(APPS.map(function(a){return a.key})).concat(['brick','meme']).join('  ');
+  if(c==='ls')return FOLDERS.map(function(f){return f.label+'/'}).concat(APPS.map(function(a){return a.key})).concat(['brick','cycles','meme']).join('  ');
   if(c==='stats')return ME.stats.map(function(s){return s[0]+' '+s[1]}).join('\n');
   if(c==='about')return ME.hero+'\n'+ME.since;
   if(c==='contact')return ME.email;
@@ -454,6 +456,7 @@ function openSheet(key){
   if(key==='finder')return openSheetPage('work');
   if(key==='launchpad'){sheet.hidden=true;return openLP()}
   if(key==='paint'){var p=document.createElement('div');p.className='page';sheetBody.appendChild(p);return window.initPaint(p)}
+  if(key==='cycles'){var gc=document.createElement('div');gc.className='game-host cyc-host';sheetBody.appendChild(gc);var cg=window.initCycles(gc);sheetBody.__stop=function(){cg&&cg.stop()};return}
   if(key==='brick'){var g=document.createElement('div');g.className='game-host';sheetBody.appendChild(g);var game=window.initBrick(g);sheetBody.__stop=function(){game&&game.stop()};return}
   if(key==='meme'){var m=document.createElement('div');m.className='page';sheetBody.appendChild(m);return window.initMeme(m)}
   if(key==='music')return void(sheetBody.innerHTML=musicHTML());

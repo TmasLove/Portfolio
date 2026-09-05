@@ -54,6 +54,7 @@ var NEWS=[
  ['Canary','Free Windows diagnostic tool that finds failing drives and crash causes your vendor software calls healthy.','canary'],
  ['Rehab Pro','iPhone app that builds a daily rehab plan around where it hurts, how it hurts today, and the time you actually have.','rehabpro'],
  ['Brick Breaker','The 2015 game is back from the archive. Left/Right to play.','brick'],
+ ['Light Cycles','A small Armagetron-style light cycle arena. Hug a wall to go faster.','cycles'],
  ['Meme Maker','Create, download & post memes to an anonymous public feed.','meme'],
  ['Music','Chill Web — '+'@tmizle on Apple Music.','music'],
  ['Paint','Everyone who visits can paint. Everything saved shows up on the wall.','paint']
