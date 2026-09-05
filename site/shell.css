@@ -297,3 +297,17 @@ canvas.paint-canvas,canvas.meme-canvas{border:1px solid var(--border);border-rad
 .lr-stamp{padding:10px 22px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
 .lr-stamp a{color:var(--accent-2)}
 @media (max-width:768px){.lr2 aside{display:none}}
+
+/* Finder */
+.fwrap{display:flex;height:100%;min-height:100%}
+.fside{width:190px;flex:0 0 auto;background:rgba(244,242,237,.55);border-right:1px solid var(--border);padding:10px 8px;overflow:auto;font-family:var(--font-display)}
+.fside h4{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin:10px 8px 4px;font-weight:600}
+.fitem{display:flex;align-items:center;gap:8px;width:100%;border:none;background:none;text-align:left;padding:6px 8px;border-radius:7px;font:inherit;font-size:.8125rem;color:var(--text);cursor:pointer}
+.fitem:hover{background:rgba(22,22,22,.06)}
+.fitem.on{background:rgba(74,84,220,.16)}
+.fi{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fi svg,.fi.doc svg{width:18px;height:18px;display:block}
+.fmain{flex:1;min-width:0;overflow:auto;height:100%}
+.docframe{width:100%;height:100%;border:none;display:block;background:#fff}
+.docs-strip{border-top:1px solid var(--border)}
+.docs-strip .btn{margin:0 6px 6px 0}
