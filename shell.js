@@ -56,6 +56,7 @@ var ART={
  about:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#4A54DC"/><circle cx="32" cy="24" r="10" fill="#fff"/><path d="M14 54c2-11 9-16 18-16s16 5 18 16z" fill="#fff"/></svg>',
  contact:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#00A88F"/><rect x="10" y="18" width="44" height="30" rx="5" fill="#fff"/><path d="M12 22l20 14 20-14" stroke="#00A88F" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>',
  tools:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#2B2350"/><path d="M40 14a10 10 0 0 0-9.6 12.7L14 43l7 7 16.3-16.4A10 10 0 0 0 50 24l-6 6-5-1-1-5 6-6a10 10 0 0 0-4-4z" fill="#F2B07A"/></svg>',
+ doc:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 6h22l12 12v40H16z" fill="#fff" stroke="#9a9aa6" stroke-width="2"/><path d="M38 6v12h12" fill="#e6e6ec" stroke="#9a9aa6" stroke-width="2"/><path d="M22 30h20M22 38h20M22 46h14" stroke="#b8b8c4" stroke-width="3" stroke-linecap="round"/></svg>',
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
 };
@@ -162,7 +163,7 @@ tick();setInterval(tick,30000);
 var menubar=document.getElementById('menubar');
 var MENUS={
  apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Spotlight','⌘K',function(){openSpot()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}]],
+ go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
@@ -336,7 +337,24 @@ function openApp(key){
   if(fn)return fn();
 }
 function openPage(slug){var p=PAGES[slug];if(isPhone())return openSheetPage(slug);var w=createWindow('page-'+slug,p.title,{w:780,h:600,dockKey:slug==='work'?'finder':'page-'+slug,appName:p.title});loadPage(w,p.url);return w}
-function openWork(){if(isPhone())return openSheetPage('work');var w=createWindow('finder','Work',{w:860,h:600,dockKey:'finder',appName:'Finder'});loadPage(w,'/work/');return w}
+/* Finder: sidebar of pages, folders and documents (the privacy and policy pages live here) */
+var DOCS=[['Privacy policy','/privacy.html'],['Rehab Pro privacy','/rehabpro/privacy.html'],['GRVT','/GRVT.html']];
+function openWork(){
+  if(isPhone())return openSheetPage('work');
+  var w=createWindow('finder','Work',{w:940,h:620,dockKey:'finder',appName:'Finder',minW:640});
+  var side='<div class="fside"><h4>Favorites</h4>'+Object.keys(PAGES).map(function(k){return '<button class="fitem'+(k==='work'?' on':'')+'" data-page="'+k+'">'+svgI(k)+PAGES[k].title+'</button>'}).join('')+'<h4>Folders</h4>'+FOLDERS.map(function(f){return '<button class="fitem" data-folder="'+f.key+'"><span class="fi">'+ART.folder+'</span>'+f.label+'</button>'}).join('')+'<h4>Documents</h4>'+DOCS.map(function(d){return '<button class="fitem" data-doc="'+d[1]+'"><span class="fi doc">'+ART.doc+'</span>'+d[0]+'</button>'}).join('')+'</div>';
+  w.el.classList.add('finder');
+  w.body.innerHTML='<div class="fwrap">'+side+'<div class="fmain win-body"></div></div>';
+  var main=w.body.querySelector('.fmain');var host={body:main,el:w.el,nav:[]};
+  function sel(b){w.body.querySelectorAll('.fitem').forEach(function(x){x.classList.toggle('on',x===b)})}
+  w.body.querySelectorAll('[data-page]').forEach(function(b){b.addEventListener('click',function(){sel(b);host.nav=[];loadPage(host,PAGES[b.dataset.page].url,{replace:true});setTitle(w,PAGES[b.dataset.page].title)})});
+  w.body.querySelectorAll('[data-folder]').forEach(function(b){b.addEventListener('click',function(){sel(b);var f=FOLDERS.filter(function(x){return x.key===b.dataset.folder})[0];main.innerHTML=folderHTML(f);main.querySelectorAll('.ficon').forEach(function(x){x.addEventListener('click',function(){openApp(x.dataset.key)})});setTitle(w,f.label)})});
+  w.body.querySelectorAll('[data-doc]').forEach(function(b){b.addEventListener('click',function(){sel(b);main.innerHTML='<iframe class="docframe" src="'+b.dataset.doc+'" title="'+esc(b.textContent)+'"></iframe>';setTitle(w,b.textContent.trim())})});
+  host.el={querySelector:function(){return {hidden:true}}};
+  loadPage(host,'/work/',{replace:true});
+  return w;
+}
+function svgI(k){var d={work:'<path d="M3 7h6l2 2h10v10H3z"/>',about:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',contact:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M4 8l8 6 8-6"/>',tools:'<path d="M14 6a4 4 0 0 0-5.6 4.6L4 15l3 3 4.4-4.4A4 4 0 0 0 16 8l-2 2-2-2z"/>'}[k];return '<svg viewBox="0 0 24 24" class="fi">'+d+'</svg>'}
 function openAbout(){var w=openPage('about');return w}
 
 /* Brave: a start page of the sites Tommy built, each one opened inside the browser when the site allows it */
@@ -419,7 +437,7 @@ if(lGrid){
   Object.keys(PAGES).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
 }
 var sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody'),sheetTitle=document.getElementById('sheetTitle');
-function openSheetPage(slug){sheet.hidden=false;sheetTitle.textContent=PAGES[slug].title;sheetBody.__wired=false;loadPage(sheetBody,PAGES[slug].url,{keepTitle:true})}
+function openSheetPage(slug){sheet.hidden=false;sheetTitle.textContent=PAGES[slug].title;sheetBody.__wired=false;loadPage(sheetBody,PAGES[slug].url,{keepTitle:true});if(slug==='work')setTimeout(function(){var d=document.createElement('div');d.className='page docs-strip';d.innerHTML='<h3>Documents</h3>'+DOCS.map(function(x){return '<a class="btn btn-secondary sm" href="'+x[1]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a> '}).join('');sheetBody.appendChild(d)},600)}
 function openSheet(key){
   var app=appByKey(key);
   sheet.hidden=false;sheetBody.__wired=false;
