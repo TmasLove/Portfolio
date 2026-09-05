@@ -26,5 +26,14 @@ window.TRWall=(function(){
       return '<figure class="wall-item"><a href="'+i.src+'" target="_blank" rel="noopener"><img src="'+i.src+'" alt="'+(kind==='paint'?'Drawing':'Meme')+(i.name?' by '+i.name.replace(/"/g,'&quot;'):'')+'" loading="lazy"></a><figcaption>'+(i.name?'<b>'+i.name.replace(/</g,'&lt;')+'</b> · ':'')+when+'</figcaption></figure>';
     }).join('')+'</div>';
   }
-  return {list:list,post:post,galleryHTML:galleryHTML,API:API};
+  function notes(){
+    return fetch(API+'/api/wall/notes?limit=120',{mode:'cors'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){return {online:true,items:j.items.map(function(i){return{name:i.name||'',message:i.message||'',rating:i.rating||0,ts:i.ts*1000}})}})
+      .catch(function(){return {online:false,items:local('notes')}});
+  }
+  function postNote(name,message,rating){
+    return fetch(API+'/api/wall/notes',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name||'',message:message,rating:rating})})
+      .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'failed');return {online:true}})})
+      .catch(function(err){if(err&&/slow down|too long/.test(err.message||''))throw err;var arr=local('notes');arr.unshift({name:name||'',message:message,rating:rating,ts:Date.now()});setLocal('notes',arr);return {online:false}});
+  }
+  return {list:list,post:post,notes:notes,postNote:postNote,galleryHTML:galleryHTML,API:API};
 })();

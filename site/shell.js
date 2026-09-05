@@ -57,11 +57,13 @@ var ART={
  contact:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#00A88F"/><rect x="10" y="18" width="44" height="30" rx="5" fill="#fff"/><path d="M12 22l20 14 20-14" stroke="#00A88F" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>',
  tools:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#2B2350"/><path d="M40 14a10 10 0 0 0-9.6 12.7L14 43l7 7 16.3-16.4A10 10 0 0 0 50 24l-6 6-5-1-1-5 6-6a10 10 0 0 0-4-4z" fill="#F2B07A"/></svg>',
  launchpad:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F7"/><stop offset="1" stop-color="#C9CAD2"/></linearGradient></defs><rect width="64" height="64" fill="url(#lpg)"/><g><rect x="12" y="12" width="11" height="11" rx="3" fill="#FF5F57"/><rect x="26.5" y="12" width="11" height="11" rx="3" fill="#FEBC2E"/><rect x="41" y="12" width="11" height="11" rx="3" fill="#28C840"/><rect x="12" y="26.5" width="11" height="11" rx="3" fill="#4A54DC"/><rect x="26.5" y="26.5" width="11" height="11" rx="3" fill="#00A88F"/><rect x="41" y="26.5" width="11" height="11" rx="3" fill="#F2B07A"/><rect x="12" y="41" width="11" height="11" rx="3" fill="#8B7DFF"/><rect x="26.5" y="41" width="11" height="11" rx="3" fill="#FC3C44"/><rect x="41" y="41" width="11" height="11" rx="3" fill="#3E9DE8"/></g></svg>',
+ guestbook:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FEBC2E"/><rect x="12" y="10" width="40" height="44" rx="5" fill="#fff"/><path d="M20 22h24M20 30h24M20 38h16" stroke="#161616" stroke-width="3" stroke-linecap="round"/><path d="M44 44l-4 2 1-4 8-8 3 3z" fill="#4A54DC"/></svg>',
  doc:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 6h22l12 12v40H16z" fill="#fff" stroke="#9a9aa6" stroke-width="2"/><path d="M38 6v12h12" fill="#e6e6ec" stroke="#9a9aa6" stroke-width="2"/><path d="M22 30h20M22 38h20M22 46h14" stroke="#b8b8c4" stroke-width="3" stroke-linecap="round"/></svg>',
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
 };
 var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'meme',title:'Meme Maker',art:'meme'}];
+var REG={};
 /* the desktop is grouped into folders (Tommy: "I kinda want to group them. And the games should be under a games folder") */
 var FOLDERS=[
  {key:'apps',label:'Apps',members:function(){return APPS.filter(function(a){return a.category==='apps'})}},
@@ -75,6 +77,7 @@ var DOCK=[
  {key:'brave',label:'Brave Browser',icon:'/assets/icons/dock-brave.png',fit:'contain',init:'B'},
  {key:'music',label:'Music',icon:'/assets/icons/dock-music.png',fit:'plain',init:'M'},
  {key:'paint',label:'Paint',art:'paint'},
+ {key:'guestbook',label:'Guestbook',art:'guestbook'},
  {key:'littleriver',label:'Little River',icon:'/assets/icons/dock-littleriver.png',fit:'cover',init:'L'},
  {key:'terminal',label:'Terminal',art:'terminal'},
  {key:'trash',label:'Trash',icon:'/assets/icons/dock-trash.png',fit:'plain',init:'T'}
@@ -164,9 +167,9 @@ tick();setInterval(tick,30000);
 /* ---------- menu bar ---------- */
 var menubar=document.getElementById('menubar');
 var MENUS={
- apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
- window:function(){var items=[['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
+ apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['New Sticky Note',function(){TR.extras&&TR.extras.addSticky()}],['Reset Stickies',function(){TR.extras&&TR.extras.resetStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
+ go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
+ window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
 function buildMenu(items){
@@ -259,7 +262,7 @@ function createWindow(id,title,opts){
   el.querySelector('.tl-min').addEventListener('click',function(){minimize(w)});
   el.querySelector('.tl-max').addEventListener('click',function(){toggleMax(w)});
   el.querySelector('.wback').addEventListener('click',function(){goBack(w)});
-  el.addEventListener('keydown',function(e){if(e.key==='Escape'&&!e.target.closest('input,textarea'))closeWindow(id)});
+  el.addEventListener('keydown',function(e){if(e.key==='Escape'&&!(e.target.closest&&e.target.closest('input,textarea')))closeWindow(id)});
   return w;
 }
 function closeWindow(id){
@@ -337,6 +340,7 @@ function openApp(key){
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
   var fn={finder:openWork,launchpad:openLP,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
   if(fn)return fn();
+  if(REG[key])return REG[key].open();
 }
 function openPage(slug){var p=PAGES[slug];if(isPhone())return openSheetPage(slug);var w=createWindow('page-'+slug,p.title,{w:780,h:600,dockKey:slug==='work'?'finder':'page-'+slug,appName:p.title});loadPage(w,p.url);return w}
 /* Finder: sidebar of pages, folders and documents (the privacy and policy pages live here) */
@@ -456,6 +460,7 @@ function openSheet(key){
   if(key==='terminal'){sheetBody.innerHTML=termHTML();return wireTerm(sheetBody)}
   if(key==='trash'){sheetBody.innerHTML=trashHTML();sheetBody.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openApp(b.dataset.open)})});return}
   if(key==='littleriver')return void window.initLR(sheetBody);
+  if(REG[key]){sheetTitle.textContent=REG[key].title;return REG[key].sheet(sheetBody)}
   if(key==='brave'){sheetBody.innerHTML='<div class="browser">'+braveStart()+'</div>';sheetBody.querySelectorAll('.dial').forEach(function(b){b.addEventListener('click',function(){var a=appByKey(b.dataset.key);window.open(a.live,'_blank','noopener')})});return}
 }
 function closeSheet(){sheet.hidden=true;if(sheetBody.__stop){sheetBody.__stop();sheetBody.__stop=null}sheetBody.innerHTML=''}
@@ -466,7 +471,7 @@ var lp=document.getElementById('launchpad'),lpGrid=document.getElementById('lpGr
 function lpItems(){
   return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init}})
    .concat(EXTRA.map(function(x){return{key:x.key,title:x.title,art:x.art}}))
-   .concat(DOCK.filter(function(d){return ['brave','music','paint','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
+   .concat(DOCK.filter(function(d){return ['brave','music','paint','guestbook','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
    .concat(Object.keys(PAGES).map(function(k){return{key:'page:'+k,title:PAGES[k].title,icon:PAGES[k].icon,fit:PAGES[k].fit,art:PAGES[k].art}}));
 }
 function renderLP(q){
@@ -508,7 +513,7 @@ document.addEventListener('keydown',function(e){
     if(lp&&!lp.hidden)return closeLP();
     if(spot&&!spot.hidden)return closeSpot();
     if(sheet&&!sheet.hidden)return closeSheet();
-    if(e.target.closest('input,textarea'))return;
+    if(e.target&&e.target.closest&&e.target.closest('input,textarea'))return;
     var t=topWin();if(t)closeWindow(t.key);
   }
 });
@@ -516,4 +521,5 @@ document.addEventListener('keydown',function(e){
 /* boot: Work opens last, like the Finder on a fresh login */
 if(!isPhone())setTimeout(openWork,reduced?0:260);
 window.trOpen=openApp;
+window.TR={esc:esc,sqHTML:sqHTML,ART:ART,APPS:APPS,DOCK:DOCK,PAGES:PAGES,ME:ME,openMap:openMap,createWindow:createWindow,closeWindow:closeWindow,minimize:minimize,restore:restore,topWin:topWin,openApp:openApp,openPage:openPage,openLP:openLP,openSpot:openSpot,closeMenus:closeMenus,isPhone:isPhone,register:function(key,title,open,sheet){REG[key]={title:title,open:open,sheet:sheet}}};
 })();
