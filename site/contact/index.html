@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hire a Miami Web Developer | Tommy Roldan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css"></head><body>
+<header class="page-header"><a class="back-link" href="/">← Tommy Roldan</a></header>
+<main class="page">
+<h1>Let's talk.</h1>
+<p>I love meeting new people. Got a project, a beer, or an idea? Hit me up.</p>
+<div class="panel"><dl class="dl"><div><dt>Email</dt><dd><a href="mailto:troldan@terryco.com">troldan@terryco.com</a></dd></div><div><dt>Based in</dt><dd>Miami, FL</dd></div><div><dt>Role</dt><dd>Web Developer &amp; Creative</dd></div></dl></div>
+<h2>Follow along</h2>
+<p class="socials">
+<a href="https://www.linkedin.com/in/tommy-roldan/" target="_blank" rel="noopener">LinkedIn</a> ·
+<a href="https://instagram.com/tomcat.png" target="_blank" rel="noopener">Instagram</a> ·
+<a href="https://www.strava.com/athletes/14197229" target="_blank" rel="noopener">Strava</a> ·
+<a href="https://music.apple.com/profile/tmizle" target="_blank" rel="noopener">Apple Music</a> ·
+<a href="https://steamcommunity.com/id/shlumplord/" target="_blank" rel="noopener">Steam</a> ·
+<a href="https://discord.gg/EJThXpcNn6" target="_blank" rel="noopener">Discord</a>
+</p>
+<h2>Send a note</h2>
+<form class="contact-form" action="https://formsubmit.co/troldan@terryco.com" method="post">
+  <input type="text" name="name" placeholder="Your name *" required aria-label="Your name">
+  <input type="email" name="email" placeholder="Your email *" required aria-label="Your email">
+  <input type="text" name="company" placeholder="Company (optional)" aria-label="Company">
+  <select name="projectType" aria-label="Project type"><option value="">Project type…</option><option value="Website">Website</option><option value="Web app">Web app</option><option value="E-commerce / Shopify">E-commerce / Shopify</option><option value="AI agent / automation">AI agent / automation</option><option value="Something else">Something else</option></select>
+  <select name="budget" class="span2" aria-label="Budget"><option value="">Budget (optional)…</option><option value="Not sure yet">Not sure yet</option><option value="&lt; $1k">&lt; $1k</option><option value="$1k – $5k">$1k – $5k</option><option value="$5k – $15k">$5k – $15k</option><option value="$15k+">$15k+</option></select>
+  <textarea name="message" class="span2" placeholder="Tell me about your project *" rows="5" required aria-label="Message"></textarea>
+  <input type="hidden" name="_subject" value="Portfolio inquiry"><input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
+  <div class="span2"><button type="submit" class="btn btn-primary">Send message →</button></div>
+</form>
+</main><footer class="site-footer">troldan@terryco.com · Miami, FL</footer>
+<script>
+/* standalone page: same FormSubmit endpoint the live site uses, no page reload */
+document.querySelector('.contact-form').addEventListener('submit',function(e){
+  if(window.trOpen)return; /* inside the desktop the shell handles it */
+  e.preventDefault();var f=this,b=f.querySelector('button[type=submit]'),d={};
+  ['name','email','company','projectType','budget','message'].forEach(function(k){d[k]=f.querySelector('[name="'+k+'"]').value});
+  b.disabled=true;b.textContent='Sending…';
+  fetch('https://formsubmit.co/ajax/troldan@terryco.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'—','Project type':d.projectType||'—',Budget:d.budget||'—',Message:d.message,_subject:'Portfolio inquiry — '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
+  .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return j.success==='true'||j.success===true||r.ok})})
+  .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent — thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
+  .catch(function(){b.disabled=false;b.textContent='Send message →';var p=document.createElement('p');p.className='form-err';p.innerHTML='Something went wrong. <a href="mailto:troldan@terryco.com">Email me directly</a>.';f.appendChild(p)});
+});
+</script>
+</body></html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0E0E10"/>
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
+        font-family="Archivo, 'Arial Black', Helvetica, sans-serif"
+        font-weight="900" font-size="200" letter-spacing="-4" fill="#FAF9F6">TR<tspan fill="#00E0C6">/</tspan></text>
+</svg>

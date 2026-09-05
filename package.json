@@ -1,41 +1,8 @@
 {
-  "name": "tommyroldan-portfolio",
+  "name": "tommyroldan.com",
   "private": true,
-  "version": "2.0.0",
-  "type": "module",
-  "homepage": "https://tommyroldan.com",
+  "description": "tommyroldan.com — a Mac desktop portfolio. Static files in site/, published to gh-pages by the workflow.",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "fetch:steam": "node scripts/fetch-steam.mjs",
-    "prerender": "node scripts/prerender.mjs",
-    "lint": "eslint .",
-    "predeploy": "npm run build && npm run prerender",
-    "deploy": "npm run build && npm run prerender && gh-pages -d dist -b gh-pages --dotfiles"
-  },
-  "dependencies": {
-    "framer-motion": "^11.11.0",
-    "i18next": "^26.3.2",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-i18next": "^17.0.8",
-    "react-router-dom": "^6.26.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.5.0",
-    "@testing-library/react": "^16.0.1",
-    "@vitejs/plugin-react": "^6.0.3",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.11.0",
-    "gh-pages": "^6.1.1",
-    "jsdom": "^25.0.1",
-    "postcss": "^8.4.47",
-    "puppeteer-core": "^25.2.0",
-    "tailwindcss": "^3.4.13",
-    "vite": "^8.1.0",
-    "vitest": "^4.1.9"
+    "preview": "python3 -m http.server 8080 --directory site"
   }
 }

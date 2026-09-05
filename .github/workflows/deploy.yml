@@ -1,56 +1,29 @@
-name: Build and deploy
+name: Publish
 
-# Builds the Vite site and publishes dist/ to the gh-pages branch, which is what
-# tommyroldan.com actually serves. This exists so deploying never requires Node
-# installed locally - pushing to master is enough.
+# The site is static HTML/CSS/JS in site/ (the Mac desktop). Pushing to master publishes it
+# to the gh-pages branch, which is what tommyroldan.com serves. No build step.
 on:
   push:
     branches: [master]
-  workflow_dispatch:        # lets you trigger a rebuild by hand from the Actions tab
+  workflow_dispatch:
 
 permissions:
-  contents: write           # needed to push the built output to gh-pages
+  contents: write
 
 concurrency:
   group: deploy
-  cancel-in-progress: true  # a newer push supersedes one still building
+  cancel-in-progress: true
 
 jobs:
-  build-deploy:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      # npm install rather than npm ci: ci refuses outright when package-lock.json
-      # has drifted from package.json, which open Dependabot PRs routinely cause.
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-
-      - name: Build
-        run: npm run build
-
-      # prerender.mjs uses puppeteer-core, which ships no browser of its own and
-      # defaults to a macOS Chrome path. The runner has Chrome preinstalled;
-      # resolve it and hand the location to the script it already looks for.
-      - name: Locate Chrome
-        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which google-chrome || which google-chrome-stable || which chromium-browser)" >> $GITHUB_ENV
-
-      - name: Prerender routes
-        run: npm run prerender
-
-      # publish_dir is replaced wholesale, exactly as `npm run deploy` did.
-      # CNAME lives in public/ so Vite copies it into dist - the custom domain
-      # survives every deploy without special handling.
-      - name: Publish to gh-pages
+      - name: Publish site/ to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./site
           publish_branch: gh-pages
           enable_jekyll: false
           commit_message: "Deploy ${{ github.sha }}"
