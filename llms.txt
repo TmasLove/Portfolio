@@ -13,8 +13,7 @@ LATAM Sales at TerryCo Group.
 Typical stack: React, Next.js, Vite, Tailwind CSS, TypeScript, Node.js, React
 Native, Expo, Shopify/Liquid, and Python.
 
-This site is published in both English and Spanish. Content is server-prerendered,
-so every page below returns complete HTML without requiring JavaScript execution.
+The site is presented as a Mac desktop: every project is an app icon that opens a case file with the live site inside. Every page below is also a plain HTML route.
 
 ## Pages
 
@@ -23,6 +22,9 @@ so every page below returns complete HTML without requiring JavaScript execution
 - [About](https://tommyroldan.com/about/): Background, experience, and the story from Medellín to Miami.
 - [Tools](https://tommyroldan.com/tools/): Free browser-based utilities built to solve real problems.
 - [Contact](https://tommyroldan.com/contact/): Project inquiry form — the way to start a project.
+- [Paint](https://tommyroldan.com/paint/): Draw and post to the public wall.
+- [Brick Breaker](https://tommyroldan.com/brick-breaker/): The 2015 canvas game, playable.
+- [Meme Maker](https://tommyroldan.com/meme/): Follow MeMe revived — make a meme, post it, no sign-up.
 
 ## Products
 
