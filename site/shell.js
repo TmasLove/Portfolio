@@ -56,6 +56,7 @@ var ART={
  about:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#4A54DC"/><circle cx="32" cy="24" r="10" fill="#fff"/><path d="M14 54c2-11 9-16 18-16s16 5 18 16z" fill="#fff"/></svg>',
  contact:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#00A88F"/><rect x="10" y="18" width="44" height="30" rx="5" fill="#fff"/><path d="M12 22l20 14 20-14" stroke="#00A88F" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>',
  tools:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#2B2350"/><path d="M40 14a10 10 0 0 0-9.6 12.7L14 43l7 7 16.3-16.4A10 10 0 0 0 50 24l-6 6-5-1-1-5 6-6a10 10 0 0 0-4-4z" fill="#F2B07A"/></svg>',
+ launchpad:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F7"/><stop offset="1" stop-color="#C9CAD2"/></linearGradient></defs><rect width="64" height="64" fill="url(#lpg)"/><g><rect x="12" y="12" width="11" height="11" rx="3" fill="#FF5F57"/><rect x="26.5" y="12" width="11" height="11" rx="3" fill="#FEBC2E"/><rect x="41" y="12" width="11" height="11" rx="3" fill="#28C840"/><rect x="12" y="26.5" width="11" height="11" rx="3" fill="#4A54DC"/><rect x="26.5" y="26.5" width="11" height="11" rx="3" fill="#00A88F"/><rect x="41" y="26.5" width="11" height="11" rx="3" fill="#F2B07A"/><rect x="12" y="41" width="11" height="11" rx="3" fill="#8B7DFF"/><rect x="26.5" y="41" width="11" height="11" rx="3" fill="#FC3C44"/><rect x="41" y="41" width="11" height="11" rx="3" fill="#3E9DE8"/></g></svg>',
  doc:'<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 6h22l12 12v40H16z" fill="#fff" stroke="#9a9aa6" stroke-width="2"/><path d="M38 6v12h12" fill="#e6e6ec" stroke="#9a9aa6" stroke-width="2"/><path d="M22 30h20M22 38h20M22 46h14" stroke="#b8b8c4" stroke-width="3" stroke-linecap="round"/></svg>',
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
@@ -70,6 +71,7 @@ var FOLDERS=[
 ];
 var DOCK=[
  {key:'finder',label:'Finder',icon:'/assets/icons/dock-finder.png',fit:'plain',init:'F'},
+ {key:'launchpad',label:'Launchpad',art:'launchpad'},
  {key:'brave',label:'Brave Browser',icon:'/assets/icons/dock-brave.png',fit:'contain',init:'B'},
  {key:'music',label:'Music',icon:'/assets/icons/dock-music.png',fit:'plain',init:'M'},
  {key:'paint',label:'Paint',art:'paint'},
@@ -162,7 +164,7 @@ tick();setInterval(tick,30000);
 /* ---------- menu bar ---------- */
 var menubar=document.getElementById('menubar');
 var MENUS={
- apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Spotlight','⌘K',function(){openSpot()}],null,['Restart…',function(){location.reload()}]],
+ apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],null,['Restart…',function(){location.reload()}]],
  go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Meme Maker',function(){openApp('meme')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
@@ -333,7 +335,7 @@ function openApp(key){
   if(isPhone())return openSheet(key);
   var app=appByKey(key);
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
-  var fn={finder:openWork,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
+  var fn={finder:openWork,launchpad:openLP,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
   if(fn)return fn();
 }
 function openPage(slug){var p=PAGES[slug];if(isPhone())return openSheetPage(slug);var w=createWindow('page-'+slug,p.title,{w:780,h:600,dockKey:slug==='work'?'finder':'page-'+slug,appName:p.title});loadPage(w,p.url);return w}
@@ -446,6 +448,7 @@ function openSheet(key){
   sheetTitle.textContent=d?d.label:key;
   sheetBody.innerHTML='';
   if(key==='finder')return openSheetPage('work');
+  if(key==='launchpad'){sheet.hidden=true;return openLP()}
   if(key==='paint'){var p=document.createElement('div');p.className='page';sheetBody.appendChild(p);return window.initPaint(p)}
   if(key==='brick'){var g=document.createElement('div');g.className='game-host';sheetBody.appendChild(g);var game=window.initBrick(g);sheetBody.__stop=function(){game&&game.stop()};return}
   if(key==='meme'){var m=document.createElement('div');m.className='page';sheetBody.appendChild(m);return window.initMeme(m)}
@@ -457,6 +460,24 @@ function openSheet(key){
 }
 function closeSheet(){sheet.hidden=true;if(sheetBody.__stop){sheetBody.__stop();sheetBody.__stop=null}sheetBody.innerHTML=''}
 var sc=document.getElementById('sheetClose');if(sc)sc.addEventListener('click',closeSheet);
+
+/* ---------- launchpad ---------- */
+var lp=document.getElementById('launchpad'),lpGrid=document.getElementById('lpGrid'),lpInput=document.getElementById('lpInput');
+function lpItems(){
+  return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init}})
+   .concat(EXTRA.map(function(x){return{key:x.key,title:x.title,art:x.art}}))
+   .concat(DOCK.filter(function(d){return ['brave','music','paint','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
+   .concat(Object.keys(PAGES).map(function(k){return{key:'page:'+k,title:PAGES[k].title,icon:PAGES[k].icon,fit:PAGES[k].fit,art:PAGES[k].art}}));
+}
+function renderLP(q){
+  q=(q||'').toLowerCase();
+  var items=lpItems().filter(function(x){return x.title.toLowerCase().indexOf(q)>-1});
+  lpGrid.innerHTML=items.map(function(x,i){return '<button class="lp-app" data-key="'+esc(x.key)+'" style="--i:'+i+'">'+sqHTML(x)+'<span class="label">'+esc(x.title)+'</span></button>'}).join('')||'<p class="lp-none">No results</p>';
+  lpGrid.querySelectorAll('.lp-app').forEach(function(b){b.addEventListener('click',function(){closeLP();var k=b.dataset.key;if(k.indexOf('page:')===0)openPage(k.slice(5));else openApp(k)})});
+}
+function openLP(){if(!lp)return;closeMenus();lp.hidden=false;lpInput.value='';renderLP('');setTimeout(function(){lpInput.focus()},60)}
+function closeLP(){if(lp)lp.hidden=true}
+if(lp){lp.addEventListener('click',function(e){if(e.target===lp||e.target===lpGrid)closeLP()});lpInput.addEventListener('input',function(){renderLP(lpInput.value)});lpInput.addEventListener('keydown',function(e){if(e.key==='Enter'){var b=lpGrid.querySelector('.lp-app');if(b)b.click()}})}
 
 /* ---------- spotlight ---------- */
 var spot=document.getElementById('spotlight'),spotInput=document.getElementById('spotInput'),spotResults=document.getElementById('spotResults');
@@ -481,8 +502,10 @@ var ls=document.getElementById('lSearchInput');
 if(ls)ls.addEventListener('focus',function(){ls.blur();openSpot()});
 document.addEventListener('keydown',function(e){
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();spot.hidden?openSpot():closeSpot()}
+  if(e.key==='F4'){e.preventDefault();lp&&lp.hidden?openLP():closeLP()}
   if(e.key==='Escape'){
     if(document.querySelector('.menu'))return closeMenus();
+    if(lp&&!lp.hidden)return closeLP();
     if(spot&&!spot.hidden)return closeSpot();
     if(sheet&&!sheet.hidden)return closeSheet();
     if(e.target.closest('input,textarea'))return;
