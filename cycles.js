@@ -12,7 +12,7 @@ window.initCycles=function(root){
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,A=1000;
-  var CFG={base:150,min:88,max:375,natural:75,turnFactor:.95,turnDelay:.05,brake:50,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:3,shieldRegen:5,boostAccel:110,boostOffset:5,boostNear:22,rimMul:.5,enemyMul:1.1};
+  var CFG={base:230,min:130,max:520,natural:110,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:3,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1};
   var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF'],NAMES=['You','Bot 1','Bot 2','Bot 3'];
   var DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   var cycles=[],running=false,raf=null,last=0,round=0,score=[0,0,0,0],over=false,mode=1,muted=false,booms=[],countdown=0,now=0;
@@ -52,9 +52,11 @@ window.initCycles=function(root){
     else if(Math.random()<dt*.3){if(fl>need*2&&fl>=fr)turn(c,'left');else if(fr>need*2)turn(c,'right')}
   }
   function turn(c,side){ /* side: 'left' / 'right', or an absolute direction 0-3 (arrow keys) */
-    if(!c.alive||now-c.lastTurn<CFG.turnDelay)return;
+    if(!c.alive)return;
     var nd=side==='left'?(c.d+3)%4:side==='right'?(c.d+1)%4:side;
     if(nd===c.d||nd===(c.d+2)%4)return;
+    if(now-c.lastTurn<CFG.turnDelay){c.pending=side;return}
+    c.pending=null;
     c.trail.push([c.x,c.y]);c.d=nd;c.speed*=CFG.turnFactor;c.lastTurn=now;
     if(c.human)blip(c.speed*1.6+220,.05);
   }
@@ -68,6 +70,7 @@ window.initCycles=function(root){
     now+=dt;var segs=segments();
     cycles.forEach(function(c){
       if(!c.alive)return;
+      if(c.pending&&now-c.lastTurn>=CFG.turnDelay){var pd=c.pending;c.pending=null;turn(c,pd)}
       if(!c.human)think(c,segs,dt);
       /* brake */
       var braking=c.braking&&c.brakeCharge>0;
@@ -119,7 +122,7 @@ window.initCycles=function(root){
     menu.innerHTML='<h2>'+(winner?(winner.human?winner.name+(winner.i===0?' win':' wins')+' the round':winner.name+' takes it'):(youDied?'You crashed':'Everyone crashed'))+'</h2><p>'+cycles.map(function(c){return c.name+': '+score[c.i]}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Next round</button><button class="cyc-btn" data-start="'+(mode===1?2:1)+'">'+(mode===1?'2 players':'Solo vs bots')+'</button></div>';
     menu.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});
   }
-  function start(m){if(m!==mode){score=[0,0,0,0];round=0}mode=m;reset();ui.hidden=true;running=true;last=0;countdown=3;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
+  function start(m){if(m!==mode){score=[0,0,0,0];round=0}mode=m;reset();ui.hidden=true;running=true;last=0;countdown=2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
   function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;if(act==='brake'){c.braking=on;return}if(on)turn(c,act)}
   /* arrow keys steer by direction: up/down/left/right on the grid. WASD does the same. Space brakes. */
   var ARROWS={ArrowRight:0,ArrowDown:1,ArrowLeft:2,ArrowUp:3},WASD={d:0,s:1,a:2,w:3,D:0,S:1,A:2,W:3};
@@ -131,7 +134,7 @@ window.initCycles=function(root){
     if(P1two[k]!==undefined){human(0,P1two[k],on);e.preventDefault()}if(P2[k]!==undefined){human(1,P2[k],on);e.preventDefault()}
   }
   function kd(e){key(e,true)}function ku(e){key(e,false)}
-  document.addEventListener('keydown',kd);document.addEventListener('keyup',ku);
+  canvas.tabIndex=0;canvas.addEventListener('keydown',kd);canvas.addEventListener('keyup',ku);document.addEventListener('keydown',function(e){if(e.target!==canvas)kd(e)});document.addEventListener('keyup',function(e){if(e.target!==canvas)ku(e)});canvas.addEventListener('mousedown',function(){canvas.focus()});
   var tx=0;canvas.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
   canvas.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)<10)return;human(0,dx>0?'right':'left',true)});
   root.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});
