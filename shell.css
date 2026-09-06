@@ -451,3 +451,10 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .dock.live .dock-icon .sq{transition:none}
 .dock-icon .sq{will-change:transform}
 .dock-icon .sq.bounce{animation:dockBounce .46s cubic-bezier(.34,1.4,.5,1)}
+
+.brick-menu p{margin:0 0 6px}
+.brick-post{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.brick-name{width:110px;background:#0F2A2E;color:#fff;border:1px solid #C6D3EC;border-radius:2px;padding:5px 8px;font:inherit;text-transform:uppercase}
+.brick-msg{color:#C6D3EC;font-size:.85rem}
+.brick-board{background:rgba(15,42,46,.92);border:2px solid #fff;padding:10px 16px;width:260px;text-align:left;color:#fff;font-size:.9rem;max-height:240px;overflow:auto}
+.brick-board ol{margin:6px 0 0;padding-left:22px}.brick-board li{margin:2px 0}.brick-board small{color:#C6D3EC;margin-left:6px}
