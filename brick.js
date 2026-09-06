@@ -56,7 +56,12 @@ window.initBrick=function(root){
     var dx=b.dx*sp,dy=b.dy*sp;
     if(b.x+dx>W-R||b.x+dx<R)b.dx=-b.dx;
     if(b.y+dy<R)b.dy=-b.dy;
-    else if(b.y+dy>H-R-PH&&b.x>paddleX-R&&b.x<paddleX+paddleW+R&&b.dy>0){b.dy=-Math.abs(b.dy);b.dx+=((b.x-(paddleX+paddleW/2))/paddleW)*2.2;var m=Math.hypot(b.dx,b.dy),want=Math.hypot(b.dx,b.dy)>6?6:m;b.dx=b.dx/m*want;b.dy=b.dy/m*want;if(Math.abs(b.dy)<1.2)b.dy=-1.2}
+    else if(b.y+dy>H-R-PH&&b.x>paddleX-R&&b.x<paddleX+paddleW+R&&b.dy>0){
+      /* where the ball meets the bar decides where it goes: centre = straight up, edges = 65° out, like a real Breakout */
+      var rel=Math.max(-1,Math.min(1,(b.x-(paddleX+paddleW/2))/(paddleW/2)));
+      var ang=rel*(65*Math.PI/180),v=Math.hypot(b.dx,b.dy);
+      b.dx=v*Math.sin(ang);b.dy=-v*Math.cos(ang);b.y=H-R-PH-1;
+    }
     b.x+=b.dx*sp;b.y+=b.dy*sp;
     hitBrick(b);
     return b.y>H+R; /* lost */
