@@ -74,7 +74,7 @@ if(mb){
 var desk=document.getElementById('desktop');
 function ctxMenu(x,y){
   closePanels();T.closeMenus();
-  var items=[['New Sticky Note',function(){addSticky()}],['Change Wallpaper…',function(){openPanel('cc',ccBtn)}],[store.get('theme','light')==='dark'?'Use Light Appearance':'Use Dark Appearance',function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()}],null,['Show Desktop',function(){showDesktop()}],['Mission Control',function(){openMission()}],['Launchpad',function(){T.openLP()}],null,['Open in Terminal',function(){T.openApp('terminal')}],['Clean Up',function(){location.reload()}]];
+  var items=[['Stickies',function(){openStickies()}],['Change Wallpaper…',function(){openPanel('cc',ccBtn)}],[store.get('theme','light')==='dark'?'Use Light Appearance':'Use Dark Appearance',function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()}],null,['Show Desktop',function(){showDesktop()}],['Mission Control',function(){openMission()}],['Launchpad',function(){T.openLP()}],null,['Open in Terminal',function(){T.openApp('terminal')}],['Clean Up',function(){location.reload()}]];
   var ul=document.createElement('ul');ul.className='menu ctx';
   items.forEach(function(it){if(!it){var s=document.createElement('li');s.className='sep';ul.appendChild(s);return}var li=document.createElement('li');li.innerHTML='<span>'+esc(it[0])+'</span>';li.addEventListener('click',function(e){e.stopPropagation();ul.remove();it[1]()});ul.appendChild(li)});
   ul.style.left=Math.min(x,window.innerWidth-240)+'px';ul.style.top=Math.min(y,window.innerHeight-330)+'px';
@@ -99,23 +99,24 @@ if(mc)mc.addEventListener('click',function(e){if(e.target===mc||e.target.classLi
 document.addEventListener('keydown',function(e){if(e.key==='F3'){e.preventDefault();mc&&mc.hidden?openMission():closeMission()}if(e.key==='Escape'){if(mc&&!mc.hidden)closeMission();closePanels();var c=document.querySelector('.menu.ctx');if(c)c.remove();var tr=document.getElementById('tour');if(tr&&!tr.hidden)endTour()}});
 
 /* ---------- stickies ---------- */
-var stickHost=document.getElementById('stickies');
-var STICKY_SEED=[{c:'yellow',t:'Tommy Roldan\nWeb Developer & Creative\nMiami, FL\n\ntroldan@terryco.com',x:60,y:60},{c:'blue',t:'Building products that move the work forward.\n\nBuilding since 2015.\nSteady output, sharp lines.\nPowered by café con leche.',x:60,y:250}];
+var stickHost=null; /* the Stickies app's board; created when the window opens */
+var STICKY_SEED=[{c:'yellow',t:'Tommy Roldan\nWeb Developer & Creative\nMiami, FL\n\ntroldan@terryco.com',x:24,y:20},{c:'blue',t:'Building products that move the work forward.\n\nBuilding since 2015.\nSteady output, sharp lines.\nPowered by café con leche.',x:290,y:60}];
 function renderStickies(){
-  if(!stickHost)return;stickHost.innerHTML='';
+  if(!stickHost||!document.body.contains(stickHost))return;stickHost.innerHTML='';
   var list=store.get('stickies',null);if(list===null){list=STICKY_SEED;store.set('stickies',list)}
   list.forEach(function(s,i){
     var el=document.createElement('div');el.className='sticky '+s.c;el.style.left=s.x+'px';el.style.top=s.y+'px';
     el.innerHTML='<div class="sticky-bar"><button class="sticky-x" aria-label="Close note">×</button></div><textarea spellcheck="false" aria-label="Sticky note">'+esc(s.t)+'</textarea>';
     var ta=el.querySelector('textarea');ta.addEventListener('input',function(){var l=store.get('stickies',[]);l[i].t=ta.value;store.set('stickies',l)});
     el.querySelector('.sticky-x').addEventListener('click',function(){var l=store.get('stickies',[]);l.splice(i,1);store.set('stickies',l);renderStickies()});
-    var bar=el.querySelector('.sticky-bar');bar.addEventListener('mousedown',function(e){if(e.target.closest('.sticky-x'))return;var sx=e.clientX,sy=e.clientY,ol=el.offsetLeft,ot=el.offsetTop;function mv(ev){el.style.left=Math.max(0,ol+ev.clientX-sx)+'px';el.style.top=Math.max(30,ot+ev.clientY-sy)+'px'}function up(){window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);var l=store.get('stickies',[]);l[i].x=el.offsetLeft;l[i].y=el.offsetTop;store.set('stickies',l)}window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up);e.preventDefault()});
+    var bar=el.querySelector('.sticky-bar');bar.addEventListener('mousedown',function(e){if(e.target.closest('.sticky-x'))return;var sx=e.clientX,sy=e.clientY,ol=el.offsetLeft,ot=el.offsetTop;function mv(ev){el.style.left=Math.max(0,ol+ev.clientX-sx)+'px';el.style.top=Math.max(0,ot+ev.clientY-sy)+'px'}function up(){window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);var l=store.get('stickies',[]);l[i].x=el.offsetLeft;l[i].y=el.offsetTop;store.set('stickies',l)}window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up);e.preventDefault()});
     stickHost.appendChild(el);
   });
 }
-function addSticky(){var l=store.get('stickies',[]);l.push({c:['yellow','blue','green','pink'][l.length%4],t:'',x:80+l.length*24,y:80+l.length*24});store.set('stickies',l);renderStickies();var last=stickHost.querySelector('.sticky:last-child textarea');if(last)last.focus()}
+function addSticky(){if(!stickHost||!document.body.contains(stickHost))openStickies();var l=store.get('stickies',[]);l.push({c:['yellow','blue','green','pink'][l.length%4],t:'',x:40+(l.length%5)*60,y:40+(l.length%4)*50});store.set('stickies',l);renderStickies();var last=stickHost.querySelector('.sticky:last-child textarea');if(last)last.focus()}
+function openStickies(){var w=T.createWindow('stickies','Stickies',{w:760,h:520,dockKey:'stickies',appName:'Stickies',minW:420});if(!w.body.querySelector('.stickies')){w.body.innerHTML='<div class="stickies-bar"><button class="btn btn-secondary sm" data-new>New note</button><button class="btn btn-secondary sm" data-reset>Reset</button><span class="t3">Drag a note by its bar. Notes stay on this device.</span></div><div class="stickies"></div>';w.body.querySelector('[data-new]').addEventListener('click',addSticky);w.body.querySelector('[data-reset]').addEventListener('click',resetStickies)}stickHost=w.body.querySelector('.stickies');renderStickies();return w}
+T.register('stickies','Stickies',openStickies,function(sheetBody){sheetBody.innerHTML='<div class="page"><div class="stickies-bar"><button class="btn btn-secondary sm" data-new>New note</button></div><div class="stickies static"></div></div>';stickHost=sheetBody.querySelector('.stickies');sheetBody.querySelector('[data-new]').addEventListener('click',addSticky);renderStickies()});
 function resetStickies(){store.set('stickies',STICKY_SEED);renderStickies()}
-renderStickies();
 
 /* ---------- guestbook: a wall of sticky notes ---------- */
 var GB_COLORS=['yellow','blue','green','pink','peach','lilac'];
@@ -160,5 +161,5 @@ function endTour(){tour.hidden=true;document.querySelectorAll('.tour-spot').forE
 setTimeout(function(){startTour(false)},1400);
 
 /* expose for the shell's menus */
-T.extras={openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
+T.extras={openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openStickies:openStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
 })();
