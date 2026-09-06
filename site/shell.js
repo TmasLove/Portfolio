@@ -191,7 +191,7 @@ if(menubar){
       e.stopPropagation();
       var was=btn.classList.contains('open');closeMenus();if(was)return;
       var items=MENUS[btn.dataset.menu];if(typeof items==='function')items=items();
-      var m=buildMenu(items);btn.classList.add('open');btn.appendChild(m);
+      var m=buildMenu(items);btn.classList.add('open');var r=btn.getBoundingClientRect();m.style.left=r.left+'px';m.style.top=(r.bottom+4)+'px';document.body.appendChild(m);
     });
   });
   document.addEventListener('click',closeMenus);

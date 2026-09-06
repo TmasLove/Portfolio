@@ -18,7 +18,7 @@ button.mb-item:hover,.mb-item.open{background:rgba(255,255,255,.22)}
 .mb-spacer{flex:1}
 .mb-loc{color:rgba(255,255,255,.85)}
 .mb-clock{font-variant-numeric:tabular-nums}
-.menu{position:absolute;top:calc(100% + 4px);left:0;min-width:220px;margin:0;padding:5px;list-style:none;background:rgba(255,255,255,.72);backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8);border-radius:9px;box-shadow:0 14px 40px rgba(10,8,20,.32),inset 0 0 0 .5px rgba(255,255,255,.7),0 0 0 .5px rgba(10,8,20,.25);color:var(--text);text-shadow:none;z-index:900;text-align:left;font-weight:400;animation:menuIn .14s ease-out}
+.menu{position:fixed;min-width:220px;margin:0;padding:5px;list-style:none;background:rgba(255,255,255,.8);backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8);border-radius:9px;box-shadow:0 14px 40px rgba(10,8,20,.32),inset 0 0 0 .5px rgba(255,255,255,.7),0 0 0 .5px rgba(10,8,20,.25);color:var(--text);text-shadow:none;z-index:900;text-align:left;font-weight:400;animation:menuIn .14s ease-out}
 @keyframes menuIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .menu li{display:flex;justify-content:space-between;gap:16px;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:.8125rem;white-space:nowrap}
 .menu li:hover{background:var(--accent);color:#fff}
@@ -365,7 +365,7 @@ html.still *{transition:none!important;animation:none!important}
 .toast{background:rgba(255,255,255,.8);backdrop-filter:blur(20px);border-radius:12px;padding:10px 14px;width:300px;box-shadow:0 10px 30px rgba(10,8,20,.25);font-family:var(--font-display);color:var(--text);animation:menuIn .2s ease-out}
 .toast.out{opacity:0;transition:opacity .3s}
 .toast b{display:block;font-size:.8125rem}.toast span{font-size:.78rem;color:var(--text-2)}
-.menu.ctx{position:fixed;z-index:950;top:auto}
+.menu.ctx{z-index:950}
 /* mission control */
 .mission{position:fixed;inset:0;z-index:1800;background:rgba(20,18,30,.5);backdrop-filter:blur(24px);padding:60px 40px;overflow:auto;animation:lpIn .18s ease-out}
 .mc-title{color:#fff;font-family:var(--font-display);text-align:center;margin-bottom:24px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
