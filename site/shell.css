@@ -423,3 +423,6 @@ body.mc-open .windows{visibility:hidden}
 .cyc-meter{display:block;width:140px;height:6px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden}
 .cyc-meter i{display:block;height:100%;width:100%;background:#00E0C6;transition:width .1s linear}
 .cyc-meter .cyc-brake{background:#FEBC2E}
+/* real macOS icon files (Finder, Music, Trash) carry their own shape: no plate, no square shadow, no clip — anywhere */
+.dock-icon .sq.plain,.lapp .sq.plain,.lp-app .sq.plain,.ficon .sq.plain,.fitem .sq.plain,.sq.plain{background:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
+.sq.plain img{background:none!important;padding:0!important;filter:drop-shadow(0 5px 10px rgba(0,0,0,.32))}
