@@ -8,7 +8,7 @@ window.initCycles=function(root){
     '<div class="cyc-hud"><span class="cyc-score"></span><span class="cyc-round"></span></div>'+
     '<div class="cyc-meters"><span class="cyc-meter"><i class="cyc-shield"></i></span><span class="cyc-meter"><i class="cyc-brake"></i></span></div>'+
     '<div class="cyc-count" hidden></div>'+
-    '<div class="cyc-ui"><div class="cyc-menu"><h2>LIGHT CYCLES</h2><p>Turn left and right with the arrows (or A / D). Space brakes. Run close and parallel to a wall to boost. Touching a wall drains your shield — get off it before it empties.</p><p class="cyc-small">M mutes · Trails fade behind you, so the grid keeps opening up · Inspired by Armagetron Advanced</p><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button></div><p class="cyc-small">2 players: A / D turn + S brake vs arrows + ↓ brake.</p></div></div></div>';
+    '<div class="cyc-ui"><div class="cyc-menu"><h2>LIGHT CYCLES</h2><p>Steer with the arrow keys (or WASD). Space brakes. Run close and parallel to a wall to boost. Touching a wall drains your shield — get off it before it empties.</p><p class="cyc-small">M mutes · Trails fade behind you, so the grid keeps opening up · Inspired by Armagetron Advanced</p><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button></div><p class="cyc-small">2 players: WASD + Space vs arrows + Shift.</p></div></div></div>';
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,A=1000;
@@ -51,9 +51,11 @@ window.initCycles=function(root){
     if(Math.random()<dt*.9&&me.alive&&me!==c){var want=Math.abs(me.x-c.x)>Math.abs(me.y-c.y)?(me.x>c.x?0:2):(me.y>c.y?1:3);if(want===l&&fl>need*1.6)turn(c,'left');else if(want===r&&fr>need*1.6)turn(c,'right')}
     else if(Math.random()<dt*.3){if(fl>need*2&&fl>=fr)turn(c,'left');else if(fr>need*2)turn(c,'right')}
   }
-  function turn(c,side){
+  function turn(c,side){ /* side: 'left' / 'right', or an absolute direction 0-3 (arrow keys) */
     if(!c.alive||now-c.lastTurn<CFG.turnDelay)return;
-    c.trail.push([c.x,c.y]);c.d=side==='left'?(c.d+3)%4:(c.d+1)%4;c.speed*=CFG.turnFactor;c.lastTurn=now;
+    var nd=side==='left'?(c.d+3)%4:side==='right'?(c.d+1)%4:side;
+    if(nd===c.d||nd===(c.d+2)%4)return;
+    c.trail.push([c.x,c.y]);c.d=nd;c.speed*=CFG.turnFactor;c.lastTurn=now;
     if(c.human)blip(c.speed*1.6+220,.05);
   }
   function trimTrail(c){ /* walls have a finite length: the tail retracts */
@@ -119,7 +121,9 @@ window.initCycles=function(root){
   }
   function start(m){if(m!==mode){score=[0,0,0,0];round=0}mode=m;reset();ui.hidden=true;running=true;last=0;countdown=3;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
   function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;if(act==='brake'){c.braking=on;return}if(on)turn(c,act)}
-  var P1={ArrowLeft:'left',ArrowRight:'right',a:'left',d:'right',A:'left',D:'right',s:'brake',S:'brake',' ':'brake'},P2={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'brake'},P1two={a:'left',d:'right',A:'left',D:'right',s:'brake',S:'brake'};
+  /* arrow keys steer by direction: up/down/left/right on the grid. WASD does the same. Space brakes. */
+  var ARROWS={ArrowRight:0,ArrowDown:1,ArrowLeft:2,ArrowUp:3},WASD={d:0,s:1,a:2,w:3,D:0,S:1,A:2,W:3};
+  var P1=Object.assign({' ':'brake'},ARROWS,WASD),P2=Object.assign({Enter:'brake',Shift:'brake'},ARROWS),P1two=Object.assign({' ':'brake'},WASD);
   function key(e,on){
     var k=e.key;
     if(on&&(k==='m'||k==='M')){muted=!muted;humSet(running&&!muted,cycles[0]?cycles[0].speed:CFG.base);return}
