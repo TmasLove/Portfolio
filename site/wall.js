@@ -35,5 +35,14 @@ window.TRWall=(function(){
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'failed');return {online:true}})})
       .catch(function(err){if(err&&/slow down|too long/.test(err.message||''))throw err;var arr=local('notes');arr.unshift({name:name||'',message:message,rating:rating,ts:Date.now()});setLocal('notes',arr);return {online:false}});
   }
-  return {list:list,post:post,notes:notes,postNote:postNote,galleryHTML:galleryHTML,API:API};
+  function scores(){
+    return fetch(API+'/api/wall/scores?limit=50',{mode:'cors'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){return {online:true,items:j.items}})
+      .catch(function(){return {online:false,items:local('scores').sort(function(a,b){return b.score-a.score})}});
+  }
+  function postScore(name,score,level){
+    return fetch(API+'/api/wall/scores',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name||'',score:score,level:level})})
+      .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||'failed');return {online:true}})})
+      .catch(function(err){if(err&&/slow down/.test(err.message||''))throw err;var arr=local('scores');arr.unshift({name:name||'',score:score,level:level,ts:Date.now()});setLocal('scores',arr);return {online:false}});
+  }
+  return {list:list,post:post,notes:notes,postNote:postNote,scores:scores,postScore:postScore,galleryHTML:galleryHTML,API:API};
 })();
