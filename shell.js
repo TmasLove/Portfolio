@@ -142,6 +142,16 @@ if(dockEl){
     dockEl.addEventListener('mouseover',function(e){var ic=e.target.closest('.dock-icon');if(!ic)return;clearMag();ic.classList.add('hov');var i=dockIcons.indexOf(ic);if(dockIcons[i-1])dockIcons[i-1].classList.add('near');if(dockIcons[i+1])dockIcons[i+1].classList.add('near')});
     dockEl.addEventListener('mouseleave',clearMag);
   }
+  var DOCKPREF={get:function(){try{return JSON.parse(localStorage.getItem('tr.dock')||'{}')}catch(e){return{}}},set:function(p){try{localStorage.setItem('tr.dock',JSON.stringify(p))}catch(e){}}};
+  function applyDock(){var p=DOCKPREF.get();var size=Math.max(36,Math.min(96,p.size||52));dockEl.style.setProperty('--dock-size',size+'px');dockEl.classList.toggle('nomag',p.mag===false)}
+  applyDock();
+  dockEl.addEventListener('contextmenu',function(e){
+    e.preventDefault();closeMenus();var p=DOCKPREF.get();
+    var items=[['Magnification',p.mag===false?'':'✓',function(){p.mag=p.mag===false;DOCKPREF.set(p);applyDock()}],null,['Small',(p.size||52)<=40?'✓':'',function(){p.size=40;DOCKPREF.set(p);applyDock()}],['Medium',!p.size||(p.size>40&&p.size<72)?'✓':'',function(){p.size=52;DOCKPREF.set(p);applyDock()}],['Large',(p.size||52)>=72?'✓':'',function(){p.size=76;DOCKPREF.set(p);applyDock()}],null,['Drag the divider up or down to resize',null]];
+    var m=buildMenu(items);m.style.left=Math.min(e.clientX,window.innerWidth-240)+'px';m.style.top=(e.clientY-260)+'px';document.body.appendChild(m);
+  });
+  var div=dockEl.querySelector('.dock-div');
+  if(div){div.addEventListener('mousedown',function(e){e.preventDefault();var sy=e.clientY,p=DOCKPREF.get(),s0=p.size||52;dockEl.classList.add('resizing');function mv(ev){p.size=Math.max(36,Math.min(96,s0+(sy-ev.clientY)*.5));DOCKPREF.set(p);applyDock()}function up(){window.removeEventListener('mousemove',mv);window.removeEventListener('mouseup',up);dockEl.classList.remove('resizing')}window.addEventListener('mousemove',mv);window.addEventListener('mouseup',up)})}
 }
 
 /* ---------- clock ---------- */
