@@ -136,11 +136,23 @@ if(dockEl){
     dockEl.appendChild(b);dockIcons.push(b);
   });
   function bounce(b){if(reduced)return;var sq=b.querySelector('.sq');sq.classList.remove('bounce');void sq.offsetWidth;sq.classList.add('bounce');setTimeout(function(){sq.classList.remove('bounce')},460)}
-  /* magnification: the icon under the pointer grows, its two neighbours a little; transforms only, so nothing shifts under the cursor */
-  function clearMag(){dockIcons.forEach(function(ic){ic.classList.remove('hov','near')})}
+  /* magnification, the macOS way: every icon scales by its distance to the pointer and slides aside to make
+     room; transforms only, computed straight from the pointer each frame, no transitions while the pointer moves */
+  var centers=null;
+  function measure(){centers=dockIcons.map(function(ic){var r=ic.getBoundingClientRect();return r.left+r.width/2})}
+  function magnify(mx){
+    if(!centers)measure();
+    var base=dockIcons[0].offsetWidth,R=base*2.1,MAX=.5,sc=[],growth=[],total=0;
+    dockIcons.forEach(function(ic,i){var d=Math.abs(mx-centers[i]),f=d<R?Math.cos(d/R*Math.PI/2):0,s=1+MAX*f*f;sc.push(s);growth.push((s-1)*base);total+=(s-1)*base});
+    var left=0;
+    dockIcons.forEach(function(ic,i){var tx=left+growth[i]/2-total/2;left+=growth[i];var s=sc[i];ic.querySelector('.sq').style.transform='translate('+tx.toFixed(1)+'px,'+(-(s-1)*base*.55).toFixed(1)+'px) scale('+s.toFixed(3)+')'});
+  }
+  function clearMag(){centers=null;dockEl.classList.remove('live');dockIcons.forEach(function(ic){ic.querySelector('.sq').style.transform=''})}
   if(!matchMedia('(pointer:coarse)').matches&&!reduced){
-    dockEl.addEventListener('mouseover',function(e){var ic=e.target.closest('.dock-icon');if(!ic)return;clearMag();ic.classList.add('hov');var i=dockIcons.indexOf(ic);if(dockIcons[i-1])dockIcons[i-1].classList.add('near');if(dockIcons[i+1])dockIcons[i+1].classList.add('near')});
+    dockEl.addEventListener('mouseenter',function(){if(dockEl.classList.contains('nomag'))return;measure();dockEl.classList.add('live')});
+    dockEl.addEventListener('mousemove',function(e){if(dockEl.classList.contains('nomag'))return;magnify(e.clientX)});
     dockEl.addEventListener('mouseleave',clearMag);
+    window.addEventListener('resize',function(){centers=null});
   }
   var DOCKPREF={get:function(){try{return JSON.parse(localStorage.getItem('tr.dock')||'{}')}catch(e){return{}}},set:function(p){try{localStorage.setItem('tr.dock',JSON.stringify(p))}catch(e){}}};
   function applyDock(){var p=DOCKPREF.get();var size=Math.max(36,Math.min(96,p.size||52));dockEl.style.setProperty('--dock-size',size+'px');dockEl.classList.toggle('nomag',p.mag===false)}
