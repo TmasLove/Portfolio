@@ -84,7 +84,7 @@ var DOCK=[
  {key:'terminal',label:'Terminal',art:'terminal'},
  {key:'trash',label:'Trash',icon:'/assets/icons/dock-trash.png',fit:'plain',init:'T'}
 ];
-var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},about:{title:'About',url:'/about/',art:'about'},contact:{title:'Contact',url:'/contact/',art:'contact'},tools:{title:'Tools',url:'/tools/',art:'tools'}};
+var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},about:{title:'About',url:'/about/',icon:'/assets/icons/dock-contacts.png',fit:'plain'},contact:{title:'Contact',url:'/contact/',icon:'/assets/icons/dock-mail.png',fit:'plain'},tools:{title:'Tools',url:'/tools/',icon:'/assets/icons/dock-settings.png',fit:'plain'}};
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -437,7 +437,7 @@ function openInfo(r){if(isPhone()){sheet.hidden=false;sheetTitle.textContent=r[0
 /* ---------- phone launcher ---------- */
 var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock');
 if(lGrid){
-  APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}})).forEach(function(a){
+  APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}})).forEach(function(a){
     var b=document.createElement('button');b.className='lapp';
     b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
