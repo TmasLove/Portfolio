@@ -1,7 +1,7 @@
 /* The public wall: drawings from Paint and memes from Meme Maker, shared by everyone who visits.
    Talks to the wall server; when it cannot be reached, saves on this device only and says so. */
 window.TRWall=(function(){
-  var API='https://wall.littleriver.site';
+  var API='https://tommyroldan-wall.troldan92.workers.dev';
   var LOCAL='wall.local.';
   function local(kind){try{return JSON.parse(localStorage.getItem(LOCAL+kind)||'[]')}catch(e){return[]}}
   function setLocal(kind,arr){try{localStorage.setItem(LOCAL+kind,JSON.stringify(arr.slice(0,24)))}catch(e){}}
