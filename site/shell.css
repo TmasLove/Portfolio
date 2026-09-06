@@ -359,8 +359,11 @@ html.still *{transition:none!important;animation:none!important}
 .mc-name{display:block;margin-top:8px;font-size:.8125rem;text-shadow:0 1px 2px rgba(0,0,0,.5)}
 body.mc-open .windows{visibility:hidden}
 /* stickies */
-.stickies{position:absolute;inset:0;pointer-events:none;z-index:5}
-.sticky{position:absolute;width:220px;min-height:150px;pointer-events:auto;box-shadow:0 10px 26px rgba(10,8,20,.25);border-radius:4px;display:flex;flex-direction:column;font-family:"Archivo",system-ui,sans-serif}
+.stickies{position:relative;min-height:420px;height:calc(100% - 44px);overflow:hidden;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(22,22,22,.05) 23px 24px)}
+.stickies-bar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);font-size:.8125rem}
+.stickies.static{height:auto;min-height:0;display:flex;flex-wrap:wrap;gap:12px;padding:12px;background:none}
+.stickies.static .sticky{position:static;width:100%}
+.sticky{position:absolute;width:220px;min-height:150px;box-shadow:0 10px 26px rgba(10,8,20,.25);border-radius:4px;display:flex;flex-direction:column;font-family:"Archivo",system-ui,sans-serif}
 .sticky.yellow{background:#FFF48A}.sticky.blue{background:#BFE1FF}.sticky.green{background:#C9F5C0}.sticky.pink{background:#FFC9E0}
 .sticky-bar{height:18px;background:rgba(0,0,0,.08);cursor:move;display:flex;align-items:center;padding:0 4px}
 .sticky-x{border:none;background:none;font-size:14px;line-height:1;cursor:pointer;color:rgba(0,0,0,.5);padding:0 3px}
@@ -431,3 +434,9 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 /* real macOS icon files (Finder, Music, Trash) carry their own shape: no plate, no square shadow, no clip — anywhere */
 .dock-icon .sq.plain,.lapp .sq.plain,.lp-app .sq.plain,.ficon .sq.plain,.fitem .sq.plain,.sq.plain{background:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important}
 .sq.plain img{background:none!important;padding:0!important;filter:drop-shadow(0 5px 10px rgba(0,0,0,.32))}
+
+.win-body .sticky-card .gb-text,.win-body .sticky-card .gb-meta,.win-body .sticky-card .gb-meta b,.win-body .sticky-card .gb-av,.sheet-body .sticky-card .gb-text,.sheet-body .sticky-card .gb-meta,.sheet-body .sticky-card .gb-meta b{color:#2b2618}
+.win-body .sticky-card .gb-meta,.sheet-body .sticky-card .gb-meta{color:rgba(43,38,24,.7)}
+.win-body .sticky-card .gb-stars,.sheet-body .sticky-card .gb-stars{color:#b8780a}
+.win-body .sticky textarea{color:#2b2618}
+@media (max-width:768px){.stickies{display:block}}
