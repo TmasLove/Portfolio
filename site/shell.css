@@ -419,3 +419,7 @@ body.mc-open .windows{visibility:hidden}
 .cyc-map{display:none}
 .cyc-count{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:6rem;font-weight:700;color:#00E0C6;text-shadow:0 0 30px rgba(0,224,198,.8);pointer-events:none}
 .cyc-opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.cyc-meters{position:absolute;left:12px;bottom:12px;display:flex;flex-direction:column;gap:5px;pointer-events:none}
+.cyc-meter{display:block;width:140px;height:6px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden}
+.cyc-meter i{display:block;height:100%;width:100%;background:#00E0C6;transition:width .1s linear}
+.cyc-meter .cyc-brake{background:#FEBC2E}
