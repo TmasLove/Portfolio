@@ -55,14 +55,16 @@ button.mb-item:hover,.mb-item.open{background:rgba(255,255,255,.22)}
 .sq.cover img{padding:0;background:none;object-fit:cover}
 
 /* dock — frosted pill; icons grow under the pointer */
-.dock{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;padding:6px;height:64px;background:rgba(255,255,255,.28);backdrop-filter:blur(28px) saturate(1.9);-webkit-backdrop-filter:blur(28px) saturate(1.9);border-radius:19px;box-shadow:0 12px 32px rgba(10,8,20,.34),inset 0 1px 0 rgba(255,255,255,.6),0 0 0 .5px rgba(255,255,255,.45);z-index:600;transition:none}
-.dock-icon{position:relative;width:52px;height:52px;flex:0 0 auto;border:none;background:transparent;cursor:pointer;padding:0;display:flex;align-items:flex-end;justify-content:center}
-.dock-icon .sq{width:52px;height:52px;transform-origin:bottom center;transition:transform .16s cubic-bezier(.22,.61,.36,1);box-shadow:0 5px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+.dock{--dock-size:52px;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;padding:6px;height:calc(var(--dock-size) + 12px);background:rgba(255,255,255,.28);backdrop-filter:blur(28px) saturate(1.9);-webkit-backdrop-filter:blur(28px) saturate(1.9);border-radius:19px;box-shadow:0 12px 32px rgba(10,8,20,.34),inset 0 1px 0 rgba(255,255,255,.6),0 0 0 .5px rgba(255,255,255,.45);z-index:600;transition:none}
+.dock-icon{position:relative;width:var(--dock-size);height:var(--dock-size);flex:0 0 auto;border:none;background:transparent;cursor:pointer;padding:0;display:flex;align-items:flex-end;justify-content:center}
+.dock-icon .sq{width:var(--dock-size);height:var(--dock-size);transform-origin:bottom center;transition:transform .16s cubic-bezier(.22,.61,.36,1);box-shadow:0 5px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.35)}
 .dock-icon .dot{position:absolute;left:50%;bottom:-5px;width:4px;height:4px;border-radius:50%;background:rgba(30,26,40,.75);transform:translateX(-50%);opacity:0;transition:opacity .14s}
 .dock-icon.open .dot{opacity:1}
 .dock-icon .tip{position:absolute;bottom:calc(100% + 22px);left:50%;transform:translateX(-50%);background:rgba(255,255,255,.78);backdrop-filter:blur(18px) saturate(1.8);color:#1b1822;font-family:var(--font-display);font-size:.8125rem;padding:5px 12px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;box-shadow:0 6px 18px rgba(10,8,20,.28),inset 0 0 0 .5px rgba(255,255,255,.8);transition:opacity .12s;z-index:2}
 .dock-icon:hover .tip,.dock-icon:focus-visible .tip{opacity:1}
-.dock-div{width:1px;align-self:stretch;background:rgba(255,255,255,.5);margin:4px 3px}
+.dock-div{width:1px;align-self:stretch;background:rgba(255,255,255,.5);margin:4px 3px;cursor:ns-resize;padding:0 3px;background-clip:content-box}
+.dock.resizing,.dock.resizing *{cursor:ns-resize!important}
+.dock.nomag .dock-icon .sq{transform:none!important}
 .dock-icon .sq.bounce{animation:dockBounce .46s cubic-bezier(.34,1.4,.5,1)}
 @keyframes dockBounce{0%{translate:0 0}30%{translate:0 -16px}55%{translate:0 0}75%{translate:0 -7px}100%{translate:0 0}}
 @media (pointer:coarse){.dock-icon .tip{display:none}}
