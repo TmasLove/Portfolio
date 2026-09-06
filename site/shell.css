@@ -57,7 +57,7 @@ button.mb-item:hover,.mb-item.open{background:rgba(255,255,255,.22)}
 /* dock — frosted pill; icons grow under the pointer */
 .dock{--dock-size:52px;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;padding:6px;height:calc(var(--dock-size) + 12px);background:rgba(255,255,255,.28);backdrop-filter:blur(28px) saturate(1.9);-webkit-backdrop-filter:blur(28px) saturate(1.9);border-radius:19px;box-shadow:0 12px 32px rgba(10,8,20,.34),inset 0 1px 0 rgba(255,255,255,.6),0 0 0 .5px rgba(255,255,255,.45);z-index:600;transition:none}
 .dock-icon{position:relative;width:var(--dock-size);height:var(--dock-size);flex:0 0 auto;border:none;background:transparent;cursor:pointer;padding:0;display:flex;align-items:flex-end;justify-content:center}
-.dock-icon .sq{width:var(--dock-size);height:var(--dock-size);transform-origin:bottom center;transition:transform .16s cubic-bezier(.22,.61,.36,1);box-shadow:0 5px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+.dock-icon .sq{width:var(--dock-size);height:var(--dock-size);transform-origin:bottom center;transition:transform .22s cubic-bezier(.22,.61,.36,1);box-shadow:0 5px 12px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.35)}
 .dock-icon .dot{position:absolute;left:50%;bottom:-5px;width:4px;height:4px;border-radius:50%;background:rgba(30,26,40,.75);transform:translateX(-50%);opacity:0;transition:opacity .14s}
 .dock-icon.open .dot{opacity:1}
 .dock-icon .tip{position:absolute;bottom:calc(100% + 22px);left:50%;transform:translateX(-50%);background:rgba(255,255,255,.78);backdrop-filter:blur(18px) saturate(1.8);color:#1b1822;font-family:var(--font-display);font-size:.8125rem;padding:5px 12px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;box-shadow:0 6px 18px rgba(10,8,20,.28),inset 0 0 0 .5px rgba(255,255,255,.8);transition:opacity .12s;z-index:2}
@@ -448,6 +448,6 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .lapp .label{flex:0 0 auto;height:2.45em;line-height:1.2;display:block;overflow:hidden}
 .dicon .label,.lp-app .label,.ficon .label{flex:0 0 auto;display:block;max-height:2.45em;line-height:1.2;overflow:hidden}
 
-.dock-icon.hov .sq{transform:translateY(-10px) scale(1.32)}
-.dock-icon.near .sq{transform:translateY(-4px) scale(1.12)}
+.dock.live .dock-icon .sq{transition:none}
+.dock-icon .sq{will-change:transform}
 .dock-icon .sq.bounce{animation:dockBounce .46s cubic-bezier(.34,1.4,.5,1)}
