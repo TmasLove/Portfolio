@@ -440,3 +440,4 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .win-body .sticky-card .gb-stars,.sheet-body .sticky-card .gb-stars{color:#b8780a}
 .win-body .sticky textarea{color:#2b2618}
 @media (max-width:768px){.stickies{display:block}}
+.dock-icon .sq.cover,.dock-icon .sq.art{box-shadow:0 5px 12px rgba(0,0,0,.28)}
