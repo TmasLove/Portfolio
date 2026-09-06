@@ -45,7 +45,8 @@ window.initMeme=function(root){
   function renderFeed(){TRWall.list('meme').then(function(res){feed.innerHTML=TRWall.galleryHTML(res,'meme')})}
   post.addEventListener('click',function(){
     post.disabled=true;msg.textContent='Posting…';
-    TRWall.post('meme',canvas.toDataURL('image/jpeg',.88),root.querySelector('.meme-name').value).then(function(r){msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';post.disabled=false;renderFeed()}).catch(function(err){msg.textContent=err.message||'Could not post.';post.disabled=false});
+    var data=canvas.toDataURL('image/jpeg',.88),who=root.querySelector('.meme-name').value;
+    TRWall.post('meme',data,who).then(function(r){msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';post.disabled=false;var mine={id:'just-now',src:data,ts:Date.now(),name:who||''};TRWall.list('meme').then(function(res){res.items.unshift(mine);feed.innerHTML=TRWall.galleryHTML(res,'meme')});setTimeout(renderFeed,65000)}).catch(function(err){msg.textContent=err.message||'Could not post.';post.disabled=false});
   });
   blank();renderFeed();
 };
