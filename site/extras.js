@@ -13,10 +13,10 @@ var WALLS=[
  ['sequoia','Sequoia','linear-gradient(150deg,#1d1b3a 0%,#7b3fa0 40%,#f26b6b 75%,#ffd27a 100%)'],
  ['graphite','Graphite','linear-gradient(160deg,#1a1b1f 0%,#3a3d45 55%,#6b6f7a 100%)'],
  ['mint','Mint','linear-gradient(150deg,#0b3b3a 0%,#00A88F 55%,#c8f4e6 100%)'],
- ['fixie','Galaxy fixie (photo)','url(/images/galaxy-fixie.jpg) center/cover']
+ ['gt3rs','GT3 RS at night (photo)','url(/assets/wall/gt3rs.jpg) center/cover #07090c']
 ];
 function applySettings(){
-  var s={theme:store.get('theme','light'),wall:store.get('wall','dusk'),motion:store.get('motion',true)};
+  var s={theme:store.get('theme','light'),wall:store.get('wall','dusk'),motion:store.get('motion',true)};if(s.wall==='fixie'){s.wall='gt3rs';store.set('wall','gt3rs')}
   document.documentElement.classList.toggle('dark',s.theme==='dark');
   document.documentElement.classList.toggle('still',!s.motion);
   var w=WALLS.filter(function(x){return x[0]===s.wall})[0]||WALLS[0];
