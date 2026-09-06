@@ -21,6 +21,7 @@ The site is presented as a Mac desktop: every project is an app icon that opens 
 - [Work](https://tommyroldan.com/work/): Full portfolio — apps, web platforms, AI agents, tools, and archived early work.
 - [About](https://tommyroldan.com/about/): Background, experience, and the story from Medellín to Miami.
 - [Tools](https://tommyroldan.com/tools/): Free browser-based utilities built to solve real problems.
+- [FAQ](https://tommyroldan.com/faq/): Cost, timelines, Shopify, apps, AI agents, Spanish — answered.
 - [Contact](https://tommyroldan.com/contact/): Project inquiry form — the way to start a project.
 - [Paint](https://tommyroldan.com/paint/): Draw and post to the public wall.
 - [Brick Breaker](https://tommyroldan.com/brick-breaker/): The 2015 canvas game, playable.

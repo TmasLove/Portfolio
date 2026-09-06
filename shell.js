@@ -84,7 +84,7 @@ var DOCK=[
  {key:'terminal',label:'Terminal',art:'terminal'},
  {key:'trash',label:'Trash',icon:'/assets/icons/dock-trash.png',fit:'plain',init:'T'}
 ];
-var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},about:{title:'About',url:'/about/',icon:'/assets/icons/dock-contacts.png',fit:'plain'},contact:{title:'Contact',url:'/contact/',icon:'/assets/icons/dock-mail.png',fit:'plain'},tools:{title:'Tools',url:'/tools/',icon:'/assets/icons/dock-settings.png',fit:'plain'}};
+var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},faq:{title:'FAQ',url:'/faq/',icon:'/assets/icons/dock-contacts.png',fit:'plain',hidden:true},about:{title:'About',url:'/about/',icon:'/assets/icons/dock-contacts.png',fit:'plain'},contact:{title:'Contact',url:'/contact/',icon:'/assets/icons/dock-mail.png',fit:'plain'},tools:{title:'Tools',url:'/tools/',icon:'/assets/icons/dock-settings.png',fit:'plain'}};
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -179,7 +179,7 @@ tick();setInterval(tick,30000);
 var menubar=document.getElementById('menubar');
 var MENUS={
  apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['Stickies',function(){TR.extras&&TR.extras.openStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Light Cycles',function(){openApp('cycles')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
+ go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Light Cycles',function(){openApp('cycles')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
@@ -355,11 +355,11 @@ function openApp(key){
 }
 function openPage(slug){var p=PAGES[slug];if(isPhone())return openSheetPage(slug);var w=createWindow('page-'+slug,p.title,{w:780,h:600,dockKey:slug==='work'?'finder':'page-'+slug,appName:p.title});loadPage(w,p.url);return w}
 /* Finder: sidebar of pages, folders and documents (the privacy and policy pages live here) */
-var DOCS=[['Privacy policy','/privacy.html'],['Rehab Pro privacy','/rehabpro/privacy.html'],['GRVT','/GRVT.html']];
+var DOCS=[['FAQ','/faq/'],['Privacy policy','/privacy.html'],['Rehab Pro privacy','/rehabpro/privacy.html'],['GRVT','/GRVT.html']];
 function openWork(){
   if(isPhone())return openSheetPage('work');
   var w=createWindow('finder','Work',{w:940,h:620,dockKey:'finder',appName:'Finder',minW:640});
-  var side='<div class="fside"><h4>Favorites</h4>'+Object.keys(PAGES).map(function(k){return '<button class="fitem'+(k==='work'?' on':'')+'" data-page="'+k+'">'+svgI(k)+PAGES[k].title+'</button>'}).join('')+'<h4>Folders</h4>'+FOLDERS.map(function(f){return '<button class="fitem" data-folder="'+f.key+'"><span class="fi">'+ART.folder+'</span>'+f.label+'</button>'}).join('')+'<h4>Documents</h4>'+DOCS.map(function(d){return '<button class="fitem" data-doc="'+d[1]+'"><span class="fi doc">'+ART.doc+'</span>'+d[0]+'</button>'}).join('')+'</div>';
+  var side='<div class="fside"><h4>Favorites</h4>'+Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).map(function(k){return '<button class="fitem'+(k==='work'?' on':'')+'" data-page="'+k+'">'+svgI(k)+PAGES[k].title+'</button>'}).join('')+'<h4>Folders</h4>'+FOLDERS.map(function(f){return '<button class="fitem" data-folder="'+f.key+'"><span class="fi">'+ART.folder+'</span>'+f.label+'</button>'}).join('')+'<h4>Documents</h4>'+DOCS.map(function(d){return '<button class="fitem" data-doc="'+d[1]+'"><span class="fi doc">'+ART.doc+'</span>'+d[0]+'</button>'}).join('')+'</div>';
   w.el.classList.add('finder');
   w.body.innerHTML='<div class="fwrap">'+side+'<div class="fmain win-body"></div></div>';
   var main=w.body.querySelector('.fmain');var host={body:main,el:w.el,nav:[]};
@@ -452,7 +452,7 @@ if(lGrid){
     b.addEventListener('click',function(){openApp(a.key)});
     lGrid.appendChild(b);
   });
-  Object.keys(PAGES).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
+  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
 }
 var sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody'),sheetTitle=document.getElementById('sheetTitle');
 function openSheetPage(slug){sheet.hidden=false;sheetTitle.textContent=PAGES[slug].title;sheetBody.__wired=false;loadPage(sheetBody,PAGES[slug].url,{keepTitle:true});if(slug==='work')setTimeout(function(){var d=document.createElement('div');d.className='page docs-strip';d.innerHTML='<h3>Documents</h3>'+DOCS.map(function(x){return '<a class="btn btn-secondary sm" href="'+x[1]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a> '}).join('');sheetBody.appendChild(d)},600)}
@@ -486,7 +486,7 @@ function lpItems(){
    .concat(EXTRA.map(function(x){return{key:x.key,title:x.title,art:x.art}}))
    .concat([{key:'stickies',title:'Stickies',art:'stickies'}])
    .concat(DOCK.filter(function(d){return ['brave','music','paint','guestbook','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
-   .concat(Object.keys(PAGES).map(function(k){return{key:'page:'+k,title:PAGES[k].title,icon:PAGES[k].icon,fit:PAGES[k].fit,art:PAGES[k].art}}));
+   .concat(Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).map(function(k){return{key:'page:'+k,title:PAGES[k].title,icon:PAGES[k].icon,fit:PAGES[k].fit,art:PAGES[k].art}}));
 }
 function renderLP(q){
   q=(q||'').toLowerCase();

@@ -33,8 +33,13 @@ window.initPaint = function(root){
   function renderGallery(){TRWall.list('paint').then(function(res){g.innerHTML=TRWall.galleryHTML(res,'paint')})}
   root.querySelector('#pSave').addEventListener('click',function(){
     var btn=this;btn.disabled=true;msg.textContent='Saving…';
-    TRWall.post('paint',canvas.toDataURL('image/png'),root.querySelector('#pName').value).then(function(r){
-      msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';btn.disabled=false;renderGallery();
+    var data=canvas.toDataURL('image/png'),who=root.querySelector('#pName').value;
+    TRWall.post('paint',data,who).then(function(r){
+      msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';btn.disabled=false;
+      /* show it at once: the wall's listing lags a minute behind a save */
+      var mine={id:'just-now',src:data,ts:Date.now(),name:who||''};
+      TRWall.list('paint').then(function(res){if(!res.items.some(function(i){return i.ts>mine.ts-3000&&i.name===mine.name&&i.id!=='just-now'}))res.items.unshift(mine);g.innerHTML=TRWall.galleryHTML(res,'paint')});
+      setTimeout(renderGallery,65000);
     }).catch(function(err){msg.textContent=err.message||'Could not save.';btn.disabled=false});
   });
   renderGallery();
