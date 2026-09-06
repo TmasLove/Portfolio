@@ -441,3 +441,7 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .win-body .sticky textarea{color:#2b2618}
 @media (max-width:768px){.stickies{display:block}}
 .dock-icon .sq.cover,.dock-icon .sq.art{box-shadow:0 5px 12px rgba(0,0,0,.28)}
+
+/* labels never get squeezed by the flex column: two lines reserved */
+.lapp .label{flex:0 0 auto;height:2.45em;line-height:1.2;display:block;overflow:hidden}
+.dicon .label,.lp-app .label,.ficon .label{flex:0 0 auto;display:block;max-height:2.45em;line-height:1.2;overflow:hidden}
