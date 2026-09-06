@@ -117,18 +117,33 @@ function addSticky(){var l=store.get('stickies',[]);l.push({c:['yellow','blue','
 function resetStickies(){store.set('stickies',STICKY_SEED);renderStickies()}
 renderStickies();
 
-/* ---------- guestbook (the wall's notes) ---------- */
-function guestbookHTML(){return '<div class="gb"><div class="gb-form"><h2>Leave a note</h2><p class="t3">A shared wall for visitors, clients and friends. Say hi, rate the visit, it stays.</p><input class="gb-name" maxlength="24" placeholder="Your name" aria-label="Your name"><textarea class="gb-msg" maxlength="420" rows="4" placeholder="Your message" aria-label="Your message"></textarea><div class="gb-rate" role="radiogroup" aria-label="Rating">'+[1,2,3,4,5].map(function(n){return '<button class="gb-star" data-n="'+n+'" aria-label="'+n+' stars">★</button>'}).join('')+'</div><div class="paint-save"><button class="btn btn-primary" data-post>Post to the wall</button><span class="t3" data-msg></span></div></div><div class="gb-list wall-host" data-list><p class="t3">Loading…</p></div></div>'}
+/* ---------- guestbook: a wall of sticky notes ---------- */
+var GB_COLORS=['yellow','blue','green','pink','peach','lilac'];
+function gbColor(seed){var h=0;for(var i=0;i<seed.length;i++)h=(h*31+seed.charCodeAt(i))>>>0;return GB_COLORS[h%GB_COLORS.length]}
+function gbInitials(n){n=(n||'').trim();if(!n)return '?';var p=n.split(/\s+/);return (p[0][0]+(p[1]?p[1][0]:'')).toUpperCase()}
+function guestbookHTML(){return '<div class="gb"><aside class="gb-form"><h2>Leave a note</h2><p class="t3">Say hi, rate the visit, pin it to the wall. Everyone who comes after you will see it.</p>'+
+ '<label class="gb-l">Name<input class="gb-name" maxlength="24" placeholder="Anonymous" aria-label="Your name"></label>'+
+ '<label class="gb-l">Note<textarea class="gb-msg" maxlength="420" rows="5" placeholder="What did you think?" aria-label="Your message"></textarea><span class="gb-count">0 / 420</span></label>'+
+ '<div class="gb-rate" role="radiogroup" aria-label="Rating">'+[1,2,3,4,5].map(function(n){return '<button class="gb-star" data-n="'+n+'" aria-label="'+n+' stars">★</button>'}).join('')+'<span class="gb-rate-word"></span></div>'+
+ '<div class="gb-preview sticky-card yellow"><span class="gb-av">?</span><p class="gb-text">Your note will look like this.</p><span class="gb-meta">now · ★★★★★</span></div>'+
+ '<div class="paint-save"><button class="btn btn-primary" data-post disabled>Pin it to the wall</button><span class="t3" data-msg></span></div></aside>'+
+ '<section class="gb-wall"><div class="gb-head"><h3>On the wall <span class="gb-n"></span></h3><div class="gb-sort"><button class="on" data-sort="new">Newest</button><button data-sort="top">Top rated</button></div></div><div class="gb-list" data-list><p class="t3">Loading…</p></div></section></div>'}
+function noteCard(n,i){var name=n.name||'Anonymous',col=gbColor(name+(n.ts||''));var rot=((i*7)%5-2)*.6;return '<div class="sticky-card '+col+'" style="--rot:'+rot+'deg;--i:'+i+'"><span class="gb-av">'+esc(gbInitials(n.name))+'</span><p class="gb-text">'+esc(n.message)+'</p><span class="gb-meta"><b>'+esc(name)+'</b> · '+new Date(n.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · <i class="gb-stars">'+'★'.repeat(n.rating||0)+'</i></span></div>'}
 function initGuestbook(root){
-  root.innerHTML=guestbookHTML();var rating=5;
-  function paint(){root.querySelectorAll('.gb-star').forEach(function(b){b.classList.toggle('on',+b.dataset.n<=rating)})}
-  root.querySelectorAll('.gb-star').forEach(function(b){b.addEventListener('click',function(){rating=+b.dataset.n;paint()})});paint();
-  var list=root.querySelector('[data-list]'),msg=root.querySelector('[data-msg]');
-  function render(){TRWall.notes().then(function(res){list.innerHTML=(res.online?'':'<p class="t3">The wall is offline right now — showing notes saved on this device.</p>')+(res.items.length?res.items.map(function(n){return '<div class="gb-note"><div class="gb-head"><b>'+esc(n.name||'Anonymous')+'</b><span class="gb-stars">'+'★'.repeat(n.rating||0)+'</span><span class="t3">'+new Date(n.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</span></div><p>'+esc(n.message)+'</p></div>'}).join(''):'<p class="t3">No notes yet — be the first.</p>')})}
-  root.querySelector('[data-post]').addEventListener('click',function(){var b=this,m=root.querySelector('.gb-msg').value.trim();if(!m){msg.textContent='Write something first.';return}b.disabled=true;msg.textContent='Posting…';TRWall.postNote(root.querySelector('.gb-name').value,m,rating).then(function(r){msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';root.querySelector('.gb-msg').value='';b.disabled=false;render()}).catch(function(e){msg.textContent=e.message||'Could not post.';b.disabled=false})});
-  render();
+  root.innerHTML=guestbookHTML();var rating=5,sort='new',items=[],online=true;
+  var WORDS={1:'rough',2:'meh',3:'decent',4:'nice',5:'loved it'};
+  var name=root.querySelector('.gb-name'),msg=root.querySelector('.gb-msg'),count=root.querySelector('.gb-count'),post=root.querySelector('[data-post]'),status=root.querySelector('[data-msg]'),list=root.querySelector('[data-list]'),nEl=root.querySelector('.gb-n'),prev=root.querySelector('.gb-preview');
+  function paint(){root.querySelectorAll('.gb-star').forEach(function(b){b.classList.toggle('on',+b.dataset.n<=rating)});root.querySelector('.gb-rate-word').textContent=WORDS[rating]}
+  root.querySelectorAll('.gb-star').forEach(function(b){b.addEventListener('click',function(){rating=+b.dataset.n;paint();preview()});b.addEventListener('mouseenter',function(){root.querySelectorAll('.gb-star').forEach(function(x){x.classList.toggle('hover',+x.dataset.n<=+b.dataset.n)})});b.addEventListener('mouseleave',function(){root.querySelectorAll('.gb-star').forEach(function(x){x.classList.remove('hover')})})});
+  function preview(){var nm=name.value.trim()||'Anonymous';prev.className='gb-preview sticky-card '+gbColor(nm);prev.querySelector('.gb-av').textContent=gbInitials(name.value);prev.querySelector('.gb-text').textContent=msg.value.trim()||'Your note will look like this.';prev.querySelector('.gb-meta').textContent=nm+' · now · '+'★'.repeat(rating);count.textContent=msg.value.length+' / 420';post.disabled=!msg.value.trim()}
+  name.addEventListener('input',preview);msg.addEventListener('input',preview);paint();preview();
+  function render(){var arr=items.slice();if(sort==='top')arr.sort(function(a,b){return (b.rating||0)-(a.rating||0)||b.ts-a.ts});nEl.textContent=items.length?'· '+items.length:'';list.innerHTML=(online?'':'<p class="t3">The wall is offline right now — showing notes saved on this device.</p>')+(arr.length?'<div class="gb-grid">'+arr.map(noteCard).join('')+'</div>':'<div class="gb-empty"><span class="sticky-card yellow" style="--rot:-2deg"><span class="gb-av">✎</span><p class="gb-text">Nothing on the wall yet. Be the first.</p></span></div>')}
+  function load(){TRWall.notes().then(function(res){items=res.items;online=res.online;render()})}
+  root.querySelectorAll('[data-sort]').forEach(function(b){b.addEventListener('click',function(){sort=b.dataset.sort;root.querySelectorAll('[data-sort]').forEach(function(x){x.classList.toggle('on',x===b)});render()})});
+  post.addEventListener('click',function(){var m=msg.value.trim();if(!m)return;post.disabled=true;status.textContent='Pinning…';TRWall.postNote(name.value,m,rating).then(function(r){status.textContent=r.online?'Pinned.':'Wall offline — saved on this device.';items.unshift({name:name.value.trim(),message:m,rating:rating,ts:Date.now()});online=r.online;render();msg.value='';preview();if(T.extras)T.extras.toast('Pinned to the wall','Thanks — it is up for everyone.');setTimeout(load,5000)}).catch(function(e){status.textContent=e.message||'Could not post.';post.disabled=false})});
+  load();
 }
-T.register('guestbook','Guestbook',function(){var w=T.createWindow('guestbook','Guestbook',{w:820,h:600,dockKey:'guestbook',appName:'Guestbook'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);initGuestbook(d)},function(sheetBody){var d=document.createElement('div');d.className='page';sheetBody.appendChild(d);initGuestbook(d)});
+T.register('guestbook','Guestbook',function(){var w=T.createWindow('guestbook','Guestbook',{w:1000,h:660,dockKey:'guestbook',appName:'Guestbook',minW:520});var d=document.createElement('div');d.className='page gb-page';w.body.appendChild(d);initGuestbook(d)},function(sheetBody){var d=document.createElement('div');d.className='page gb-page';sheetBody.appendChild(d);initGuestbook(d)});
 
 /* ---------- first-visit tour ---------- */
 var STEPS=[
