@@ -36,7 +36,7 @@ window.initCycles3D=function(root,api){
     wallLine=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true}));scene.add(wallLine);
     /* goal ring + light column (survival) */
     ring=new THREE.Mesh(new THREE.TorusGeometry(1,.06,10,64),new THREE.MeshBasicMaterial({color:0xffd166}));ring.rotation.x=Math.PI/2;ring.visible=false;scene.add(ring);
-    column=new THREE.Mesh(new THREE.CylinderGeometry(1,1,90,32,1,true),new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:.09,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));column.visible=false;scene.add(column);
+    column=new THREE.Mesh(new THREE.CylinderGeometry(1,1,90,32,1,true),new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:.035,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));column.visible=false;scene.add(column);
     /* crash sparks */
     pPos=new Float32Array(600*3);pCol=new Float32Array(600*3);var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pPos,3));pg.setAttribute('color',new THREE.BufferAttribute(pCol,3));pg.setDrawRange(0,0);
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
@@ -100,7 +100,7 @@ window.initCycles3D=function(root,api){
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
     cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.35:.12;m.children[0].material.color.set(c.touching?'#ffffff':c.color)});
     /* goal pulse */
-    if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.07+Math.sin(now*3)*.03}
+    if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
     /* sparks */
     var k=0;booms.forEach(function(b){if(k<600){pPos[k*3]=b.x;pPos[k*3+1]=3+(1-b.t)*20;pPos[k*3+2]=b.y;var c=rgb(b.c);pCol[k*3]=c[0];pCol[k*3+1]=c[1];pCol[k*3+2]=c[2];k++}});
     points.geometry.setDrawRange(0,k);points.geometry.attributes.position.needsUpdate=true;points.geometry.attributes.color.needsUpdate=true;
