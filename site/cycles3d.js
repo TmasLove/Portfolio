@@ -11,9 +11,9 @@ window.initCycles3D=function(root,api){
   /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
      meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
      Without the file the built-in cycle below is used. */
-  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:20,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
+  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:24,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
   var modelScene=null,modelTried=false;
-  var walls,wallLine,mirror,floor,grid,ring,column,zone,zoneRing,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
+  var walls,wallLine,wallBase,mirror,floor,grid,ring,column,zone,zoneRing,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
   var pos,col,idx,linePos,lineCol,pPos,pCol;
   var camPos,camLook,camOff,lookOff,tmpV,DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   Promise.all([import(U+'+esm'),import(U+'examples/jsm/postprocessing/EffectComposer.js'+E),import(U+'examples/jsm/postprocessing/RenderPass.js'+E),import(U+'examples/jsm/postprocessing/UnrealBloomPass.js'+E),import(U+'examples/jsm/postprocessing/OutputPass.js'+E)])
@@ -24,22 +24,23 @@ window.initCycles3D=function(root,api){
     try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'})}catch(e){host.remove();view='flat';return}
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5)); /* re-capped in resize() for big canvases */
     host.appendChild(renderer.domElement);
-    scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);scene.fog=new THREE.FogExp2(0x02040a,0.00028);
+    scene=new THREE.Scene();scene.background=new THREE.Color(0x000000); /* pure black, no fog: nothing between you and the walls */
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
     camera=new THREE.PerspectiveCamera(55,1,1,8000);
-    scene.add(new THREE.HemisphereLight(0x6f9fcf,0x0a0d14,1.1));var sun=new THREE.DirectionalLight(0xdfefff,1.4);sun.position.set(300,500,200);scene.add(sun);
+    scene.add(new THREE.HemisphereLight(0x5b8fc9,0x05070a,1.5));var sun=new THREE.DirectionalLight(0xe8f4ff,1.7);sun.position.set(300,500,200);scene.add(sun);var rimL=new THREE.DirectionalLight(0x9fd8ff,.9);rimL.position.set(-400,250,-300);scene.add(rimL);
     camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-100,52,0);lookOff=new THREE.Vector3(120,4,0);tmpV=new THREE.Vector3();
     /* floor: a dark slab you can faintly see the walls mirrored in, plus the grid */
-    floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x05070c,transparent:true,opacity:.82,depthWrite:false}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
+    floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x020408}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
     grid=null;
     /* wall ribbons: one shared buffer for trails, level walls and the rim; a mirrored twin under the floor */
     pos=new Float32Array(CAP*4*3);col=new Float32Array(CAP*4*3);idx=new Uint32Array(CAP*6);
     for(var q=0;q<CAP;q++){var b=q*4,o=q*6;idx[o]=b;idx[o+1]=b+1;idx[o+2]=b+2;idx[o+3]=b;idx[o+4]=b+2;idx[o+5]=b+3}
     var geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));geo.setIndex(new THREE.BufferAttribute(idx,1));geo.setDrawRange(0,0);
-    walls=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.62,depthWrite:false}));scene.add(walls);
-    mirror=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.16,depthWrite:false}));mirror.scale.y=-1;scene.add(mirror);
+    walls=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.42,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(walls); /* light walls: additive, so crossings brighten instead of muddying */
     linePos=new Float32Array(CAP*2*3);lineCol=new Float32Array(CAP*2*3);
     var lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.BufferAttribute(linePos,3));lg.setAttribute('color',new THREE.BufferAttribute(lineCol,3));lg.setDrawRange(0,0);
     wallLine=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true}));scene.add(wallLine);
+    wallBase=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.8}));wallBase.position.y=-WALL_H+.25;scene.add(wallBase); /* the same edge line again, at the floor */
     /* goal ring + light column (survival) */
     ring=new THREE.Mesh(new THREE.TorusGeometry(1,.06,10,64),new THREE.MeshBasicMaterial({color:0xffd166}));ring.rotation.x=Math.PI/2;ring.visible=false;scene.add(ring);
     column=new THREE.Mesh(new THREE.CylinderGeometry(1,1,90,32,1,true),new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:.035,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));column.visible=false;scene.add(column);
@@ -50,8 +51,8 @@ window.initCycles3D=function(root,api){
     pPos=new Float32Array(600*3);pCol=new Float32Array(600*3);var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pPos,3));pg.setAttribute('color',new THREE.BufferAttribute(pCol,3));pg.setDrawRange(0,0);
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
     /* post: bloom is what makes the ribbons glow */
-    composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
-    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.7,.25,.22);composer.addPass(bloom);composer.addPass(new OutputPass());
+    composer=new EffectComposer(renderer,new THREE.WebGLRenderTarget(800,600,{samples:4,type:THREE.HalfFloatType}));composer.addPass(new RenderPass(scene,camera)); /* 4x MSAA: no jaggies on the edge lines */
+    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.55,.1,.5);composer.addPass(bloom);composer.addPass(new OutputPass());
     resize();
     if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(host)}else window.addEventListener('resize',resize);
     ready=true;apply();
@@ -82,7 +83,7 @@ window.initCycles3D=function(root,api){
     var g=new THREE.Group(),c=hex(color),m=modelScene.clone(true);
     m.traverse(function(o){if(o.isMesh&&o.material){o.material=o.material.clone();var nm=o.material.name||'';if(/^glow/i.test(nm)){if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=2.2}o.material.color=c.clone()}else if(/^tint/i.test(nm)){o.material.color=c.clone();if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=.28}}}});
     g.add(m);
-    var shield=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending}));shield.position.y=3;g.add(shield);g.userData.shield=shield;g.userData.tint=null;
+    var shield=new THREE.Mesh(new THREE.RingGeometry(.86,1,40),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));shield.rotation.x=-Math.PI/2;shield.position.y=.5;g.add(shield);g.userData.shield=shield;g.userData.tint=null;
     scene.add(g);return g;
   }
   function mkBuiltIn(color){
@@ -97,7 +98,7 @@ window.initCycles3D=function(root,api){
     var disc=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,.8,20),dark);disc.rotation.x=Math.PI/2;disc.position.copy(w1.position);g.add(disc);var disc2=disc.clone();disc2.position.copy(w2.position);g.add(disc2);
     var hub1=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,1.1,12),white);hub1.rotation.x=Math.PI/2;hub1.position.copy(w1.position);g.add(hub1);var hub2=hub1.clone();hub2.position.copy(w2.position);g.add(hub2);
     g.userData.tint=strip;
-    var shield=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending}));shield.position.y=3;g.add(shield);g.userData.shield=shield;
+    var shield=new THREE.Mesh(new THREE.RingGeometry(.86,1,40),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));shield.rotation.x=-Math.PI/2;shield.position.y=.5;g.add(shield);g.userData.shield=shield;
     scene.add(g);return g;
   }
   function noteSprite(text,x,y,s){
@@ -114,7 +115,7 @@ window.initCycles3D=function(root,api){
     else{ring.visible=column.visible=false}
     floor.scale.set(AW*4,AH*4,1);floor.position.set(AW/2,0.05,AH/2);
     if(grid){scene.remove(grid);grid.geometry.dispose();grid.material.dispose()}
-    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x0f6b63,0x0b3d39);grid.material.transparent=true;grid.material.opacity=.55;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
+    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x0e6a60,0x0a3f3a);grid.material.transparent=true;grid.material.opacity=.75;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
   }
   function quad(n,x0,z0,x1,z1,h,r,g,b){
     var p=n*12;pos[p]=x0;pos[p+1]=0;pos[p+2]=z0;pos[p+3]=x1;pos[p+4]=0;pos[p+5]=z1;pos[p+6]=x1;pos[p+7]=h;pos[p+8]=z1;pos[p+9]=x0;pos[p+10]=h;pos[p+11]=z0;
@@ -131,12 +132,15 @@ window.initCycles3D=function(root,api){
     var n=0,rim=rgb('#0d5e57');
     quad(n++,0,0,AW,0,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,AW,0,AW,AH,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,AW,AH,0,AH,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,0,AH,0,0,WALL_H*1.4,rim[0],rim[1],rim[2]);
     statics.forEach(function(s){if(n<CAP){var c=rgb(s[6]);quad(n++,s[0],s[1],s[2],s[3],WALL_H,c[0],c[1],c[2])}});
-    cycles.forEach(function(c){var t=c.trail,cc=rgb(c.color),f=c.alive?1:.28;for(var i=1;i<t.length&&n<CAP;i++)quad(n++,t[i-1][0],t[i-1][1],t[i][0],t[i][1],WALL_H,cc[0]*f,cc[1]*f,cc[2]*f);if(n<CAP)quad(n++,t[t.length-1][0],t[t.length-1][1],c.x,c.y,WALL_H,cc[0]*f,cc[1]*f,cc[2]*f)});
+    cycles.forEach(function(c){var t=c.trail,cc=rgb(c.color),f=c.alive?1:.28;for(var i=1;i<t.length&&n<CAP;i++)quad(n++,t[i-1][0],t[i-1][1],t[i][0],t[i][1],WALL_H,cc[0]*f,cc[1]*f,cc[2]*f);
+      var lp=t[t.length-1],tail=MODEL.size*.42,hx=c.x-DIRS[c.d][0]*tail,hy=c.y-DIRS[c.d][1]*tail; /* the wall leaves the tail of the bike */
+      if(!c.alive){hx=c.x;hy=c.y}else if((hx-lp[0])*DIRS[c.d][0]+(hy-lp[1])*DIRS[c.d][1]<0){hx=lp[0];hy=lp[1]}
+      if(n<CAP)quad(n++,lp[0],lp[1],hx,hy,WALL_H,cc[0]*f,cc[1]*f,cc[2]*f)});
     walls.geometry.setDrawRange(0,n*6);walls.geometry.attributes.position.needsUpdate=true;walls.geometry.attributes.color.needsUpdate=true;walls.geometry.computeBoundingSphere();
-    wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();
+    wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();wallBase.geometry.setDrawRange(0,n*2);
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
-    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.15));m.userData.shield.material.opacity=c.touching?.42:(c.protect>0?.12+.08*Math.sin(now*10):.14); /* the halo IS the collision size */if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
+    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.15));m.userData.shield.material.opacity=c.touching?.9:(c.protect>0?.5+.4*Math.sin(now*10):.4); /* the ring IS the collision size */if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
     var z=api.zone();zone.visible=zoneRing.visible=!!z;if(z){zone.position.set(z.x,35,z.y);zone.scale.set(z.r,1,z.r);zoneRing.position.set(z.x,1,z.y);zoneRing.scale.setScalar(z.r);zone.material.opacity=.04+.02*Math.sin(now*2)}
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}

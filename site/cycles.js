@@ -217,6 +217,7 @@ window.initCycles=function(root){
   }
   function standings(){if(mode===5)return cycles.slice().sort(function(a,b){return zoneScore[b.i]-zoneScore[a.i]});return cycles.slice().sort(function(a,b){return score[b.i]-score[a.i]||a.deaths-b.deaths})}
   function endMatch(){
+    if(mode<4)return;
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');countEl.hidden=true;
     var st=standings(),you=st.indexOf(cycles[0])+1,tot=zoneScore.reduce(function(a,b){return a+b},0)||1;
     var title=you===1?(mode===5?'King of the Zone':'King of the Arena'):'#'+you+' of '+st.length+(mode===5?' — '+st[0].name+' is King of the Zone':' — '+st[0].name+' is King of the Arena');
@@ -259,11 +260,13 @@ window.initCycles=function(root){
   function viewLabel(){var v=g3?g3.view():'flat';return 'View: '+({chase:'chase',high:'high chase',overview:'overview',flat:'flat'}[v]||v)}
   function viewBtns(){menu.querySelectorAll('[data-view]').forEach(function(b){b.textContent=viewLabel();b.onclick=function(){if(g3)g3.cycleView();viewBtns();draw()}})}
   function endRound(winner,youDied){
+    if(mode!==1&&mode!==2)return;
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     menu.innerHTML='<h2>'+(winner?(winner.human?winner.name+(winner.i===0?' win':' wins')+' the round':winner.name+' takes it'):(youDied?'You crashed':'Everyone crashed'))+'</h2><p>'+cycles.map(function(c){return c.name+': '+score[c.i]}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Next round</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
   function endLevel(won,how){
+    if(mode!==3||!level)return; /* the mode changed during the end delay */
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var next=levelIx+1<LEVELS.length;
     menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' — new best':' · best '+BEST[level.id].toFixed(2)+'s'):' — '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
