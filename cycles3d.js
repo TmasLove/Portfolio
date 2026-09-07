@@ -55,7 +55,7 @@ window.initCycles3D=function(root,api){
   }
   function resize(){if(!renderer)return;var w=host.clientWidth||wrap.clientWidth||900,h=host.clientHeight||wrap.clientHeight||640;renderer.setSize(w,h,false);composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
   function apply(){var on=ready&&view!=='flat';host.hidden=!on;root.classList.toggle('cyc-has3d',on);try{localStorage.setItem('tr-cycles-view',view)}catch(e){}}
-  function cycleView(){var order=ready?['chase','overview','flat']:['flat'];view=order[(order.indexOf(view)+1)%order.length];apply();return view}
+  function cycleView(){var order=ready?['chase','high','overview','flat']:['flat'];view=order[(order.indexOf(view)+1)%order.length];apply();return view}
   function hex(c){return new THREE.Color(c)}
   function loadModel(){
     if(modelTried)return;modelTried=true;
@@ -140,15 +140,15 @@ window.initCycles3D=function(root,api){
     var k=0;booms.forEach(function(b){if(k<600){pPos[k*3]=b.x;pPos[k*3+1]=3+(1-b.t)*20;pPos[k*3+2]=b.y;var c=rgb(b.c);pCol[k*3]=c[0];pCol[k*3+1]=c[1];pCol[k*3+2]=c[2];k++}});
     points.geometry.setDrawRange(0,k);points.geometry.attributes.position.needsUpdate=true;points.geometry.attributes.color.needsUpdate=true;
     /* camera */
-    var me=cycles[0],mode=api.mode(),chase=view==='chase'&&mode!==2&&me&&me.alive;
+    var me=cycles[0],mode=api.mode(),chase=(view==='chase'||view==='high')&&mode!==2&&me&&me.alive,hi=view==='high';
     if(chase){ /* smooth the OFFSET from the bike, not the world position, so the camera never trails at speed; turns still swing round */
-      var d=DIRS[me.d];tmpV.set(-d[0]*58,24,-d[1]*58);camOff.lerp(tmpV,1-Math.exp(-dt*6));tmpV.set(d[0]*80,3,d[1]*80);lookOff.lerp(tmpV,1-Math.exp(-dt*8));
+      var d=DIRS[me.d],back=hi?110:58,up=hi?62:24,ahead=hi?70:80;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*6));tmpV.set(d[0]*ahead,3,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*8));
       camPos.set(me.x+camOff.x,camOff.y,me.y+camOff.z);camLook.set(me.x+lookOff.x,lookOff.y,me.y+lookOff.z)}
     else{var big=Math.max(AW,AH*1.3);tmpV.set(AW/2,big*.72,AH/2+big*.62);camPos.lerp(tmpV,1-Math.exp(-dt*2.5));tmpV.set(AW/2,0,AH/2);camLook.lerp(tmpV,1-Math.exp(-dt*2.5))}
     camera.position.copy(camPos);camera.lookAt(camLook);
     composer.render();
   }
   function snap(){camPos.set(-1e9,0,0)} /* next render jumps the camera instead of sweeping across the arena */
-  return {render:render,model:function(){return !!modelScene},view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&view==='chase'},reset:function(){if(camPos)camPos.set(0,900,0)},
+  return {render:render,model:function(){return !!modelScene},view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&(view==='chase'||view==='high')},reset:function(){if(camPos)camPos.set(0,900,0)},
     stop:function(){stopped=true;if(ro)ro.disconnect();window.removeEventListener('resize',resize);if(renderer){renderer.dispose();host.remove()}}};
 };
