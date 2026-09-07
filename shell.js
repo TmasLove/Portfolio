@@ -65,7 +65,7 @@ var ART={
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
 };
-var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'arena',title:'Lightwall',art:'arena'},{key:'meme',title:'Meme Maker',art:'meme'}];
+var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'arena',title:'Lightwall',art:'cycles'},{key:'meme',title:'Meme Maker',art:'meme'}];
 var REG={};
 /* the desktop is grouped into folders (Tommy: "I kinda want to group them. And the games should be under a games folder") */
 var FOLDERS=[
