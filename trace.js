@@ -54,15 +54,15 @@ window.TRTrace = (function(){
     while(h<t){var c=q[h++],x=c%cw,y=(c/cw)|0,d=D[c]+1;if(x>0&&D[c-1]<0){D[c-1]=d;q[t++]=c-1}if(x<cw-1&&D[c+1]<0){D[c+1]=d;q[t++]=c+1}if(y>0&&D[c-cw]<0){D[c-cw]=d;q[t++]=c-cw}if(y<ch-1&&D[c+cw]<0){D[c+cw]=d;q[t++]=c+cw}}return D}
   function score(level,userData){
     var ref=level.photo?null:refMask(level),edge=level.photo?edgeMask(level):null,cs=2,cw=W/cs,ch=H/cs,R=new Uint8Array(cw*ch),RL=new Uint8Array(cw*ch),U=new Uint8Array(cw*ch),cnt=new Uint8Array(cw*ch),i,x,y;
-    for(y=0;y<H;y++)for(x=0;x<W;x++){i=(y*W+x)*4;var cx=(x/cs)|0,cy=(y/cs)|0;if(level.photo){if(edge[y*W+x]){RL[cy*cw+cx]=1;if(++cnt[cy*cw+cx]>=2)R[cy*cw+cx]=1}}else if(ref[i]<120){R[cy*cw+cx]=1;RL[cy*cw+cx]=1}
+    for(y=0;y<H;y++)for(x=0;x<W;x++){i=(y*W+x)*4;var cx=(x/cs)|0,cy=(y/cs)|0;if(level.photo){if(edge[y*W+x]){RL[cy*cw+cx]=1;if(++cnt[cy*cw+cx]>=2)R[cy*cw+cx]=1}}else{if(ref[i]<120)R[cy*cw+cx]=1;if(ref[i]<200)RL[cy*cw+cx]=1}
       if(userData[i+3]>40&&(userData[i]<200||userData[i+1]<200||userData[i+2]<200))U[cy*cw+cx]=1}
-    var lvlIx=LEVELS.indexOf(level),free=level.photo?2:1,slide=level.photo?3:(lvlIx>=6?1:2); /* cells: full credit within `free`, zero at free+slide */
+    var lvlIx=LEVELS.indexOf(level),free=level.photo?(lvlIx>=13?1:2):(lvlIx>=6?0:1),slide=level.photo?(lvlIx>=13?2:3):2; /* higher levels: no free band (credit falls off from the line itself) */ /* cells: full credit within `free`, zero at free+slide */
     function credit(d){if(d<0)return 0;if(d<=free)return 1;var v=1-(d-free)/slide;return v>0?v:0}
     var DU=dist(U,cw,ch),DR=dist(RL,cw,ch),cov=0,nr=0,prec=0,nu=0;
     for(i=0;i<cw*ch;i++){if(R[i]){nr++;cov+=credit(DU[i])}if(U[i]){nu++;prec+=credit(DR[i])}}
     cov=nr?cov/nr:0;prec=nu?prec/nu:0;
     if(!nu)return {score:0,coverage:0,precision:0};
-    var f=cov+prec?2*cov*prec/(cov+prec):0;f=Math.pow(f,level.photo?1.5:2.2); /* steep: a sloppy trace should feel it */
+    var f=cov+prec?2*cov*prec/(cov+prec):0;var steep=level.photo?(lvlIx>=13?1.8:1.5):(lvlIx>=6?2.6:2.2);f=Math.pow(f,steep); /* steeper on the higher levels */
     return {score:Math.round(f*100),coverage:Math.round(cov*100),precision:Math.round(prec*100)};
   }
   return {LEVELS:LEVELS,score:score,prepare:prepare,edgeMask:edgeMask,W:W,H:H};
