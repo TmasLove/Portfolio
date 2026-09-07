@@ -11,7 +11,7 @@ window.initCycles3D=function(root,api){
   /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
      meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
      Without the file the built-in cycle below is used. */
-  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:18,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
+  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:19,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
   var modelScene=null,modelTried=false;
   var walls,wallLine,mirror,floor,grid,ring,column,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
   var pos,col,idx,linePos,lineCol,pPos,pCol;
@@ -77,7 +77,7 @@ window.initCycles3D=function(root,api){
   }
   function mkFromModel(color){
     var g=new THREE.Group(),c=hex(color),m=modelScene.clone(true);
-    m.traverse(function(o){if(o.isMesh&&o.material){o.material=o.material.clone();var glow=/^glow/i.test(o.material.name||'')||(o.material.emissiveIntensity>0&&o.material.emissive&&(o.material.emissive.r+o.material.emissive.g+o.material.emissive.b)>.5);if(glow){if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=2.2}o.material.color=c.clone()}}});
+    m.traverse(function(o){if(o.isMesh&&o.material){o.material=o.material.clone();var nm=o.material.name||'';if(/^glow/i.test(nm)){if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=2.2}o.material.color=c.clone()}else if(/^tint/i.test(nm)){o.material.color=c.clone();if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=.28}}}});
     g.add(m);
     var shield=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending}));shield.position.y=3;g.add(shield);g.userData.shield=shield;g.userData.tint=null;
     scene.add(g);return g;
