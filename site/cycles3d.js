@@ -7,7 +7,7 @@ window.initCycles3D=function(root,api){
   try{view=localStorage.getItem('tr-cycles-view')||'chase'}catch(e){}
   var wrap=root.querySelector('.cyc'),host=document.createElement('div');host.className='cyc-3d';wrap.insertBefore(host,wrap.firstChild);
   var U='https://cdn.jsdelivr.net/npm/three@0.160.0/',E='/+esm';
-  var WALL_H=12,CAP=6000; /* quads */
+  var WALL_H=22,CAP=6000; /* quads */
   /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
      meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
      Without the file the built-in cycle below is used. */
@@ -28,7 +28,7 @@ window.initCycles3D=function(root,api){
     renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
     camera=new THREE.PerspectiveCamera(55,1,1,8000);
     scene.add(new THREE.HemisphereLight(0x5b8fc9,0x05070a,1.5));var sun=new THREE.DirectionalLight(0xe8f4ff,1.7);sun.position.set(300,500,200);scene.add(sun);var rimL=new THREE.DirectionalLight(0x9fd8ff,.9);rimL.position.set(-400,250,-300);scene.add(rimL);
-    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-100,52,0);lookOff=new THREE.Vector3(120,4,0);tmpV=new THREE.Vector3();
+    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-85,42,0);lookOff=new THREE.Vector3(120,6,0);tmpV=new THREE.Vector3();
     /* floor: a dark slab you can faintly see the walls mirrored in, plus the grid */
     floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x020408}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
     grid=null;
@@ -115,7 +115,7 @@ window.initCycles3D=function(root,api){
     else{ring.visible=column.visible=false}
     floor.scale.set(AW*4,AH*4,1);floor.position.set(AW/2,0.05,AH/2);
     if(grid){scene.remove(grid);grid.geometry.dispose();grid.material.dispose()}
-    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x15928a,0x0f5e57);grid.material.transparent=true;grid.material.opacity=.95;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
+    var size=Math.max(AW,AH),gs=size>1500?60:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x15928a,0x0f5e57);grid.material.transparent=true;grid.material.opacity=.95;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
   }
   function quad(n,x0,z0,x1,z1,h,r,g,b){
     var p=n*12;pos[p]=x0;pos[p+1]=0;pos[p+2]=z0;pos[p+3]=x1;pos[p+4]=0;pos[p+5]=z1;pos[p+6]=x1;pos[p+7]=h;pos[p+8]=z1;pos[p+9]=x0;pos[p+10]=h;pos[p+11]=z0;
@@ -129,8 +129,8 @@ window.initCycles3D=function(root,api){
     var cycles=api.cycles(),statics=api.statics(),level=api.level(),sz=api.size(),AW=sz[0],AH=sz[1],booms=api.booms(),now=api.now();
     if(level!==noteLevel||floor.scale.x!==AW*4||floor.scale.y!==AH*4)setLevel(level,AW,AH);
     /* ribbons */
-    var n=0,rim=rgb('#0d5e57');
-    quad(n++,0,0,AW,0,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,AW,0,AW,AH,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,AW,AH,0,AH,WALL_H*1.4,rim[0],rim[1],rim[2]);quad(n++,0,AH,0,0,WALL_H*1.4,rim[0],rim[1],rim[2]);
+    var n=0,rim=rgb('#094640'),RH=WALL_H*.7; /* the arena edge: lower and dimmer than a rider's wall */
+    quad(n++,0,0,AW,0,RH,rim[0],rim[1],rim[2]);quad(n++,AW,0,AW,AH,RH,rim[0],rim[1],rim[2]);quad(n++,AW,AH,0,AH,RH,rim[0],rim[1],rim[2]);quad(n++,0,AH,0,0,RH,rim[0],rim[1],rim[2]);
     statics.forEach(function(s){if(n<CAP){var c=rgb(s[6]);quad(n++,s[0],s[1],s[2],s[3],WALL_H,c[0],c[1],c[2])}});
     cycles.forEach(function(c){var t=c.trail,cc=rgb(c.color),f=c.alive?1:.28;for(var i=1;i<t.length&&n<CAP;i++)quad(n++,t[i-1][0],t[i-1][1],t[i][0],t[i][1],WALL_H,cc[0]*f,cc[1]*f,cc[2]*f);
       var lp=t[t.length-1],tail=MODEL.size*.42,hx=c.x-DIRS[c.d][0]*tail,hy=c.y-DIRS[c.d][1]*tail; /* the wall leaves the tail of the bike */
@@ -150,7 +150,7 @@ window.initCycles3D=function(root,api){
     /* camera */
     var me=cycles[0],mode=api.mode(),chase=(view==='chase'||view==='high')&&mode!==2&&me&&me.alive,hi=view==='high';
     if(chase){ /* smooth the OFFSET from the bike, not the world position, so the camera never trails at speed; turns still swing round */
-      var d=DIRS[me.d],back=hi?170:100,up=hi?110:52,ahead=hi?110:120;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*3.5));tmpV.set(d[0]*ahead,4,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*5)); /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
+      var d=DIRS[me.d],back=hi?160:85,up=hi?100:42,ahead=hi?110:120;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*7));tmpV.set(d[0]*ahead,6,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*9)); /* quick swing: a slow one reads as input lag */ /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
       camPos.set(me.x+camOff.x,camOff.y,me.y+camOff.z);camLook.set(me.x+lookOff.x,lookOff.y,me.y+lookOff.z)}
     else{var big=Math.max(AW,AH*1.3);tmpV.set(AW/2,big*.72,AH/2+big*.62);camPos.lerp(tmpV,1-Math.exp(-dt*2.5));tmpV.set(AW/2,0,AH/2);camLook.lerp(tmpV,1-Math.exp(-dt*2.5))}
     camera.position.copy(camPos);camera.lookAt(camLook);
