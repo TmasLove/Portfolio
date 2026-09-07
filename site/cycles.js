@@ -151,14 +151,24 @@ window.initCycles=function(root){
       var l=c.speed-CFG.base;
       if(l>0)c.speed-=.1*l*dt;else if(l<0&&!braking)c.speed+=-l*CFG.recover*dt; /* measured on a live arena: speed closes ~45%/s of the gap to cruise, and bleeds ~10%/s above it */
       c.speed=Math.max(CFG.min,Math.min(CFG.max,c.speed));
-      /* move; a wall ahead drains the shield (and shrinks you) instead of killing outright */
-      var rad=radius(c),dist=c.speed*dt,rr2=ray(c.x,c.y,c.d,c,dist+rad+1.5,segs,rad);
-      if(rr2.d<=dist+rad){
-        c.x+=DIRS[c.d][0]*Math.max(0,rr2.d-rad);c.y+=DIRS[c.d][1]*Math.max(0,rr2.d-rad);
-        c.touching=true;c.lastHit=rr2.seg;if(c.protect<=0)c.shield-=CFG.shieldDrain*dt;
+      /* move. Three cases, none of them freezes you:
+         hard  — a wall squarely across the path: you stop against it and grind (shield drains, you shrink, die at 0)
+         soft  — only your shield's width clips a wall end (a gap narrower than you): you SQUEEZE through at 40% speed while the shield drains faster
+         sides — walls closer than your radius on the left/right (a tight tunnel): you keep full speed but the shield drains */
+      var rad=radius(c),dist=c.speed*dt,hard=ray(c.x,c.y,c.d,c,dist+2.5,segs,1.2),soft=ray(c.x,c.y,c.d,c,dist+rad+1.5,segs,rad);
+      var sideL=ray(c.x,c.y,(c.d+3)%4,c,rad+1,segs).d,sideR=ray(c.x,c.y,(c.d+1)%4,c,rad+1,segs).d,tight=Math.min(sideL,sideR)<rad;
+      function hurt(mul){c.touching=true;if(c.protect<=0)c.shield-=CFG.shieldDrain*mul*dt;
         if(c.shield<=0){c.alive=false;c.deaths++;boom(c);if(c.human)blip(90,.4);
-          if(mode>=4){var owner=rr2.seg!=='rim'&&rr2.seg[4]&&rr2.seg[4].i!==undefined?rr2.seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}
-      }else{c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;c.touching=false;c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.shieldRegen*dt)}
+          if(mode>=4){var seg=c.lastHit,owner=seg&&seg!=='rim'&&seg[4]&&seg[4].i!==undefined?seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}}
+      if(hard.d<=dist+1){
+        c.x+=DIRS[c.d][0]*Math.max(0,hard.d-1.2);c.y+=DIRS[c.d][1]*Math.max(0,hard.d-1.2);c.lastHit=hard.seg;hurt(1);
+      }else if(soft.d<=dist+rad){
+        var sq=dist*.4;c.x+=DIRS[c.d][0]*sq;c.y+=DIRS[c.d][1]*sq;c.lastHit=soft.seg;hurt(1.6);
+      }else{
+        c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;
+        if(tight){c.lastHit=(sideL<sideR?ray(c.x,c.y,(c.d+3)%4,c,rad+1,segs):ray(c.x,c.y,(c.d+1)%4,c,rad+1,segs)).seg;hurt(.8)}
+        else{c.touching=false;c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.shieldRegen*dt)}
+      }
       if(mode===5){c.outside=!inZone(c.x,c.y);if(c.outside&&c.protect<=0){c.shield-=ZONE.drain*dt;if(c.shield<=0){c.alive=false;c.deaths++;boom(c);c.respawn=DM.respawn;if(c.human){blip(90,.4);countEl.hidden=false}}}}
       trimTrail(c);
     });
