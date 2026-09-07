@@ -136,7 +136,7 @@ window.initCycles3D=function(root,api){
     wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
-    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.3:(c.protect>0?.06+.05*Math.sin(now*10):.04);if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
+    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.15));m.userData.shield.material.opacity=c.touching?.42:(c.protect>0?.12+.08*Math.sin(now*10):.14); /* the halo IS the collision size */if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
     var z=api.zone();zone.visible=zoneRing.visible=!!z;if(z){zone.position.set(z.x,35,z.y);zone.scale.set(z.r,1,z.r);zoneRing.position.set(z.x,1,z.y);zoneRing.scale.setScalar(z.r);zone.material.opacity=.04+.02*Math.sin(now*2)}
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
