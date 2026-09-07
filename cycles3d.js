@@ -8,11 +8,16 @@ window.initCycles3D=function(root,api){
   var wrap=root.querySelector('.cyc'),host=document.createElement('div');host.className='cyc-3d';wrap.insertBefore(host,wrap.firstChild);
   var U='https://cdn.jsdelivr.net/npm/three@0.160.0/',E='/+esm';
   var WALL_H=14,CAP=6000; /* quads */
+  /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
+     meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
+     Without the file the built-in cycle below is used. */
+  var MODEL={url:'/assets/models/cycle.glb',forward:'-z',size:15,lift:0};
+  var modelScene=null,modelTried=false;
   var walls,wallLine,mirror,floor,grid,ring,column,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
   var pos,col,idx,linePos,lineCol,pPos,pCol;
   var camPos,camLook,tmpV,DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   Promise.all([import(U+'+esm'),import(U+'examples/jsm/postprocessing/EffectComposer.js'+E),import(U+'examples/jsm/postprocessing/RenderPass.js'+E),import(U+'examples/jsm/postprocessing/UnrealBloomPass.js'+E),import(U+'examples/jsm/postprocessing/OutputPass.js'+E)])
-    .then(function(m){if(stopped)return;THREE=m[0];build(m[1].EffectComposer,m[2].RenderPass,m[3].UnrealBloomPass,m[4].OutputPass)})
+    .then(function(m){if(stopped)return;THREE=m[0];build(m[1].EffectComposer,m[2].RenderPass,m[3].UnrealBloomPass,m[4].OutputPass);loadModel()})
     .catch(function(e){host.remove();ready=false;view='flat';if(window.console)console.warn('3D view unavailable, staying flat:',e&&e.message)});
 
   function build(EffectComposer,RenderPass,UnrealBloomPass,OutputPass){
@@ -51,14 +56,43 @@ window.initCycles3D=function(root,api){
   function apply(){var on=ready&&view!=='flat';host.hidden=!on;root.classList.toggle('cyc-has3d',on);try{localStorage.setItem('tr-cycles-view',view)}catch(e){}}
   function cycleView(){var order=ready?['chase','overview','flat']:['flat'];view=order[(order.indexOf(view)+1)%order.length];apply();return view}
   function hex(c){return new THREE.Color(c)}
+  function loadModel(){
+    if(modelTried)return;modelTried=true;
+    fetch(MODEL.url,{method:'HEAD'}).then(function(r){if(!r.ok)throw new Error('no model file');
+      return Promise.all([import(U+'examples/jsm/loaders/GLTFLoader.js'+E),import(U+'examples/jsm/loaders/DRACOLoader.js'+E)])}).then(function(m){
+      var loader=new m[0].GLTFLoader(),draco=new m[1].DRACOLoader();draco.setDecoderPath(U+'examples/jsm/libs/draco/gltf/');loader.setDRACOLoader(draco);
+      loader.load(MODEL.url,function(gltf){
+        var sc=gltf.scene,box=new THREE.Box3().setFromObject(sc),size=new THREE.Vector3();box.getSize(size);var k=MODEL.size/Math.max(size.x,size.y,size.z);
+        var pivot=new THREE.Group();sc.scale.setScalar(k);var c=new THREE.Vector3();box.getCenter(c);sc.position.set(-c.x*k,-box.min.y*k+MODEL.lift,-c.z*k);pivot.add(sc);
+        pivot.rotation.y={'-z':-Math.PI/2,'+z':Math.PI/2,'+x':0,'-x':Math.PI}[MODEL.forward]||0;
+        modelScene=pivot;
+        cycleMeshes.forEach(function(old,i){scene.remove(old)});cycleMeshes=[];
+      },undefined,function(e){if(window.console)console.warn('cycle model failed to load, using the built-in cycle:',e&&e.message)});
+    }).catch(function(){});
+  }
   function mkCycle(color){
+    if(modelScene)return mkFromModel(color);
+    return mkBuiltIn(color);
+  }
+  function mkFromModel(color){
+    var g=new THREE.Group(),c=hex(color),m=modelScene.clone(true);
+    m.traverse(function(o){if(o.isMesh&&o.material){o.material=o.material.clone();if('emissive' in o.material){o.material.emissive=c.clone();o.material.emissiveIntensity=1.2}else o.material.color=c.clone()}});
+    g.add(m);
+    var shield=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending}));shield.position.y=3;g.add(shield);g.userData.shield=shield;g.userData.tint=null;
+    scene.add(g);return g;
+  }
+  function mkBuiltIn(color){
     var g=new THREE.Group(),c=hex(color),mat=new THREE.MeshBasicMaterial({color:c}),white=new THREE.MeshBasicMaterial({color:0xf4fffd});
-    var body=new THREE.Mesh(new THREE.BoxGeometry(11,3.2,3.6),mat);body.position.y=3.2;g.add(body);
-    var canopy=new THREE.Mesh(new THREE.BoxGeometry(4.5,2,2.6),white);canopy.position.set(.5,5.4,0);g.add(canopy);
-    var w1=new THREE.Mesh(new THREE.TorusGeometry(2.6,.8,8,24),mat);w1.position.set(5.2,2.6,0);g.add(w1);
-    var w2=new THREE.Mesh(new THREE.TorusGeometry(2.6,.8,8,24),mat);w2.position.set(-5.2,2.6,0);g.add(w2);
-    var hub1=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.4,1.2,12),white);hub1.rotation.x=Math.PI/2;hub1.position.copy(w1.position);g.add(hub1);
-    var hub2=hub1.clone();hub2.position.copy(w2.position);g.add(hub2);
+    var dark=new THREE.MeshBasicMaterial({color:0x0b0f16});
+    var hull=new THREE.Mesh(new THREE.CapsuleGeometry(1.7,9,6,14),dark);hull.rotation.z=Math.PI/2;hull.position.y=3.4;g.add(hull);
+    var strip=new THREE.Mesh(new THREE.BoxGeometry(10.5,.35,.5),mat);strip.position.set(0,4.9,1.1);g.add(strip);var strip2=strip.clone();strip2.position.z=-1.1;g.add(strip2);
+    var spine=new THREE.Mesh(new THREE.BoxGeometry(11.5,.3,.5),mat);spine.position.set(0,2.2,0);g.add(spine);
+    var canopy=new THREE.Mesh(new THREE.CapsuleGeometry(1,2.6,4,10),white);canopy.rotation.z=Math.PI/2;canopy.position.set(1.2,5.3,0);g.add(canopy);
+    var w1=new THREE.Mesh(new THREE.TorusGeometry(2.9,.55,8,28),mat);w1.position.set(5.6,2.9,0);g.add(w1);
+    var w2=w1.clone();w2.position.set(-5.6,2.9,0);g.add(w2);
+    var disc=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.4,.8,20),dark);disc.rotation.x=Math.PI/2;disc.position.copy(w1.position);g.add(disc);var disc2=disc.clone();disc2.position.copy(w2.position);g.add(disc2);
+    var hub1=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,1.1,12),white);hub1.rotation.x=Math.PI/2;hub1.position.copy(w1.position);g.add(hub1);var hub2=hub1.clone();hub2.position.copy(w2.position);g.add(hub2);
+    g.userData.tint=strip;
     var shield=new THREE.Mesh(new THREE.SphereGeometry(1,20,14),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending}));shield.position.y=3;g.add(shield);g.userData.shield=shield;
     scene.add(g);return g;
   }
@@ -66,7 +100,7 @@ window.initCycles3D=function(root,api){
     var cv=document.createElement('canvas'),px=48;cv.width=Math.max(64,Math.ceil(text.length*px*.62));cv.height=px*1.4;var cx=cv.getContext('2d');
     cx.font='600 '+px+'px ui-monospace,Menlo,monospace';cx.fillStyle='rgba(159,245,233,.95)';cx.textBaseline='middle';cx.fillText(text,0,cv.height/2);
     var tex=new THREE.CanvasTexture(cv);tex.minFilter=THREE.LinearFilter;var w=text.length*7.2*s,h=w*cv.height/cv.width;
-    var m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:.55,depthWrite:false}));
+    var m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:.3,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(x+w/2,.4,y);scene.add(m);return m;
   }
   function setLevel(level,AW,AH){
@@ -98,7 +132,7 @@ window.initCycles3D=function(root,api){
     wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
-    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.35:.12;m.children[0].material.color.set(c.touching?'#ffffff':c.color)});
+    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.35:.12;if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
     /* sparks */
@@ -112,6 +146,6 @@ window.initCycles3D=function(root,api){
     composer.render();
   }
   function snap(){camPos.set(-1e9,0,0)} /* next render jumps the camera instead of sweeping across the arena */
-  return {render:render,view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&view==='chase'},reset:function(){if(camPos)camPos.set(0,900,0)},
+  return {render:render,model:function(){return !!modelScene},view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&view==='chase'},reset:function(){if(camPos)camPos.set(0,900,0)},
     stop:function(){stopped=true;if(ro)ro.disconnect();window.removeEventListener('resize',resize);if(renderer){renderer.dispose();host.remove()}}};
 };

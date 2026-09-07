@@ -1,0 +1,1 @@
+Drop a cycle.glb here (a model you own or one with a licence that allows it). cycles3d.js loads it on its own; Draco meshes and WebP textures work. See MODEL at the top of cycles3d.js for forward axis and size.
