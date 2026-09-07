@@ -446,16 +446,25 @@ function infoHTML(r){return '<div class="page"><div class="panel"><span class="b
 function openInfo(r){if(isPhone()){sheet.hidden=false;sheetTitle.textContent=r[0];sheetBody.innerHTML=infoHTML(r);return}var w=createWindow('info-'+r[0],r[0],{w:560,h:380,dockKey:'finder',appName:r[0]});w.body.innerHTML=infoHTML(r)}
 
 /* ---------- phone launcher ---------- */
-var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock');
+var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock'),lDots=document.getElementById('lDots'),ltiles=[];
 if(lGrid){
   APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}})).forEach(function(a){
     var b=document.createElement('button');b.className='lapp';
     b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
-    lGrid.appendChild(b);
+    ltiles.push(b);
   });
   Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
 }
+/* the phone launcher pages sideways like an iPhone home screen: as many rows as fit, 4 per row, dots underneath */
+function layoutPages(){
+  if(!lGrid||!ltiles.length)return;var rows=Math.max(3,Math.floor((lGrid.clientHeight-16)/112)),per=rows*4,pages=[];
+  lGrid.innerHTML='';for(var k=0;k<ltiles.length;k+=per){var pg=document.createElement('div');pg.className='lpage';ltiles.slice(k,k+per).forEach(function(t){pg.appendChild(t)});lGrid.appendChild(pg);pages.push(pg)}
+  if(lDots){lDots.innerHTML=pages.map(function(_,n){return '<span class="ldot'+(n===0?' on':'')+'" data-p="'+n+'"></span>'}).join('');lDots.hidden=pages.length<2;lDots.querySelectorAll('.ldot').forEach(function(d){d.addEventListener('click',function(){lGrid.scrollTo({left:lGrid.clientWidth*(+d.dataset.p),behavior:'smooth'})})})}
+  lGrid.scrollLeft=0;
+}
+if(lGrid){layoutPages();var lw=lGrid.clientWidth,lh=lGrid.clientHeight;window.addEventListener('resize',function(){if(lGrid.clientWidth!==lw||Math.abs(lGrid.clientHeight-lh)>40){lw=lGrid.clientWidth;lh=lGrid.clientHeight;layoutPages()}});
+  lGrid.addEventListener('scroll',function(){if(!lDots)return;var n=Math.round(lGrid.scrollLeft/Math.max(1,lGrid.clientWidth));lDots.querySelectorAll('.ldot').forEach(function(d,k){d.classList.toggle('on',k===n)})},{passive:true})}
 var sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody'),sheetTitle=document.getElementById('sheetTitle');
 function openSheetPage(slug){sheet.hidden=false;sheetTitle.textContent=PAGES[slug].title;sheetBody.__wired=false;loadPage(sheetBody,PAGES[slug].url,{keepTitle:true});if(slug==='work')setTimeout(function(){var d=document.createElement('div');d.className='page docs-strip';d.innerHTML='<h3>Documents</h3>'+DOCS.map(function(x){return '<a class="btn btn-secondary sm" href="'+x[1]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a> '}).join('');sheetBody.appendChild(d)},600)}
 function openSheet(key){
