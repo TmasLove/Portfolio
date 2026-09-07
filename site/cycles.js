@@ -14,7 +14,7 @@ window.initCycles=function(root){
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,AW=1000,AH=1000;
-  var CFG={base:230,min:130,max:520,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:6};
+  var CFG={base:230,min:130,max:520,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:3.2}; /* radMax ≈ the bike's visible half-width; what you see is what collides */
   var RIDER='You';try{RIDER=(localStorage.getItem('tr-cycles-name')||'You').slice(0,14)||'You'}catch(e){}
   var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#FF8A3D','#4FC3FF','#F25CFF','#9CFF57'],NAMES=[RIDER,'Vex','Halo','Kilo','Nyx','Onyx','Zephyr','Quill'];
   var DM={size:2400,riders:8,time:180,respawn:3,protect:2,wallLen:3200};
@@ -27,7 +27,7 @@ window.initCycles=function(root){
      goal: a ring to reach. limit: seconds allowed (0 = none). msg: notes painted on the floor. */
   var LEVELS=[
     {id:'dig',name:'Digging',tier:'training',w:1000,h:600,spawn:[120,300,0],goal:[880,300,40],limit:0,
-      walls:[[560,60,560,296,'#06b6d4'],[560,304,560,540,'#06b6d4']],
+      walls:[[560,60,560,297.5,'#06b6d4'],[560,302.5,560,540,'#06b6d4']],
       msg:[[300,200,'Crash into the wall: your shield shrinks you'],[300,400,'Small enough, and you squeeze through the gap']]},
     {id:'turn',name:'Turning',tier:'training',w:1000,h:600,spawn:[100,300,0],goal:[900,300,45],limit:12,
       walls:[[500,100,500,500,'#f97316']],
@@ -49,7 +49,7 @@ window.initCycles=function(root){
     {id:'novice2',name:'Corridors',tier:'novice',w:1200,h:700,spawn:[60,75,0],goal:[1140,650,35],limit:16,
       walls:[[0,150,1000,150,'#f97316'],[200,300,1200,300,'#f97316'],[0,450,1000,450,'#f97316'],[200,600,1200,600,'#f97316']],msg:[]},
     {id:'easy1',name:'Pinch',tier:'easy',w:1000,h:600,spawn:[80,300,0],goal:[920,300,36],limit:9,
-      walls:[[350,0,350,296,'#22c55e'],[350,304,350,600,'#22c55e'],[650,0,650,296,'#ef4444'],[650,304,650,600,'#ef4444']],
+      walls:[[350,0,350,297.5,'#22c55e'],[350,302.5,350,600,'#22c55e'],[650,0,650,297.5,'#ef4444'],[650,302.5,650,600,'#ef4444']],
       msg:[[420,120,'Two digs in a row — keep some shield for the second']]},
     {id:'easy2',name:'Spiral',tier:'easy',w:1000,h:800,spawn:[500,400,0],goal:[60,60,34],limit:18,
       walls:[[400,300,650,300,'#8B7DFF'],[650,300,650,550,'#8B7DFF'],[650,550,300,550,'#8B7DFF'],[300,550,300,200,'#8B7DFF'],[300,200,800,200,'#8B7DFF'],[800,200,800,700,'#8B7DFF'],[800,700,150,700,'#8B7DFF'],[150,700,150,120,'#8B7DFF']],
