@@ -33,9 +33,9 @@ if(typeof window.round !== "function")
 	}
 	window.__trGridBuilds = 0;
 
-	/* walls: the stock lit wall (that is what reads best on a dark floor), a little taller, with a self-lit tint
-	   in the rider's colour so it does not go grey in shadow, and a bright top edge */
-	var WALL_SCALE = 1.25;
+	/* walls: a cyclearena-style ribbon — a thin unlit translucent band in the rider's colour with bright edge lines
+	   top and bottom, and low (about bike height) so turns read cleanly */
+	var WALL_SCALE = 0.5;
 	if(typeof createWall === "function")
 	{
 		var stockCreateWall = createWall;
@@ -43,20 +43,18 @@ if(typeof window.round !== "function")
 		{
 			var group = stockCreateWall(cycle, x, y);
 			var wall = group.children[0], line = group.children[1];
+			var bright = new THREE.Color(cycle.tailColor).lerp(new THREE.Color(0xffffff), 0.55);
 			if(wall && wall.material)
 			{
-				wall.material = new THREE.MeshLambertMaterial({
-					side: THREE.DoubleSide, color: cycle.tailColor,
-					emissive: new THREE.Color(cycle.tailColor).multiplyScalar(0.35),
-					transparent: settings.ALPHA_BLEND, opacity: 0.78
-				});
+				wall.material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: cycle.tailColor, transparent: true, opacity: 0.42, depthWrite: false });
 				wall.scale.z = WALL_SCALE;
 			}
 			if(line && line.material)
 			{
-				var bright = new THREE.Color(cycle.tailColor).lerp(new THREE.Color(0xffffff), 0.45);
 				line.material = new THREE.LineBasicMaterial({ color: bright });
 				line.scale.z = WALL_SCALE;
+				/* a second edge line along the floor: the two lines are what make it read as a ribbon of light */
+				var base = new THREE.Line(line.geometry, line.material); base.scale.set(1, 1, 0.002); line.add(base); /* child of the line, so the group keeps its two children (their code indexes them) */
 			}
 			return group;
 		};
