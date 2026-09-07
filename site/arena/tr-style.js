@@ -1,5 +1,37 @@
 /* tommyroldan.com look for Armawebtron — walls, floor grid, billboards. GPL-2.0 like the rest of this folder.
    Everything here wraps Armawebtron's own globals (settings, createWall, buildGrid) so the engine files stay stock. */
+/* The bots are Tommy's agents (names from the estate roster), each with its own colour, and a sharper brain:
+   on top of the stock survive-and-camp logic they hunt the nearest rider and cut across their path when there is room. */
+window.TR_AI_NAMES = ["Dr. Floss","Gates","Publisher","Scout","Scribe","Curator","Extractor","Trader","Analyst","Risk","Nolan","Marketer"];
+window.TR_AI_COLORS = [0x00e0c6,0xff5f57,0xfebc2e,0x8b7dff,0x4fc3ff,0xf25cff,0x9cff57,0xff8a3d,0x00a88f,0xf2b07a,0x4a54dc,0xffffff];
+window.addEventListener("load", function()
+{
+	if(typeof AI !== "function" || !AI.prototype.think) return;
+	var stockThink = AI.prototype.think;
+	AI.prototype.think = function(timestep)
+	{
+		var r = stockThink.call(this, timestep);
+		try
+		{
+			var c = this.cycle; if(!c || !c.alive || !c.sensor) return r;
+			if(this.aggr === undefined) this.aggr = 0.45 + Math.random()*0.5;
+			var since = engine.gtime - c.lastTurnTime;
+			if(since < settings.CYCLE_DELAY*1000 + 650) return r;
+			if(c.sensor.front < 12) return r; /* let the stock survival code own tight spots */
+			var best = null, bd = Infinity, ps = engine.players;
+			for(var i = 0; i < ps.length; i++){ var p = ps[i]; if(!p || p === c || !p.alive) continue; var d = pointDistance(p.position.x, p.position.y, c.position.x, c.position.y); if(d < bd){ bd = d; best = p; } }
+			if(!best || bd > 110) return r;
+			/* aim a little ahead of where they are going */
+			var lead = Math.min(bd*0.6, best.speed*0.9), px = best.position.x + best.dir.front[0]*lead, py = best.position.y + best.dir.front[1]*lead;
+			var rel = this.getRelDirToPoint(px, py); if(rel !== -1 && rel !== 1) return r;
+			var room = rel === -1 ? c.sensor.leftTurn : c.sensor.rightTurn;
+			if(room > 16 && Math.random() < 0.35*this.aggr) this.turn(rel);
+		}
+		catch(e){}
+		return r;
+	};
+});
+
 /* Bug fix for the stock build: player.js calls a global round(value, decimals) that no file defines, so the frame loop
    throws every frame once a cycle reaches that branch — the game stutters and dies. This defines it. */
 if(typeof window.round !== "function")

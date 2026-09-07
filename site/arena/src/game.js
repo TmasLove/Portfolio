@@ -223,8 +223,9 @@ function createAIsettings()
 	var cycleinfo = { ai:true,
 	cycleColor:cycleColor, tailColor:tailColor,
 	/*engineType: 5,*/ engineType:(settings.players[0])?settings.players[0].engineType:5, spectating:false,
-	name: settings.AI_DUAL_COLOR_NAME?'AI0x'+colorcode+'#'+AI_NUM:'AI#'+AI_NUM 
+	name: (window.TR_AI_NAMES && TR_AI_NAMES[(AI_NUM-1)%TR_AI_NAMES.length]) || (settings.AI_DUAL_COLOR_NAME?'AI0x'+colorcode+'#'+AI_NUM:'AI#'+AI_NUM) /* tommyroldan.com: bots carry the estate agents' names */
 	};
+	if(window.TR_AI_COLORS){ var tc = TR_AI_COLORS[(AI_NUM-1)%TR_AI_COLORS.length]; cycleinfo.cycleColor = new THREE.Color(tc); cycleinfo.tailColor = new THREE.Color(tc); }
 	return cycleinfo;
 }
 function calculateSpawn(x)
