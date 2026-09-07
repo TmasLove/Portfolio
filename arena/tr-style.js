@@ -84,14 +84,19 @@ if(typeof window.round !== "function")
 		return tex;
 	}
 
+	var holderCache = null, holderKey = "";
 	function addBillboards()
 	{
 		if(!engine.grid || !engine.logicalBox) return;
+		if(/[?&](plain|nobillboards)=1/.test(location.search)) return; /* kill switch */
 		var f = engine.REAL_ARENA_SIZE_FACTOR, b = engine.logicalBox;
 		var minX = b.min.x*f, maxX = b.max.x*f, minY = b.min.y*f, maxY = b.max.y*f;
 		var AW = maxX-minX, AH = maxY-minY, cx = (minX+maxX)/2, cy = (minY+maxY)/2;
 		/* Armagetron scale: a wall is ~1 unit tall, so boards are sized to that, not to the arena */
-		var wallH = 0.75*WALL_SCALE, W = Math.min(AW*0.14, wallH*22), H = W*448/768, off = Math.max(AW*0.08, wallH*6), z = H/2 + wallH*3.5;
+		/* built once per arena size and reused: rebuilding the grid must not rebuild these */
+		var key = AW.toFixed(1)+"x"+AH.toFixed(1);
+		if(holderCache && holderKey === key){ engine.grid.add(holderCache); return; }
+		var wallH = 0.75*WALL_SCALE, W = wallH*5, H = W*448/768, off = Math.max(AW*0.25, 40), z = H/2 + wallH*2.5;
 		var spots = [];
 		[0.22,0.5,0.78].forEach(function(t){ spots.push([minX+AW*t, minY-off]); spots.push([minX+AW*t, maxY+off]); });
 		[0.3,0.7].forEach(function(t){ spots.push([minX-off, minY+AH*t]); spots.push([maxX+off, minY+AH*t]); });
@@ -109,9 +114,9 @@ if(typeof window.round !== "function")
 		});
 		/* skyline */
 		var seed = 7; function rnd(){ seed = (seed*16807) % 2147483647; return seed/2147483647; }
-		for(var i=0;i<30;i++)
+		for(var i=0;i<16;i++)
 		{
-			var side = i%4, t = rnd(), dist = off + wallH*(6+rnd()*30), w = wallH*(2+rnd()*5), h = wallH*(4+rnd()*22), x, y;
+			var side = i%4, t = rnd(), dist = off + wallH*(10+rnd()*60), w = wallH*(2+rnd()*4), h = wallH*(3+rnd()*10), x, y;
 			if(side===0){ x = minX+AW*t; y = minY-dist; } else if(side===1){ x = minX+AW*t; y = maxY+dist; }
 			else if(side===2){ x = minX-dist; y = minY+AH*t; } else { x = maxX+dist; y = minY+AH*t; }
 			var g = new THREE.BoxGeometry(w, w, h), tower = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0x05070b }));
@@ -119,6 +124,7 @@ if(typeof window.round !== "function")
 			tower.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: [0x0d6b62,0x4a2a7a,0x7a2340,0x0c4f7a][i%4], transparent: true, opacity: 0.75 })));
 			holder.add(tower);
 		}
+		holderCache = holder; holderKey = key;
 		engine.grid.add(holder);
 	}
 

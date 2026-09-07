@@ -65,7 +65,7 @@ var ART={
  folder:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FCBFF"/><stop offset="1" stop-color="#3E9DE8"/></linearGradient></defs><path d="M6 16a4 4 0 0 1 4-4h14l5 5h25a4 4 0 0 1 4 4v3H6z" fill="#2F86D6"/><rect x="6" y="22" width="52" height="30" rx="4" fill="url(#fd)"/><rect x="6" y="22" width="52" height="3" fill="rgba(255,255,255,.35)"/></svg>',
  littleriver:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EEF2F8"/><path d="M32 8l24 24-24 24L8 32z" fill="#2F5FA8"/><circle cx="32" cy="32" r="9" fill="#EEF2F8"/><circle cx="32" cy="32" r="4" fill="#2F5FA8"/></svg>'
 };
-var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'arena',title:'Armawebtron',art:'arena'},{key:'cycles',title:'Lightwall',art:'cycles'},{key:'meme',title:'Meme Maker',art:'meme'}];
+var EXTRA=[{key:'brick',title:'Brick Breaker',art:'brick'},{key:'arena',title:'Lightwall',art:'arena'},{key:'meme',title:'Meme Maker',art:'meme'}];
 var REG={};
 /* the desktop is grouped into folders (Tommy: "I kinda want to group them. And the games should be under a games folder") */
 var FOLDERS=[
@@ -180,7 +180,7 @@ tick();setInterval(tick,30000);
 var menubar=document.getElementById('menubar');
 var MENUS={
  apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['Stickies',function(){TR.extras&&TR.extras.openStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Armawebtron',function(){openApp('arena')}],['Lightwall',function(){openApp('cycles')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
+ go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Lightwall',function(){openApp('arena')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
@@ -396,7 +396,7 @@ function openBrave(){
 function musicHTML(){return '<div class="music"><div class="music-head"><span class="sq art sm">'+ART.music+'</span><div><strong>'+esc(MUSIC.title)+'</strong><a href="'+MUSIC.profile+'" target="_blank" rel="noopener">'+esc(MUSIC.handle)+' on Apple Music →</a></div><a class="btn btn-primary sm music-open" href="'+MUSIC.page+'" target="_blank" rel="noopener">Open in Apple Music ↗</a></div><p class="t3 music-note">Apple plays 30-second previews here until you sign in to Apple Music inside the player.</p><iframe allow="autoplay *; encrypted-media *; clipboard-write" frameborder="0" height="450" loading="lazy" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="'+MUSIC.embed+'" title="Apple Music — '+esc(MUSIC.title)+' playlist"></iframe></div>'}
 function openMusic(){var w=createWindow('music','Music',{w:720,h:560,dockKey:'music',appName:'Music'});w.body.innerHTML=musicHTML()}
 function openPaint(){var w=createWindow('paint','Paint',{w:900,h:620,dockKey:'paint',appName:'Paint'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);window.initPaint(d)}
-function openArena(){var w=createWindow('arena','Armawebtron',{w:1000,h:720,dockKey:'arena',appName:'Armawebtron',minW:520,minH:420});var f=document.createElement('iframe');f.src='/arena/';f.title='Armawebtron';f.setAttribute('allow','autoplay');f.style.cssText='width:100%;height:100%;border:0;background:#000;display:block';w.body.appendChild(f);w.body.style.padding='0';setTimeout(function(){try{f.contentWindow.focus()}catch(e){}},300)}
+function openArena(){var w=createWindow('arena','Lightwall',{w:1000,h:720,dockKey:'arena',appName:'Lightwall',minW:520,minH:420});var f=document.createElement('iframe');f.src='/arena/';f.title='Lightwall';f.setAttribute('allow','autoplay');f.style.cssText='width:100%;height:100%;border:0;background:#000;display:block';w.body.appendChild(f);w.body.style.padding='0';setTimeout(function(){try{f.contentWindow.focus()}catch(e){}},300)}
 function openCycles(){var w=createWindow('cycles','Lightwall',{w:940,h:760,dockKey:'cycles',appName:'Lightwall',minW:480,minH:400});var d=document.createElement('div');d.className='game-host cyc-host';w.body.appendChild(d);var g=window.initCycles(d);w.onclose=function(){g&&g.stop()}}
 function openBrick(){var w=createWindow('brick','Brick Breaker',{w:740,h:620,dockKey:'brick',appName:'Brick Breaker',minW:420,minH:360});var d=document.createElement('div');d.className='game-host';w.body.appendChild(d);var g=window.initBrick(d);w.onclose=function(){g&&g.stop()}}
 function openMeme(){var w=createWindow('meme','Meme Maker',{w:940,h:640,dockKey:'meme',appName:'Meme Maker'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);window.initMeme(d)}
@@ -408,7 +408,7 @@ function termRun(cmd){
   if(!c)return '';
   if(c==='help')return TERM_HELP;
   if(c==='whoami')return ME.name+' — '+ME.role+' · '+ME.location;
-  if(c==='ls')return FOLDERS.map(function(f){return f.label+'/'}).concat(APPS.map(function(a){return a.key})).concat(['brick','arena','cycles','meme']).join('  ');
+  if(c==='ls')return FOLDERS.map(function(f){return f.label+'/'}).concat(APPS.map(function(a){return a.key})).concat(['brick','arena','meme']).join('  ');
   if(c==='stats')return ME.stats.map(function(s){return s[0]+' '+s[1]}).join('\n');
   if(c==='about')return ME.hero+'\n'+ME.since;
   if(c==='contact')return ME.email;
@@ -468,7 +468,7 @@ function openSheet(key){
   if(key==='finder')return openSheetPage('work');
   if(key==='launchpad'){sheet.hidden=true;return openLP()}
   if(key==='paint'){var p=document.createElement('div');p.className='page';sheetBody.appendChild(p);return window.initPaint(p)}
-  if(key==='arena'){var fa=document.createElement('iframe');fa.src='/arena/';fa.title='Armawebtron';fa.style.cssText='width:100%;height:70vh;border:0;background:#000;display:block';sheetBody.appendChild(fa);return}
+  if(key==='arena'){var fa=document.createElement('iframe');fa.src='/arena/';fa.title='Lightwall';fa.style.cssText='width:100%;height:70vh;border:0;background:#000;display:block';sheetBody.appendChild(fa);return}
   if(key==='cycles'){var gc=document.createElement('div');gc.className='game-host cyc-host';sheetBody.appendChild(gc);var cg=window.initCycles(gc);sheetBody.__stop=function(){cg&&cg.stop()};return}
   if(key==='brick'){var g=document.createElement('div');g.className='game-host';sheetBody.appendChild(g);var game=window.initBrick(g);sheetBody.__stop=function(){game&&game.stop()};return}
   if(key==='meme'){var m=document.createElement('div');m.className='page';sheetBody.appendChild(m);return window.initMeme(m)}
