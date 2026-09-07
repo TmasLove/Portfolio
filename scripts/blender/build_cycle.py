@@ -112,5 +112,6 @@ tail = bpy.context.object; tail.name = "glow_tail"; tail.scale = (0.36, 0.06, 0.
 
 for o in bpy.data.objects: o.select_set(True)
 bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_apply=True, use_selection=True,
-                          export_materials="EXPORT", export_yup=True, export_texcoords=False, export_normals=True)
+                          export_materials="EXPORT", export_yup=True, export_texcoords=False, export_normals=True,
+                          export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=6)  # Draco: ~5x smaller download
 print("exported", out)

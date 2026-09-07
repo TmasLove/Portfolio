@@ -14,7 +14,7 @@ window.initCycles=function(root){
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,AW=1000,AH=1000;
-  var CFG={base:230,min:130,max:520,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:3.2}; /* radMax ≈ the bike's visible half-width; what you see is what collides */
+  var CFG={base:260,min:150,max:580,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:3.2}; /* radMax ≈ the bike's visible half-width; what you see is what collides */
   var RIDER='You';try{RIDER=(localStorage.getItem('tr-cycles-name')||'You').slice(0,14)||'You'}catch(e){}
   var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#FF8A3D','#4FC3FF','#F25CFF','#9CFF57'],NAMES=[RIDER,'Vex','Halo','Kilo','Nyx','Onyx','Zephyr','Quill'];
   var DM={size:2400,riders:8,time:180,respawn:3,protect:2,wallLen:3200};
@@ -59,14 +59,14 @@ window.initCycles=function(root){
   var level=null,levelIx=0,statics=[],clock=0,BEST={};
   try{BEST=JSON.parse(localStorage.getItem('tr-cycles-best')||'{}')||{}}catch(e){}
   var audio=null,hum=null,humGain=null;
-  var g3=window.initCycles3D?window.initCycles3D(root,{cycles:function(){return cycles},statics:function(){return statics},level:function(){return level},size:function(){return [AW,AH]},booms:function(){return booms},now:function(){return now},mode:function(){return mode},radius:function(c){return radius(c)},zone:function(){return mode===5?{x:AW/2,y:AH/2,r:zoneR()}:null}}):null;
+  var g3=window.initCycles3D?window.initCycles3D(root,{cycles:function(){return cycles},statics:function(){return statics},level:function(){return level},size:function(){return [AW,AH]},booms:function(){return booms},now:function(){return now},mode:function(){return mode},radius:function(c){return radius(c)},zone:function(){return mode===5?{x:AW/2,y:AH/2,r:zoneR()}:null},speedRatio:function(){return cycles[0]?cycles[0].speed/(CFG.base*smul()):1}}):null;
   function sound(){if(muted)return;try{if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();if(!hum){hum=audio.createOscillator();hum.type='sawtooth';humGain=audio.createGain();humGain.gain.value=0;var f=audio.createBiquadFilter();f.type='lowpass';f.frequency.value=600;hum.connect(f);f.connect(humGain);humGain.connect(audio.destination);hum.start()}if(audio.state==='suspended')audio.resume()}catch(e){}}
   function humSet(on,speed){if(!humGain)return;try{humGain.gain.linearRampToValueAtTime(on&&!muted?.05:0,audio.currentTime+.08);hum.frequency.linearRampToValueAtTime(60+speed*.4,audio.currentTime+.08)}catch(e){}}
   function blip(freq,dur){if(!audio||muted)return;try{var o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=freq;g.gain.value=.05;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch(e){}}
 
   function mk(i,x,y,d,human){return{i:i,x:x,y:y,d:d,alive:true,human:human,color:COLORS[i],name:NAMES[i],speed:CFG.base*smul(),shield:CFG.shieldMax,brakeCharge:CFG.brakeMax,braking:false,lastTurn:-1,trail:[[x,y]],len:0,grinding:false,touching:false,protect:0,respawn:0,deaths:0,lastHit:null,target:null,retarget:0}}
   function wallLen(){return mode>=4?DM.wallLen:CFG.wallLen}
-  function smul(){return mode>=4?1.3:1} /* the big grids run faster */
+  function smul(){return mode>=4?1.5:1} /* the big grids run faster */
   var KMH=2.6,fps=60; /* display factor: our units → a cyclearena-like km/h readout */
   function radius(c){return CFG.radMin+(CFG.radMax-CFG.radMin)*c.shield/CFG.shieldMax}
   function reset(){
@@ -94,15 +94,15 @@ window.initCycles=function(root){
   function segments(){var out=statics.slice();cycles.forEach(function(c){var t=c.trail;for(var i=1;i<t.length;i++)out.push([t[i-1][0],t[i-1][1],t[i][0],t[i][1],c,false]);out.push([t[t.length-1][0],t[t.length-1][1],c.x,c.y,c,true])});return out}
   /* distance along direction d from (x,y) to the first wall; returns {d, seg} — the rim counts as a wall.
      tol is how wide the cycle is: a bigger shield clips wall ends it would otherwise slip past (that is digging) */
-  function ray(x,y,d,self,maxD,segs,tol){
-    tol=tol||1.2;
+  function ray(x,y,d,self,maxD,segs,tol,tolPar){ /* tol: lateral reach for walls across the path; tolPar: for walls running alongside (their far end) */
+    tol=tol||1.2;tolPar=tolPar||1.2;
     var dx=DIRS[d][0],dy=DIRS[d][1],best=maxD,hitSeg='rim';
     var rim=dx>0?AW-x:dx<0?x:dy>0?AH-y:y;if(rim<best){best=rim;hitSeg='rim'}
     for(var i=0;i<segs.length;i++){var s=segs[i];
       if(s[5]&&s[4]===self)continue;
       var sx0=Math.min(s[0],s[2]),sx1=Math.max(s[0],s[2]),sy0=Math.min(s[1],s[3]),sy1=Math.max(s[1],s[3]),t=-1;
-      if(dx){ if(y<sy0-tol||y>sy1+tol)continue; if(sx0===sx1)t=(sx0-x)*dx; else if(Math.abs(y-sy0)<=tol)t=dx>0?sx0-x:x-sx1; }
-      else{ if(x<sx0-tol||x>sx1+tol)continue; if(sy0===sy1)t=(sy0-y)*dy; else if(Math.abs(x-sx0)<=tol)t=dy>0?sy0-y:y-sy1; }
+      if(dx){ if(sx0===sx1){if(y<sy0-tol||y>sy1+tol)continue;t=(sx0-x)*dx} else if(Math.abs(y-sy0)<=tolPar)t=dx>0?sx0-x:x-sx1; }
+      else{ if(sy0===sy1){if(x<sx0-tol||x>sx1+tol)continue;t=(sy0-y)*dy} else if(Math.abs(x-sx0)<=tolPar)t=dy>0?sy0-y:y-sy1; }
       if(t>0.01&&t<best){best=t;hitSeg=s}
     }
     return {d:best,seg:hitSeg};
@@ -157,8 +157,8 @@ window.initCycles=function(root){
          hard  — a wall squarely across the path: you stop against it and grind (shield drains, you shrink, die at 0)
          soft  — only your shield's width clips a wall end (a gap narrower than you): you SQUEEZE through at 40% speed while the shield drains faster
          sides — walls closer than your radius on the left/right (a tight tunnel): you keep full speed but the shield drains */
-      var rad=radius(c),dist=c.speed*dt,hard=ray(c.x,c.y,c.d,c,dist+2.5,segs,1.2),soft=ray(c.x,c.y,c.d,c,dist+rad+1.5,segs,rad);
-      var sideL=ray(c.x,c.y,(c.d+3)%4,c,rad+1,segs).d,sideR=ray(c.x,c.y,(c.d+1)%4,c,rad+1,segs).d,tight=Math.min(sideL,sideR)<rad;
+      var rad=radius(c),dist=c.speed*dt,hard=ray(c.x,c.y,c.d,c,dist+2.5,segs,1.2),soft=ray(c.x,c.y,c.d,c,dist+rad+1.5,segs,rad,1.2);
+      var touchD=Math.max(1.6,rad*.5),sideL=ray(c.x,c.y,(c.d+3)%4,c,touchD+1,segs).d,sideR=ray(c.x,c.y,(c.d+1)%4,c,touchD+1,segs).d,tight=Math.min(sideL,sideR)<touchD; /* grinding close is free boost; only actual side contact drains */
       function hurt(mul){c.touching=true;if(c.protect<=0)c.shield-=CFG.shieldDrain*mul*dt;
         if(c.shield<=0){c.alive=false;c.deaths++;boom(c);if(c.human)blip(90,.4);
           if(mode>=4){var seg=c.lastHit,owner=seg&&seg!=='rim'&&seg[4]&&seg[4].i!==undefined?seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}}
@@ -168,7 +168,7 @@ window.initCycles=function(root){
         var sq=dist*.4;c.x+=DIRS[c.d][0]*sq;c.y+=DIRS[c.d][1]*sq;c.lastHit=soft.seg;hurt(1.6);
       }else{
         c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;
-        if(tight){c.lastHit=(sideL<sideR?ray(c.x,c.y,(c.d+3)%4,c,rad+1,segs):ray(c.x,c.y,(c.d+1)%4,c,rad+1,segs)).seg;hurt(.8)}
+        if(tight){c.lastHit=(sideL<sideR?ray(c.x,c.y,(c.d+3)%4,c,touchD+1,segs):ray(c.x,c.y,(c.d+1)%4,c,touchD+1,segs)).seg;hurt(.8)}
         else{c.touching=false;c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.shieldRegen*dt)}
       }
       if(mode===5){c.outside=!inZone(c.x,c.y);if(c.outside&&c.protect<=0){c.shield-=ZONE.drain*dt;if(c.shield<=0){c.alive=false;c.deaths++;boom(c);c.respawn=DM.respawn;if(c.human){blip(90,.4);countEl.hidden=false}}}}

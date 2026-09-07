@@ -7,14 +7,14 @@ window.initCycles3D=function(root,api){
   try{view=localStorage.getItem('tr-cycles-view')||'chase'}catch(e){}
   var wrap=root.querySelector('.cyc'),host=document.createElement('div');host.className='cyc-3d';wrap.insertBefore(host,wrap.firstChild);
   var U='https://cdn.jsdelivr.net/npm/three@0.160.0/',E='/+esm';
-  var WALL_H=22,CAP=6000; /* quads */
+  var WALL_H=36,CAP=6000; /* quads */
   /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
      meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
      Without the file the built-in cycle below is used. */
   var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:24,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
   var modelScene=null,modelTried=false;
   var walls,wallLine,wallBase,mirror,floor,grid,ring,column,zone,zoneRing,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
-  var pos,col,idx,linePos,lineCol,pPos,pCol;
+  var pos,col,idx,wv,linePos,lineCol,pPos,pCol,ads=[],adsSize=0,towers=null;
   var camPos,camLook,camOff,lookOff,tmpV,DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   Promise.all([import(U+'+esm'),import(U+'examples/jsm/postprocessing/EffectComposer.js'+E),import(U+'examples/jsm/postprocessing/RenderPass.js'+E),import(U+'examples/jsm/postprocessing/UnrealBloomPass.js'+E),import(U+'examples/jsm/postprocessing/OutputPass.js'+E)])
     .then(function(m){if(stopped)return;THREE=m[0];build(m[1].EffectComposer,m[2].RenderPass,m[3].UnrealBloomPass,m[4].OutputPass);loadModel()})
@@ -28,15 +28,18 @@ window.initCycles3D=function(root,api){
     renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
     camera=new THREE.PerspectiveCamera(55,1,1,8000);
     scene.add(new THREE.HemisphereLight(0x5b8fc9,0x05070a,1.5));var sun=new THREE.DirectionalLight(0xe8f4ff,1.7);sun.position.set(300,500,200);scene.add(sun);var rimL=new THREE.DirectionalLight(0x9fd8ff,.9);rimL.position.set(-400,250,-300);scene.add(rimL);
-    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-85,42,0);lookOff=new THREE.Vector3(120,6,0);tmpV=new THREE.Vector3();
+    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-72,36,0);lookOff=new THREE.Vector3(120,6,0);tmpV=new THREE.Vector3();
     /* floor: a dark slab you can faintly see the walls mirrored in, plus the grid */
     floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x020408}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
     grid=null;
     /* wall ribbons: one shared buffer for trails, level walls and the rim; a mirrored twin under the floor */
     pos=new Float32Array(CAP*4*3);col=new Float32Array(CAP*4*3);idx=new Uint32Array(CAP*6);
     for(var q=0;q<CAP;q++){var b=q*4,o=q*6;idx[o]=b;idx[o+1]=b+1;idx[o+2]=b+2;idx[o+3]=b;idx[o+4]=b+2;idx[o+5]=b+3}
-    var geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));geo.setIndex(new THREE.BufferAttribute(idx,1));geo.setDrawRange(0,0);
-    walls=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.42,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(walls); /* light walls: additive, so crossings brighten instead of muddying */
+    wv=new Float32Array(CAP*4);for(var q2=0;q2<CAP;q2++){wv[q2*4]=0;wv[q2*4+1]=0;wv[q2*4+2]=1;wv[q2*4+3]=1}
+    var geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));geo.setAttribute('wv',new THREE.BufferAttribute(wv,1));geo.setIndex(new THREE.BufferAttribute(idx,1));geo.setDrawRange(0,0);
+    walls=new THREE.Mesh(geo,new THREE.ShaderMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{t:{value:0}},
+      vertexShader:'attribute float wv;varying float vv;varying vec3 vc;void main(){vv=wv;vc=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+      fragmentShader:'uniform float t;varying float vv;varying vec3 vc;void main(){float e=pow(abs(vv-0.5)*2.0,3.0);float bands=0.08*smoothstep(0.35,0.5,abs(fract(vv*5.0+t*0.2)-0.5));float a=0.08+0.32*e+bands;gl_FragColor=vec4(vc*(0.55+0.45*e),a);}'}));scene.add(walls); /* light walls: additive, bright edges, glassy middle */
     linePos=new Float32Array(CAP*2*3);lineCol=new Float32Array(CAP*2*3);
     var lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.BufferAttribute(linePos,3));lg.setAttribute('color',new THREE.BufferAttribute(lineCol,3));lg.setDrawRange(0,0);
     wallLine=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true}));scene.add(wallLine);
@@ -52,7 +55,7 @@ window.initCycles3D=function(root,api){
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
     /* post: bloom is what makes the ribbons glow */
     composer=new EffectComposer(renderer,new THREE.WebGLRenderTarget(800,600,{samples:4,type:THREE.HalfFloatType}));composer.addPass(new RenderPass(scene,camera)); /* 4x MSAA: no jaggies on the edge lines */
-    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.55,.1,.5);composer.addPass(bloom);composer.addPass(new OutputPass());
+    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.5,.1,.62);composer.addPass(bloom);composer.addPass(new OutputPass());
     resize();
     if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(host)}else window.addEventListener('resize',resize);
     ready=true;apply();
@@ -108,7 +111,49 @@ window.initCycles3D=function(root,api){
     var m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:.3,depthWrite:false}));
     m.rotation.x=-Math.PI/2;m.position.set(x+w/2,.4,y);scene.add(m);return m;
   }
+  /* Around the arena: billboards for the apps on this site (titles and icons are the site's own), and a dark skyline */
+  var ADS=[['Canary','Tool','/assets/icons/canary.png'],['Rehab Pro','App','/assets/icons/rehabpro.png'],['SocialAudit','App','/assets/icons/social-audit.png'],['Clear Care Dental','App','/assets/icons/clear-care-dental.png'],['World Resort Rescue','Web','/assets/icons/world-resort-rescue.png'],['WrapMe','Web','/assets/icons/wrapme.png'],['Versatile Customs','App','/assets/icons/versatile-customs.jpg'],['Alexandra Rossi Portal','App','/assets/icons/alexandra-rossi.png'],['Dolce Vita Supplements','Web','/assets/icons/dolce-vita-supplements.png'],['La Dolce Vita Casa','Web','/assets/icons/la-dolce-vita-casa.png'],['NST Redesign','Web','/assets/icons/nst-redesign.png'],['PowerPoint Speech Tool','Tool','/assets/icons/powerpoint-speech-tool.png']];
+  var ADCOL=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#4FC3FF','#F25CFF'];
+  function adTexture(ad,accent){
+    var cv=document.createElement('canvas');cv.width=768;cv.height=448;var x=cv.getContext('2d');
+    function paint(img){
+      x.fillStyle='#06080d';x.fillRect(0,0,768,448);
+      var gr=x.createLinearGradient(0,0,768,448);gr.addColorStop(0,'rgba(255,255,255,.05)');gr.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=gr;x.fillRect(0,0,768,448);
+      x.strokeStyle=accent;x.lineWidth=10;x.strokeRect(14,14,740,420);x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=2;x.strokeRect(30,30,708,388);
+      x.fillStyle=accent;x.fillRect(48,48,220,220);x.fillStyle='#06080d';x.fillRect(56,56,204,204);
+      if(img){x.save();x.beginPath();x.rect(56,56,204,204);x.clip();var r=Math.max(204/img.width,204/img.height),w=img.width*r,h=img.height*r;x.drawImage(img,56+(204-w)/2,56+(204-h)/2,w,h);x.restore()}
+      x.fillStyle='#f2fffd';x.font='700 54px "Space Grotesk",Archivo,sans-serif';x.textBaseline='top';
+      var words=ad[0].split(' '),line='',yy=70,lines=[];words.forEach(function(w){var t=(line?line+' ':'')+w;if(x.measureText(t).width>440&&line){lines.push(line);line=w}else line=t});lines.push(line);
+      lines.slice(0,2).forEach(function(l){x.fillText(l,300,yy);yy+=62});
+      x.fillStyle=accent;x.font='600 30px ui-monospace,Menlo,monospace';x.fillText(ad[1].toUpperCase(),300,yy+12);
+      x.fillStyle='rgba(159,245,233,.7)';x.font='600 26px ui-monospace,Menlo,monospace';x.fillText('TOMMYROLDAN.COM',48,330);
+      x.fillStyle=accent;x.fillRect(48,372,672,6);
+      tex.needsUpdate=true;
+    }
+    var tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;paint(null);
+    var img=new Image();img.onload=function(){paint(img)};img.src=ad[2];
+    return tex;
+  }
+  function placeAds(AW,AH){
+    ads.forEach(function(a){scene.remove(a)});ads=[];if(towers){scene.remove(towers);towers=null}
+    var W=AW*.22,H=W*448/768,off=150,cy=H/2+40,k=0;
+    var spots=[];[0.22,0.5,0.78].forEach(function(f){spots.push([AW*f,-off,0]);spots.push([AW*f,AH+off,Math.PI])});[0.3,0.7].forEach(function(f){spots.push([-off,AH*f,Math.PI/2]);spots.push([AW+off,AH*f,-Math.PI/2])});
+    spots.forEach(function(sp,i){var ad=ADS[i%ADS.length],accent=ADCOL[i%ADCOL.length];
+      var m=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshBasicMaterial({map:adTexture(ad,accent),side:THREE.DoubleSide}));m.position.set(sp[0],cy,sp[1]);m.rotation.y=sp[2];
+      var frame=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.LineBasicMaterial({color:accent}));m.add(frame);
+      var post=new THREE.Mesh(new THREE.BoxGeometry(W*.06,cy,W*.06),new THREE.MeshBasicMaterial({color:0x0a0e14}));post.position.set(0,-cy/2,-2);m.add(post);
+      scene.add(m);ads.push(m)});
+    /* skyline: dark towers with lit edges, well outside the rim, deterministic so it does not flicker between rebuilds */
+    towers=new THREE.Group();var seed=7;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+    for(var i=0;i<34;i++){var side=i%4,f=rnd(),dist=off+120+rnd()*700,w=60+rnd()*140,h=120+rnd()*520,x=0,z=0;
+      if(side===0){x=AW*f;z=-dist}else if(side===1){x=AW*f;z=AH+dist}else if(side===2){x=-dist;z=AH*f}else{x=AW+dist;z=AH*f}
+      var g=new THREE.BoxGeometry(w,h,w),t=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x05070b}));t.position.set(x,h/2,z);
+      var col=[0x0d6b62,0x4a2a7a,0x7a2340,0x0c4f7a][i%4];t.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.75})));
+      towers.add(t)}
+    scene.add(towers);adsSize=AW*10000+AH;
+  }
   function setLevel(level,AW,AH){
+    if(adsSize!==AW*10000+AH)placeAds(AW,AH);
     notes.forEach(function(n){scene.remove(n);n.material.map.dispose();n.material.dispose();n.geometry.dispose()});notes=[];
     noteLevel=level;
     if(level){level.msg.forEach(function(m){notes.push(noteSprite(m[2],m[0],m[1],1))});ring.visible=column.visible=true;ring.position.set(level.goal[0],1.2,level.goal[1]);ring.scale.setScalar(level.goal[2]);column.position.set(level.goal[0],45,level.goal[1]);column.scale.set(level.goal[2],1,level.goal[2])}
@@ -136,7 +181,7 @@ window.initCycles3D=function(root,api){
       var lp=t[t.length-1],tail=MODEL.size*.42,hx=c.x-DIRS[c.d][0]*tail,hy=c.y-DIRS[c.d][1]*tail; /* the wall leaves the tail of the bike */
       if(!c.alive){hx=c.x;hy=c.y}else if((hx-lp[0])*DIRS[c.d][0]+(hy-lp[1])*DIRS[c.d][1]<0){hx=lp[0];hy=lp[1]}
       if(n<CAP)quad(n++,lp[0],lp[1],hx,hy,WALL_H,cc[0]*f,cc[1]*f,cc[2]*f)});
-    walls.geometry.setDrawRange(0,n*6);walls.geometry.attributes.position.needsUpdate=true;walls.geometry.attributes.color.needsUpdate=true;walls.geometry.computeBoundingSphere();
+    walls.material.uniforms.t.value=now;walls.geometry.setDrawRange(0,n*6);walls.geometry.attributes.position.needsUpdate=true;walls.geometry.attributes.color.needsUpdate=true;walls.geometry.computeBoundingSphere();
     wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();wallBase.geometry.setDrawRange(0,n*2);
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
@@ -150,7 +195,7 @@ window.initCycles3D=function(root,api){
     /* camera */
     var me=cycles[0],mode=api.mode(),chase=(view==='chase'||view==='high')&&mode!==2&&me&&me.alive,hi=view==='high';
     if(chase){ /* smooth the OFFSET from the bike, not the world position, so the camera never trails at speed; turns still swing round */
-      var d=DIRS[me.d],back=hi?160:85,up=hi?100:42,ahead=hi?110:120;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*7));tmpV.set(d[0]*ahead,6,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*9)); /* quick swing: a slow one reads as input lag */ /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
+      var d=DIRS[me.d],back=hi?150:72,up=hi?95:36,ahead=hi?110:120;var sr=api.speedRatio?api.speedRatio():1,fov=58+Math.max(0,Math.min(1.3,sr-1))*11;if(Math.abs(camera.fov-fov)>.05){camera.fov+=(fov-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix()}tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*7));tmpV.set(d[0]*ahead,6,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*9)); /* quick swing: a slow one reads as input lag */ /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
       camPos.set(me.x+camOff.x,camOff.y,me.y+camOff.z);camLook.set(me.x+lookOff.x,lookOff.y,me.y+lookOff.z)}
     else{var big=Math.max(AW,AH*1.3);tmpV.set(AW/2,big*.72,AH/2+big*.62);camPos.lerp(tmpV,1-Math.exp(-dt*2.5));tmpV.set(AW/2,0,AH/2);camLook.lerp(tmpV,1-Math.exp(-dt*2.5))}
     camera.position.copy(camPos);camera.lookAt(camLook);
