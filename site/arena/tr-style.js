@@ -13,8 +13,25 @@ if(typeof window.round !== "function")
 	/* floor: the grid tile is grayscale, tinted by these three; light grey so it stays out of the way.
 	   Presets (Classic etc.) repaint the floor, so the same values are re-applied every time the grid is built. */
 	var FLOOR = [0.42, 0.44, 0.5];
-	function pinFloor(){ settings.FLOOR_RED = FLOOR[0]; settings.FLOOR_GREEN = FLOOR[1]; settings.FLOOR_BLUE = FLOOR[2]; settings.FLOOR_DETAIL = 3; }
+	/* IMPORTANT: assigning a setting schedules its callback (FLOOR_* → updategrid → buildGrid). Assigning the same
+	   value again would still schedule it, so only assign when the value differs — otherwise the grid rebuilds forever. */
+	function pinFloor()
+	{
+		var changed = false;
+		if(settings.FLOOR_RED !== FLOOR[0]){ settings.FLOOR_RED = FLOOR[0]; changed = true; }
+		if(settings.FLOOR_GREEN !== FLOOR[1]){ settings.FLOOR_GREEN = FLOOR[1]; changed = true; }
+		if(settings.FLOOR_BLUE !== FLOOR[2]){ settings.FLOOR_BLUE = FLOOR[2]; changed = true; }
+		if(settings.FLOOR_DETAIL !== 3) settings.FLOOR_DETAIL = 3;
+		return changed;
+	}
 	pinFloor();
+	/* presets repaint the floor; re-pin once after a preset is applied */
+	if(typeof preset === "function")
+	{
+		var stockPreset = preset;
+		preset = function(){ var r = stockPreset.apply(this, arguments); setTimeout(pinFloor, 30); return r; };
+	}
+	window.__trGridBuilds = 0;
 
 	/* walls: taller, additive light with a bright top edge (the cyberpunk look), same colours the players chose */
 	var WALL_SCALE = 1.9;
@@ -131,6 +148,6 @@ if(typeof window.round !== "function")
 	if(typeof window.buildGrid === "function")
 	{
 		var stockBuildGrid = window.buildGrid;
-		window.buildGrid = function(){ pinFloor(); var r = stockBuildGrid.apply(this, arguments); try { addBillboards(); } catch(e){ console.warn("billboards:", e); } return r; };
+		window.buildGrid = function(){ window.__trGridBuilds++; var r = stockBuildGrid.apply(this, arguments); try { addBillboards(); } catch(e){ console.warn("billboards:", e); } return r; };
 	}
 })();
