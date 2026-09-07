@@ -180,18 +180,18 @@ window.initCycles=function(root){
   }
   function wire(){menu.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});menu.querySelectorAll('[data-level]').forEach(function(b){b.addEventListener('click',function(){levelIx=+b.dataset.level;start(3)})});menu.querySelectorAll('[data-levels]').forEach(function(b){b.addEventListener('click',levelMenu)});menu.querySelectorAll('[data-keys]').forEach(function(b){b.addEventListener('click',keysMenu)})}
   function endRound(winner,youDied){
-    running=false;ui.hidden=false;humSet(false,0);
+    running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     menu.innerHTML='<h2>'+(winner?(winner.human?winner.name+(winner.i===0?' win':' wins')+' the round':winner.name+' takes it'):(youDied?'You crashed':'Everyone crashed'))+'</h2><p>'+cycles.map(function(c){return c.name+': '+score[c.i]}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Next round</button><button class="cyc-btn" data-start="'+(mode===1?2:1)+'">'+(mode===1?'2 players':'Solo vs bots')+'</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button></div>';
     wire();
   }
   function endLevel(won,how){
-    running=false;ui.hidden=false;humSet(false,0);
+    running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var next=levelIx+1<LEVELS.length;
     menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' — new best':' · best '+BEST[level.id].toFixed(2)+'s'):' — '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-start="1">Arena</button></div>';
     wire();
   }
   function levelMenu(){
-    running=false;ui.hidden=false;humSet(false,0);
+    running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var tiers=[];LEVELS.forEach(function(l){if(tiers.indexOf(l.tier)<0)tiers.push(l.tier)});
     menu.innerHTML='<h2>SURVIVAL</h2><p>Fixed walls, a ring to reach, a clock. Same physics as the arena.</p>'+tiers.map(function(t){return '<p class="cyc-small" style="margin:8px 0 4px;text-transform:uppercase;letter-spacing:.12em">'+t+'</p><div class="cyc-opts">'+LEVELS.map(function(l,i){return l.tier===t?'<button class="cyc-btn cyc-lvl" data-level="'+i+'">'+l.name+(BEST[l.id]?'<small>'+BEST[l.id].toFixed(2)+'s</small>':'')+'</button>':''}).join('')+'</div>'}).join('')+'<div class="cyc-opts"><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-start="1">Back to the arena</button></div>';
     wire();
@@ -221,14 +221,14 @@ window.initCycles=function(root){
     if(hit)e.preventDefault();
   }
   function keysMenu(){
-    running=false;ui.hidden=false;humSet(false,0);
+    running=false;ui.hidden=false;humSet(false,0);menu.classList.add('cyc-wide');
     menu.innerHTML='<h2>CONTROLS</h2><p class="cyc-small">Click + then press a key to add it. Click a key to remove it. Bind two keys to one turn and press both for a double bind.</p><div class="cyc-keys">'+KEYS.map(function(map,p){return '<div class="cyc-keycol"><strong>'+(p?'Player 2 (2P mode)':'Player 1')+'</strong>'+ACTIONS.map(function(a){return '<div class="cyc-keyrow"><span>'+a[1]+'</span><span class="cyc-chips">'+map[a[0]].map(function(k,i){return '<button class="cyc-chip" data-del="'+p+':'+a[0]+':'+i+'" title="remove">'+keyName(k)+'</button>'}).join('')+'<button class="cyc-chip cyc-add" data-add="'+p+':'+a[0]+'">'+(listening&&listening.p===p&&listening.a===a[0]?'press a key…':'+')+'</button></span></div>'}).join('')+'</div>'}).join('')+'</div><div class="cyc-opts"><button class="cyc-btn" data-keysreset="1">Reset</button><button class="cyc-btn" data-back="1">Done</button></div>';
     menu.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){var q=b.dataset.del.split(':');KEYS[+q[0]][q[1]].splice(+q[2],1);saveKeys();keysMenu()})});
     menu.querySelectorAll('[data-add]').forEach(function(b){b.addEventListener('click',function(){var q=b.dataset.add.split(':');listening={p:+q[0],a:q[1]};keysMenu();canvas.focus()})});
     menu.querySelector('[data-keysreset]').addEventListener('click',function(){KEYS=JSON.parse(JSON.stringify(DEF));saveKeys();keysMenu()});
     menu.querySelector('[data-back]').addEventListener('click',function(){listening=null;mode===3?levelMenu():endRoundMenu()});
   }
-  function endRoundMenu(){menu.innerHTML='<h2>LIGHT CYCLES</h2><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button></div>';wire()}
+  function endRoundMenu(){menu.classList.remove('cyc-wide');menu.innerHTML='<h2>LIGHT CYCLES</h2><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button></div>';wire()}
   function kd(e){key(e,true)}function ku(e){key(e,false)}
   canvas.tabIndex=0;canvas.addEventListener('keydown',kd);canvas.addEventListener('keyup',ku);document.addEventListener('keydown',function(e){if(e.target!==canvas)kd(e)});document.addEventListener('keyup',function(e){if(e.target!==canvas)ku(e)});canvas.addEventListener('mousedown',function(){canvas.focus()});
   var tx=0;canvas.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
