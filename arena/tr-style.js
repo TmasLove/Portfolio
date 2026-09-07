@@ -46,8 +46,13 @@ if(typeof window.round !== "function")
 			var bright = new THREE.Color(cycle.tailColor).lerp(new THREE.Color(0xffffff), 0.55);
 			if(wall && wall.material)
 			{
-				wall.material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: cycle.tailColor, transparent: true, opacity: 0.42, depthWrite: false });
+				wall.material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: new THREE.Color(cycle.tailColor).lerp(new THREE.Color(0xffffff), 0.12), transparent: true, opacity: 0.5, depthWrite: false });
 				wall.scale.z = WALL_SCALE;
+				/* glow: a taller, fainter additive copy of the band behind it — a halo rising off the ribbon */
+				var glow = new THREE.Mesh(wall.geometry, new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: cycle.tailColor, transparent: true, opacity: 0.28, depthWrite: false, blending: THREE.AdditiveBlending }));
+				glow.scale.set(1, 1, 1.7); wall.add(glow);
+				var glow2 = new THREE.Mesh(wall.geometry, new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, color: cycle.tailColor, transparent: true, opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending }));
+				glow2.scale.set(1, 1, 2.6); wall.add(glow2);
 			}
 			if(line && line.material)
 			{
