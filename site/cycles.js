@@ -1,6 +1,8 @@
 /* Lightwall — an Armagetron-style arena, written for this desktop. Own code, no libraries.
-   Movement model (numbers sampled from a live light-cycle arena, 2026-09-07): speed closes on cruise at ~45%/s of
-   the gap and bleeds ~10%/s above it, every turn costs 5% speed and has a 30 ms delay, a brake with a recharging meter, boost that grows the
+   Movement model: Armagetron's rules (re-implemented in our own code from how Armagetron / Armawebtron behave):
+   the cycle is a point and walls have no width; RUBBER is a distance budget that only burns while you press into a
+   wall (turn away and it refills); speed snaps back up to cruise fast but bleeds off slowly above it; walls beside
+   you accelerate you by how close you run; every turn costs 5% speed, has a 20 ms delay and queues up to three, a brake with a recharging meter, boost that grows the
    closer you run parallel to a wall, a shield that is also your size — it drains while you touch a wall,
    shrinking you so you can dig through gaps, and refills when clear — trails of finite length so the grid
    keeps opening up. Solo vs three bots, 2 players on one keyboard, or Survival: a ladder of short levels
@@ -14,10 +16,11 @@ window.initCycles=function(root){
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,AW=1000,AH=1000;
-  var CFG={base:260,min:150,max:580,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:3.2}; /* radMax ≈ the bike's visible half-width; what you see is what collides */
+  var CFG={base:260,minF:.25,maxF:3,decayBelow:5,decayAbove:.1,turnFactor:.95,turnDelay:.02,turnMemory:3,brakeF:1.2,brakeMax:1,brakeDrain:1,brakeRegen:.15,wallLen:4000,shieldMax:2.5,rubber:170,rubberTime:10,minDist:.6,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1,radMax:3.2};
+  /* shieldMax is the RUBBER meter (full = 2.5). rubber: how many units of blocked travel the meter holds; rubberTime: seconds to refill from empty; minDist: how close you stop to a wall. */
   var RIDER='You';try{RIDER=(localStorage.getItem('tr-cycles-name')||'You').slice(0,14)||'You'}catch(e){}
   var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#FF8A3D','#4FC3FF','#F25CFF','#9CFF57'],NAMES=[RIDER,'Vex','Halo','Kilo','Nyx','Onyx','Zephyr','Quill'];
-  var DM={size:2400,riders:8,time:180,respawn:3,protect:2,wallLen:3200};
+  var DM={size:2400,riders:8,time:180,respawn:3,protect:2,wallLen:7000};
   var ZONE={time:180,shrink:150,r0:.47,r1:.13,drain:.75,reach:520};
   var zoneScore=[0,0,0,0,0,0,0,0],shares=[0,0,0,0,0,0,0,0],shareTick=0;
   function zoneR(){return AW*(ZONE.r0+(ZONE.r1-ZONE.r0)*Math.min(1,clock/ZONE.shrink))}
@@ -26,9 +29,9 @@ window.initCycles=function(root){
   /* Survival levels. Own layouts; units are arena units, origin top-left. wall: [x0,y0,x1,y1,color].
      goal: a ring to reach. limit: seconds allowed (0 = none). msg: notes painted on the floor. */
   var LEVELS=[
-    {id:'dig',name:'Digging',tier:'training',w:1000,h:600,spawn:[120,300,0],goal:[880,300,40],limit:0,
-      walls:[[560,60,560,297.5,'#06b6d4'],[560,302.5,560,540,'#06b6d4']],
-      msg:[[300,200,'Crash into the wall: your shield shrinks you'],[300,400,'Small enough, and you squeeze through the gap']]},
+    {id:'dig',name:'Rubber',tier:'training',w:1000,h:600,spawn:[120,300,0],goal:[880,300,40],limit:0,
+      walls:[[560,60,560,270,'#06b6d4'],[560,330,560,540,'#06b6d4']],
+      msg:[[300,200,'Ride into the wall: it holds you and burns RUBBER'],[300,400,'Turn away before it runs out, find the gap']]},
     {id:'turn',name:'Turning',tier:'training',w:1000,h:600,spawn:[100,300,0],goal:[900,300,45],limit:12,
       walls:[[500,100,500,500,'#f97316']],
       msg:[[250,180,'Arrows steer by direction: up goes up'],[250,440,'Go around, then back to the ring']]},
@@ -48,9 +51,9 @@ window.initCycles=function(root){
       walls:[[300,0,300,500,'#06b6d4'],[600,200,600,700,'#06b6d4'],[850,0,850,450,'#06b6d4']],msg:[]},
     {id:'novice2',name:'Corridors',tier:'novice',w:1200,h:700,spawn:[60,75,0],goal:[1140,650,35],limit:16,
       walls:[[0,150,1000,150,'#f97316'],[200,300,1200,300,'#f97316'],[0,450,1000,450,'#f97316'],[200,600,1200,600,'#f97316']],msg:[]},
-    {id:'easy1',name:'Pinch',tier:'easy',w:1000,h:600,spawn:[80,300,0],goal:[920,300,36],limit:9,
-      walls:[[350,0,350,297.5,'#22c55e'],[350,302.5,350,600,'#22c55e'],[650,0,650,297.5,'#ef4444'],[650,302.5,650,600,'#ef4444']],
-      msg:[[420,120,'Two digs in a row — keep some shield for the second']]},
+    {id:'easy1',name:'Pinch',tier:'easy',w:1000,h:600,spawn:[80,280,0],goal:[920,300,36],limit:9,
+      walls:[[350,0,350,292,'#22c55e'],[350,308,350,600,'#22c55e'],[650,0,650,292,'#ef4444'],[650,308,650,600,'#ef4444']],
+      msg:[[420,120,'Two tight gaps — line up, the cycle is a point']]},
     {id:'easy2',name:'Spiral',tier:'easy',w:1000,h:800,spawn:[500,400,0],goal:[60,60,34],limit:18,
       walls:[[400,300,650,300,'#8B7DFF'],[650,300,650,550,'#8B7DFF'],[650,550,300,550,'#8B7DFF'],[300,550,300,200,'#8B7DFF'],[300,200,800,200,'#8B7DFF'],[800,200,800,700,'#8B7DFF'],[800,700,150,700,'#8B7DFF'],[150,700,150,120,'#8B7DFF']],
       msg:[[420,430,'Unwind it']]}
@@ -125,8 +128,7 @@ window.initCycles=function(root){
     if(!c.alive)return;
     var nd=side==='left'?(c.d+3)%4:side==='right'?(c.d+1)%4:side;
     if(nd===c.d||nd===(c.d+2)%4)return;
-    if(now-c.lastTurn<CFG.turnDelay){c.pending=side;return}
-    c.pending=null;
+    if(now-c.lastTurn<CFG.turnDelay){c.queue=c.queue||[];if(c.queue.length<CFG.turnMemory)c.queue.push(side);return}
     c.trail.push([c.x,c.y]);c.d=nd;c.speed*=CFG.turnFactor;c.lastTurn=now;
     if(c.human)blip(c.speed*1.6+220,.05);
   }
@@ -142,34 +144,30 @@ window.initCycles=function(root){
       if(!c.alive){if(mode>=4&&c.respawn>0){c.respawn-=dt;if(c.respawn<=0)respawnAt(c)}return}
       if(c.protect>0)c.protect-=dt;
       if(!c.human)think(c,segs,dt);
-      if(c.pending&&now-c.lastTurn>=CFG.turnDelay){var pd=c.pending;c.pending=null;turn(c,pd)}
+      if(c.queue&&c.queue.length&&now-c.lastTurn>=CFG.turnDelay){turn(c,c.queue.shift())}
       /* brake */
-      var braking=c.braking&&c.brakeCharge>0;
-      if(braking){c.speed-=CFG.brake*dt;c.brakeCharge=Math.max(0,c.brakeCharge-CFG.brakeDrain*dt)}else if(!c.braking)c.brakeCharge=Math.min(CFG.brakeMax,c.brakeCharge+CFG.brakeRegen*dt);
+      var base=CFG.base*smul(),braking=c.braking&&c.brakeCharge>0;
+      if(braking){c.speed-=CFG.brakeF*base*dt;c.brakeCharge=Math.max(0,c.brakeCharge-CFG.brakeDrain*dt)}else if(!c.braking)c.brakeCharge=Math.min(CFG.brakeMax,c.brakeCharge+CFG.brakeRegen*dt);
       /* boost from a parallel wall on either side: stronger the closer, weaker on the rim, strongest on a level wall */
       var boost=0;[(c.d+1)%4,(c.d+3)%4].forEach(function(sd){var rr=ray(c.x,c.y,sd,c,CFG.boostNear,segs);if(rr.d<CFG.boostNear){var mul=rr.seg==='rim'?CFG.rimMul:rr.seg[4]==='static'?CFG.staticMul:(rr.seg[4]===c?1:CFG.enemyMul);boost+=CFG.boostAccel*mul*(1/(rr.d+CFG.boostOffset)-1/(CFG.boostOffset+CFG.boostNear))*CFG.boostOffset*4}});
       c.grinding=boost>0;
       c.speed+=boost*dt;
-      var l=c.speed-CFG.base*smul();
-      if(l>0)c.speed-=.1*l*dt;else if(l<0&&!braking)c.speed+=-l*CFG.recover*dt; /* measured on a live arena: speed closes ~45%/s of the gap to cruise, and bleeds ~10%/s above it */
-      c.speed=Math.max(CFG.min*smul(),Math.min(CFG.max*smul(),c.speed));
-      /* move. Three cases, none of them freezes you:
-         hard  — a wall squarely across the path: you stop against it and grind (shield drains, you shrink, die at 0)
-         soft  — only your shield's width clips a wall end (a gap narrower than you): you SQUEEZE through at 40% speed while the shield drains faster
-         sides — walls closer than your radius on the left/right (a tight tunnel): you keep full speed but the shield drains */
-      var rad=radius(c),dist=c.speed*dt,hard=ray(c.x,c.y,c.d,c,dist+2.5,segs,1.2),soft=ray(c.x,c.y,c.d,c,dist+rad+1.5,segs,rad,1.2);
-      var touchD=Math.max(1.6,rad*.5),sideL=ray(c.x,c.y,(c.d+3)%4,c,touchD+1,segs).d,sideR=ray(c.x,c.y,(c.d+1)%4,c,touchD+1,segs).d,tight=Math.min(sideL,sideR)<touchD; /* grinding close is free boost; only actual side contact drains */
-      function hurt(mul){c.touching=true;if(c.protect<=0)c.shield-=CFG.shieldDrain*mul*dt;
+      var l=c.speed-base;
+      if(l>0)c.speed-=CFG.decayAbove*l*dt;else if(l<0&&!braking)c.speed+=-l*CFG.decayBelow*dt; /* Armagetron: quick back up to cruise, slow bleed above it */
+      c.speed=Math.max(base*CFG.minF,Math.min(base*CFG.maxF,c.speed));
+      /* move, Armagetron style: the cycle is a point. A wall across the path stops you a hair short of it, and the
+         travel you could not make burns RUBBER. Rubber gone = crash (blamed on the wall's owner). Turn away and
+         rubber refills. Running alongside a wall, however close, costs nothing — that is grinding. */
+      var rad=radius(c),dist=c.speed*dt,front=ray(c.x,c.y,c.d,c,dist+CFG.minDist+2,segs,.02,.02),room=front.d-CFG.minDist;
+      if(dist>room){
+        var moved=Math.max(0,room),blocked=dist-moved;c.x+=DIRS[c.d][0]*moved;c.y+=DIRS[c.d][1]*moved;
+        c.touching=true;c.lastHit=front.seg;
+        if(c.protect<=0)c.shield-=blocked/CFG.rubber*CFG.shieldMax;
         if(c.shield<=0){c.alive=false;c.deaths++;boom(c);if(c.human)blip(90,.4);
-          if(mode>=4){var seg=c.lastHit,owner=seg&&seg!=='rim'&&seg[4]&&seg[4].i!==undefined?seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}}
-      if(hard.d<=dist+1){
-        c.x+=DIRS[c.d][0]*Math.max(0,hard.d-1.2);c.y+=DIRS[c.d][1]*Math.max(0,hard.d-1.2);c.lastHit=hard.seg;hurt(1);
-      }else if(soft.d<=dist+rad){
-        var sq=dist*.4;c.x+=DIRS[c.d][0]*sq;c.y+=DIRS[c.d][1]*sq;c.lastHit=soft.seg;hurt(1.6);
+          if(mode>=4){var seg=c.lastHit,owner=seg&&seg!=='rim'&&seg[4]&&seg[4].i!==undefined?seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}
       }else{
-        c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;
-        if(tight){c.lastHit=(sideL<sideR?ray(c.x,c.y,(c.d+3)%4,c,touchD+1,segs):ray(c.x,c.y,(c.d+1)%4,c,touchD+1,segs)).seg;hurt(.8)}
-        else{c.touching=false;c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.shieldRegen*dt)}
+        c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;c.touching=false;
+        c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.rubberTime*dt);
       }
       if(mode===5){c.outside=!inZone(c.x,c.y);if(c.outside&&c.protect<=0){c.shield-=ZONE.drain*dt;if(c.shield<=0){c.alive=false;c.deaths++;boom(c);c.respawn=DM.respawn;if(c.human){blip(90,.4);countEl.hidden=false}}}}
       trimTrail(c);
@@ -214,7 +212,7 @@ window.initCycles=function(root){
       if(mode===5&&!inZone(x,y,90))continue;
       for(var d=0;d<4;d++)dmin=Math.min(dmin,ray(x,y,d,null,600,segs).d);
       if(dmin>bestD){bestD=dmin;best=[x,y]}if(dmin>=400)break}
-    if(!best)best=[AW/2,AH/2];var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.outside=false;c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base*smul();c.protect=DM.protect;c.lastTurn=-1;c.pending=null;c.braking=false;c.touching=false;
+    if(!best)best=[AW/2,AH/2];var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.outside=false;c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base*smul();c.protect=DM.protect;c.lastTurn=-1;c.queue=[];c.braking=false;c.touching=false;
     if(c.human){countEl.hidden=true;humSet(true,CFG.base)}
   }
   function standings(){if(mode===5)return cycles.slice().sort(function(a,b){return zoneScore[b.i]-zoneScore[a.i]});return cycles.slice().sort(function(a,b){return score[b.i]-score[a.i]||a.deaths-b.deaths})}
@@ -244,7 +242,7 @@ window.initCycles=function(root){
       if(c.alive){var r=radius(c)*s;ctx.globalAlpha=c.protect>0?.5+.5*Math.sin(now*12):1;ctx.fillStyle=c.touching?c.color:'#fff';ctx.fillRect(ox+c.x*s-3,oy+c.y*s-3,6,6);ctx.strokeStyle=c.touching?'rgba(255,255,255,.75)':'rgba(255,255,255,.28)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(ox+c.x*s,oy+c.y*s,Math.max(4,r+(c.touching?Math.random()*3:0)),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}});
     booms=booms.filter(function(b){return b.t>0});booms.forEach(function(b){b.x+=b.vx*.016;b.y+=b.vy*.016;b.t-=.025;ctx.globalAlpha=Math.max(0,b.t);ctx.fillStyle=b.c;ctx.fillRect(ox+b.x*s,oy+b.y*s,3,3)});ctx.globalAlpha=1;
     var me=cycles[0];
-    var st=(me.alive?Math.round(me.speed*KMH)+' km/h'+(me.grinding?'  BOOST':'')+(me.braking&&me.brakeCharge>0?'  BRAKE':'')+(me.touching?'  SHIELD':''):'crashed');
+    var st=(me.alive?Math.round(me.speed*KMH)+' km/h'+(me.grinding?'  BOOST':'')+(me.braking&&me.brakeCharge>0?'  BRAKE':'')+(me.touching?'  RUBBER':''):'crashed');
     if(level){hudS.textContent=level.name+(BEST[level.id]?'   best '+BEST[level.id].toFixed(2)+'s':'');hudR.textContent=st+'   ·   '+(level.limit?Math.max(0,level.limit-clock).toFixed(1)+'s left':clock.toFixed(1)+'s')}
     else if(mode===5){var st5=standings();hudS.textContent=st5.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+Math.round(shares[c.i]*100)+'%'}).join('   ')+(st5.indexOf(me)>3?'   ·   you #'+(st5.indexOf(me)+1)+' '+Math.round(shares[0]*100)+'%':'');hudR.textContent=(me.alive&&me.outside?'OUTSIDE THE ZONE   ':me.protect>0?'PROTECTED   ':'')+st+'   ·   zone '+Math.round(zoneR()/AW*200)+'%   ·   '+Math.max(0,ZONE.time-clock).toFixed(0)+'s   ·   '+Math.round(fps)+' fps'}
     else if(mode===4){var st4=standings();hudS.textContent=st4.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+score[c.i]}).join('   ')+(st4.indexOf(me)>3?'   ·   you #'+(st4.indexOf(me)+1)+' '+score[0]:'');hudR.textContent=(me.protect>0?'PROTECTED   ':'')+st+'   ·   '+Math.max(0,DM.time-clock).toFixed(0)+'s   ·   '+Math.round(fps)+' fps'}
@@ -321,7 +319,7 @@ window.initCycles=function(root){
     menu.innerHTML='<div class="cyc-lobby"><div class="cyc-lobby-head"><h2>LIGHTWALL</h2><p class="cyc-tag">Tron-style light cycles. Your wall is your weapon.</p></div>'+
       '<div class="cyc-modes">'+MODES.map(function(m){return '<button class="cyc-mode'+(String(m[0])===String(picked)?' sel':'')+'" data-mode="'+m[0]+'"><strong>'+m[1]+'</strong><span>'+m[2]+'</span></button>'}).join('')+'</div>'+
       '<div class="cyc-lobby-side"><label class="cyc-name">Rider name<input id="cycName" maxlength="14" value="'+RIDER.replace(/"/g,'&quot;')+'" autocomplete="off" spellcheck="false"></label><button class="cyc-btn cyc-play" data-play="1">PLAY</button><div class="cyc-opts"><button class="cyc-btn cyc-mini" data-keys="1">Controls</button><button class="cyc-btn cyc-mini" data-view="1"></button><button class="cyc-btn cyc-mini" data-help="1">How to play</button></div></div>'+
-      '<div class="cyc-help" hidden><p>Arrow keys or WASD. In the chase views left and right turn you and down brakes; from above the arrows point the way and Space brakes. Run close and parallel to a wall to boost — the closer, the faster. Touching a wall drains your shield and shrinks you: dig through a gap, or get off it before it empties.</p><p>Two turn keys at once flip you 180° (a double bind). V or the View button switches the camera. M mutes. Trails fade behind you, so the grid keeps opening up.</p><p class="cyc-small">Inspired by Armagetron Advanced · own code and art</p></div></div>';
+      '<div class="cyc-help" hidden><p>Arrow keys or WASD. In the chase views left and right turn you and down brakes; from above the arrows point the way and Space brakes. Run close and parallel to a wall to boost — the closer, the faster. Ride into a wall and it holds you while your RUBBER burns; turn away before it runs out. Grinding alongside a wall is free and fast.</p><p>Two turn keys at once flip you 180° (a double bind). V or the View button switches the camera. M mutes. Trails fade behind you, so the grid keeps opening up.</p><p class="cyc-small">Inspired by Armagetron Advanced · own code and art</p></div></div>';
     menu.querySelectorAll('[data-mode]').forEach(function(b){b.addEventListener('click',function(){picked=isNaN(+b.dataset.mode)?b.dataset.mode:+b.dataset.mode;try{localStorage.setItem('tr-cycles-mode',JSON.stringify(picked))}catch(e){}menu.querySelectorAll('[data-mode]').forEach(function(x){x.classList.toggle('sel',x===b)})});b.addEventListener('dblclick',play)});
     menu.querySelector('[data-play]').addEventListener('click',play);
     var nameEl=menu.querySelector('#cycName');nameEl.addEventListener('input',function(){RIDER=(nameEl.value.trim()||'You').slice(0,14);NAMES[0]=RIDER;if(cycles[0])cycles[0].name=RIDER;try{localStorage.setItem('tr-cycles-name',RIDER)}catch(e){}});
