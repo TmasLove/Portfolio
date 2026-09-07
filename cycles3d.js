@@ -28,9 +28,9 @@ window.initCycles3D=function(root,api){
     renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
     camera=new THREE.PerspectiveCamera(55,1,1,8000);
     scene.add(new THREE.HemisphereLight(0x5b8fc9,0x05070a,1.5));var sun=new THREE.DirectionalLight(0xe8f4ff,1.7);sun.position.set(300,500,200);scene.add(sun);var rimL=new THREE.DirectionalLight(0x9fd8ff,.9);rimL.position.set(-400,250,-300);scene.add(rimL);
-    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-72,36,0);lookOff=new THREE.Vector3(120,6,0);tmpV=new THREE.Vector3();
+    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-72,36,0);lookOff=new THREE.Vector3(120,6,0);var camAng=0,lookAng=0;tmpV=new THREE.Vector3();
     /* floor: a dark slab you can faintly see the walls mirrored in, plus the grid */
-    floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x020408}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
+    floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x020408,transparent:true,opacity:.86,depthWrite:false})); /* almost opaque: the mirrored walls beneath show as a faint reflection, no haze */floor.rotation.x=-Math.PI/2;floor.position.y=0.05;floor.renderOrder=0;scene.add(floor);
     grid=null;
     /* wall ribbons: one shared buffer for trails, level walls and the rim; a mirrored twin under the floor */
     pos=new Float32Array(CAP*4*3);col=new Float32Array(CAP*4*3);idx=new Uint32Array(CAP*6);
@@ -40,6 +40,7 @@ window.initCycles3D=function(root,api){
     walls=new THREE.Mesh(geo,new THREE.ShaderMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{t:{value:0}},
       vertexShader:'attribute float wv;varying float vv;varying vec3 vc;void main(){vv=wv;vc=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
       fragmentShader:'uniform float t;varying float vv;varying vec3 vc;void main(){float e=pow(abs(vv-0.5)*2.0,3.0);float bands=0.08*smoothstep(0.35,0.5,abs(fract(vv*5.0+t*0.2)-0.5));float a=0.08+0.32*e+bands;gl_FragColor=vec4(vc*(0.55+0.45*e),a);}'}));scene.add(walls); /* light walls: additive, bright edges, glassy middle */
+    mirror=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.26,depthWrite:false,blending:THREE.AdditiveBlending}));mirror.scale.y=-1;mirror.renderOrder=-1;scene.add(mirror);
     linePos=new Float32Array(CAP*2*3);lineCol=new Float32Array(CAP*2*3);
     var lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.BufferAttribute(linePos,3));lg.setAttribute('color',new THREE.BufferAttribute(lineCol,3));lg.setDrawRange(0,0);
     wallLine=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true}));scene.add(wallLine);
@@ -54,13 +55,13 @@ window.initCycles3D=function(root,api){
     pPos=new Float32Array(600*3);pCol=new Float32Array(600*3);var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pPos,3));pg.setAttribute('color',new THREE.BufferAttribute(pCol,3));pg.setDrawRange(0,0);
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
     /* post: bloom is what makes the ribbons glow */
-    composer=new EffectComposer(renderer,new THREE.WebGLRenderTarget(800,600,{samples:4,type:THREE.HalfFloatType}));composer.addPass(new RenderPass(scene,camera)); /* 4x MSAA: no jaggies on the edge lines */
-    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.5,.1,.62);composer.addPass(bloom);composer.addPass(new OutputPass());
+    composer=new EffectComposer(renderer,new THREE.WebGLRenderTarget(800,600,{samples:2,type:THREE.HalfFloatType}));composer.addPass(new RenderPass(scene,camera)); /* 4x MSAA: no jaggies on the edge lines */
+    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.42,.08,.68);composer.addPass(bloom);composer.addPass(new OutputPass());
     resize();
     if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(host)}else window.addEventListener('resize',resize);
     ready=true;apply();
   }
-  function resize(){if(!renderer)return;var w=host.clientWidth||wrap.clientWidth||900,h=host.clientHeight||wrap.clientHeight||640;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w*h>1200000?1:1.5));renderer.setSize(w,h,false); /* full-screen: render at 1x so bloom stays cheap */composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+  function resize(){if(!renderer)return;var w=host.clientWidth||wrap.clientWidth||900,h=host.clientHeight||wrap.clientHeight||640;renderer.setPixelRatio(1); /* 1x everywhere: MSAA covers the edges, and frames stay even on 120 Hz screens */renderer.setSize(w,h,false); /* full-screen: render at 1x so bloom stays cheap */composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
   function apply(){var on=ready&&view!=='flat';host.hidden=!on;root.classList.toggle('cyc-has3d',on);try{localStorage.setItem('tr-cycles-view',view)}catch(e){}}
   function cycleView(){var order=ready?['chase','high','overview','flat']:['flat'];view=order[(order.indexOf(view)+1)%order.length];apply();return view}
   function hex(c){return new THREE.Color(c)}
@@ -185,7 +186,7 @@ window.initCycles3D=function(root,api){
     wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();wallBase.geometry.setDrawRange(0,n*2);
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
-    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.15));m.userData.shield.material.opacity=c.touching?.9:(c.protect>0?.5+.4*Math.sin(now*10):.4); /* the ring IS the collision size */if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
+    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);var ty=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]),cy=m.userData.yaw===undefined?ty:m.userData.yaw,dy=ty-cy;while(dy>Math.PI)dy-=Math.PI*2;while(dy<-Math.PI)dy+=Math.PI*2;cy+=dy*(1-Math.exp(-dt*16));m.userData.yaw=cy;m.rotation.y=cy;m.rotation.x=-dy*.9; /* turn over a few frames, lean into it */var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.15));m.userData.shield.material.opacity=c.touching?.9:(c.protect>0?.5+.4*Math.sin(now*10):.4); /* the ring IS the collision size */if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
     var z=api.zone();zone.visible=zoneRing.visible=!!z;if(z){zone.position.set(z.x,35,z.y);zone.scale.set(z.r,1,z.r);zoneRing.position.set(z.x,1,z.y);zoneRing.scale.setScalar(z.r);zone.material.opacity=.04+.02*Math.sin(now*2)}
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
@@ -195,13 +196,16 @@ window.initCycles3D=function(root,api){
     /* camera */
     var me=cycles[0],mode=api.mode(),chase=(view==='chase'||view==='high')&&mode!==2&&me&&me.alive,hi=view==='high';
     if(chase){ /* smooth the OFFSET from the bike, not the world position, so the camera never trails at speed; turns still swing round */
-      var d=DIRS[me.d],back=hi?150:72,up=hi?95:36,ahead=hi?110:120;var sr=api.speedRatio?api.speedRatio():1,fov=58+Math.max(0,Math.min(1.3,sr-1))*11;if(Math.abs(camera.fov-fov)>.05){camera.fov+=(fov-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix()}tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*7));tmpV.set(d[0]*ahead,6,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*9)); /* quick swing: a slow one reads as input lag */ /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
-      camPos.set(me.x+camOff.x,camOff.y,me.y+camOff.z);camLook.set(me.x+lookOff.x,lookOff.y,me.y+lookOff.z)}
+      var d=DIRS[me.d],back=hi?150:58,up=hi?95:24,ahead=hi?110:110;var sr=api.speedRatio?api.speedRatio():1,fov=60+Math.max(0,Math.min(1.3,sr-1))*10;if(Math.abs(camera.fov-fov)>.05){camera.fov+=(fov-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix()}
+      /* the camera sweeps round the bike on an arc (smoothing the heading angle), never cutting through the corner */
+      var want=Math.atan2(d[1],d[0]),da=want-camAng;while(da>Math.PI)da-=Math.PI*2;while(da<-Math.PI)da+=Math.PI*2;camAng+=da*(1-Math.exp(-dt*7));
+      var dl=want-lookAng;while(dl>Math.PI)dl-=Math.PI*2;while(dl<-Math.PI)dl+=Math.PI*2;lookAng+=dl*(1-Math.exp(-dt*10));
+      camPos.set(me.x-Math.cos(camAng)*back,up,me.y-Math.sin(camAng)*back);camLook.set(me.x+Math.cos(lookAng)*ahead,7,me.y+Math.sin(lookAng)*ahead)}
     else{var big=Math.max(AW,AH*1.3);tmpV.set(AW/2,big*.72,AH/2+big*.62);camPos.lerp(tmpV,1-Math.exp(-dt*2.5));tmpV.set(AW/2,0,AH/2);camLook.lerp(tmpV,1-Math.exp(-dt*2.5))}
     camera.position.copy(camPos);camera.lookAt(camLook);
     composer.render();
   }
   function snap(){camPos.set(-1e9,0,0)} /* next render jumps the camera instead of sweeping across the arena */
-  return {render:render,model:function(){return !!modelScene},view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&(view==='chase'||view==='high')},reset:function(){if(camPos)camPos.set(0,900,0)},
+  return {render:render,model:function(){return !!modelScene},view:function(){return view},cycleView:cycleView,ready:function(){return ready&&view!=='flat'},chase:function(){return ready&&(view==='chase'||view==='high')},reset:function(){if(camPos){camPos.set(0,900,0);var c0=api.cycles()[0];if(c0){camAng=lookAng=Math.atan2(DIRS[c0.d][1],DIRS[c0.d][0])}}},
     stop:function(){stopped=true;if(ro)ro.disconnect();window.removeEventListener('resize',resize);if(renderer){renderer.dispose();host.remove()}}};
 };
