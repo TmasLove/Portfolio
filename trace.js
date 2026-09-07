@@ -47,15 +47,22 @@ window.TRTrace = (function(){
     EDGE[level.img]=mask;return mask;
   }
   function refMask(level){var cv=document.createElement('canvas');cv.width=W;cv.height=H;var c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,W,H);level.draw(c);return c.getImageData(0,0,W,H).data}
-  /* score: cells of 4px; coverage = image cells with a stroke nearby, precision = stroke cells with image nearby */
+  /* score: 2px cells. Distance from every cell to the nearest reference cell and to the nearest user cell (BFS).
+     Credit is 1 on the line, then slides to 0 over a few pixels — so a wobble costs points instead of being free.
+     coverage = average credit over the picture's cells; precision = average credit over your ink cells; score = F1. */
+  function dist(A,cw,ch){var D=new Int16Array(cw*ch).fill(-1),q=new Int32Array(cw*ch),h=0,t=0,i;for(i=0;i<cw*ch;i++)if(A[i]){D[i]=0;q[t++]=i}
+    while(h<t){var c=q[h++],x=c%cw,y=(c/cw)|0,d=D[c]+1;if(x>0&&D[c-1]<0){D[c-1]=d;q[t++]=c-1}if(x<cw-1&&D[c+1]<0){D[c+1]=d;q[t++]=c+1}if(y>0&&D[c-cw]<0){D[c-cw]=d;q[t++]=c-cw}if(y<ch-1&&D[c+cw]<0){D[c+cw]=d;q[t++]=c+cw}}return D}
   function score(level,userData){
-    var ref=level.photo?null:refMask(level),edge=level.photo?edgeMask(level):null,cs=4,cw=W/cs,ch=H/cs,R=new Uint8Array(cw*ch),RL=new Uint8Array(cw*ch),U=new Uint8Array(cw*ch),cnt=new Uint8Array(cw*ch),i,x,y;
-    for(y=0;y<H;y++)for(x=0;x<W;x++){i=(y*W+x)*4;var cx=(x/cs)|0,cy=(y/cs)|0;if(level.photo){if(edge[y*W+x]){RL[cy*cw+cx]=1;if(++cnt[cy*cw+cx]>=5)R[cy*cw+cx]=1}}else if(ref[i]<120){R[cy*cw+cx]=1;RL[cy*cw+cx]=1}if(userData[i+3]>40&&(userData[i]<200||userData[i+1]<200||userData[i+2]<200))U[cy*cw+cx]=1}
-    function near(A,B,tol){var hit=0,tot=0;for(var yy=0;yy<ch;yy++)for(var xx=0;xx<cw;xx++){if(!A[yy*cw+xx])continue;tot++;var ok=false;for(var dy=-tol;dy<=tol&&!ok;dy++)for(var dx=-tol;dx<=tol;dx++){var X=xx+dx,Y=yy+dy;if(X>=0&&Y>=0&&X<cw&&Y<ch&&B[Y*cw+X]){ok=true;break}}if(ok)hit++}return tot?hit/tot:0}
-    var tol=level.photo?1:(LEVELS.indexOf(level)>=4?1:2); /* higher line-art levels and photos judge within 4px */
-    var cov=near(R,U,tol),prec=near(U,RL,tol); /* cover the solid outline; be on any edge */
-    if(!cov&&!prec)return {score:0,coverage:0,precision:0};
-    var f=cov+prec?2*cov*prec/(cov+prec):0;if(level.photo)f=Math.pow(f,1.35); /* photos: random ink still lands on edges, so curve the score down */
+    var ref=level.photo?null:refMask(level),edge=level.photo?edgeMask(level):null,cs=2,cw=W/cs,ch=H/cs,R=new Uint8Array(cw*ch),RL=new Uint8Array(cw*ch),U=new Uint8Array(cw*ch),cnt=new Uint8Array(cw*ch),i,x,y;
+    for(y=0;y<H;y++)for(x=0;x<W;x++){i=(y*W+x)*4;var cx=(x/cs)|0,cy=(y/cs)|0;if(level.photo){if(edge[y*W+x]){RL[cy*cw+cx]=1;if(++cnt[cy*cw+cx]>=2)R[cy*cw+cx]=1}}else if(ref[i]<120){R[cy*cw+cx]=1;RL[cy*cw+cx]=1}
+      if(userData[i+3]>40&&(userData[i]<200||userData[i+1]<200||userData[i+2]<200))U[cy*cw+cx]=1}
+    var lvlIx=LEVELS.indexOf(level),free=level.photo?2:1,slide=level.photo?3:(lvlIx>=6?1:2); /* cells: full credit within `free`, zero at free+slide */
+    function credit(d){if(d<0)return 0;if(d<=free)return 1;var v=1-(d-free)/slide;return v>0?v:0}
+    var DU=dist(U,cw,ch),DR=dist(RL,cw,ch),cov=0,nr=0,prec=0,nu=0;
+    for(i=0;i<cw*ch;i++){if(R[i]){nr++;cov+=credit(DU[i])}if(U[i]){nu++;prec+=credit(DR[i])}}
+    cov=nr?cov/nr:0;prec=nu?prec/nu:0;
+    if(!nu)return {score:0,coverage:0,precision:0};
+    var f=cov+prec?2*cov*prec/(cov+prec):0;f=Math.pow(f,level.photo?1.5:2.2); /* steep: a sloppy trace should feel it */
     return {score:Math.round(f*100),coverage:Math.round(cov*100),precision:Math.round(prec*100)};
   }
   return {LEVELS:LEVELS,score:score,prepare:prepare,edgeMask:edgeMask,W:W,H:H};
