@@ -198,7 +198,7 @@ window.onload = function()
 {
 	if(!engine.scene) init();
 
-	httpGetAsync("layout/menu.xml",function(output){
+	httpGetAsync("layout/menu.xml?v=20260908k",function(output){
 		engine.menu = xmlify(output); menu('menu:main'); aamenurender();
 		if(typeof(_GET["ssl"]) != "undefined")
 		{

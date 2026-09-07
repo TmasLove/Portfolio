@@ -81,10 +81,6 @@
 						text="Current" title="Just use the settings already loaded"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('classic')" 
 						text="Classic" title="Default low rubber settings in Armagetron"/>
-					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('sumo')" 
-						text="0xffcc66Sumo" title="Stay inside the shrinking zone. Fortress physics: speed 30, rubber 5, walls 400."/>
-					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('sumosurv')" 
-						text="0xffcc66Sumo Survival" title="One zone, everyone for themselves, outlast the bots."/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('df')" 
 						text="Loose Dogfight" title="Obey loose dogfight rules or go elsewhere!"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('hr')" 
