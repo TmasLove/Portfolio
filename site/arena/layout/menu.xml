@@ -19,7 +19,7 @@
 		<Item type="str" var="player.name" text="Name"/>
 		<Item type="exitmenu" text="Let's go!"/>
 	</Menu>
-	<Menu id="main" title="@progtitle@ @version@">
+	<Menu id="main" title="@progtitle@">
 		<Item type="submenu" onenter="game" text="Play"/>
 		<Item type="submenu" onenter="player" text="Customize Player"/>
 		<Item type="submenu" onenter="input" text="Configure Input"/>
@@ -32,8 +32,6 @@
 	<!-- General game configuration -->
 	<Menu id="game" title="Play Game">
 		<Item type="submenu" onenter="presets" text="Locally"/>
-		<Item type="js" onenter="serverBrowser()" text="Online" if="window.ConnectionArma"/>
-		<Item type="submenu" onenter="network" text="Custom Connect"/>
 		<Item type="exitmenu" text="&lt;- Go Back"/>
 	</Menu>
 		<Menu id="network" title="Network Game">
@@ -85,8 +83,6 @@
 						text="Classic" title="Default low rubber settings in Armagetron"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('df')" 
 						text="Loose Dogfight" title="Obey loose dogfight rules or go elsewhere!"/>
-					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('jump')" 
-						text="Jump test" title="Jump! Go ahead, jump!"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('hr')" 
 						text="0x0000ff-=}0xffffffID0x0000ff&lt; 0xffff00T0x00ff00I0xffff00L0x00ff00T 0x0000ffHigh Rubber0x00ff00" title="No camping!"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('ft')" 
@@ -95,14 +91,10 @@
 						text="Fortress" title="Take the enemy's base, try not to let them take yours."/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('ctf')" 
 						text="Capture the Flag" title="Take the enemy's flag, try not to let them take yours."/>
-					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('styball')" 
-						text="Styball (Soccer / Hockey)" title="Push the ball into the enemy's base, but don't let them push it into yours!"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('racing')" 
 						text="0x66cc66Adventures of 0x00cc00TRON 0xffffff>> Advanced Racing &lt;&lt;" title="First to the finish line wins!"/>
 					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('snake')" 
 						text="0x66ccffSnake Survival" title="How long can you get your trail?"/>
-					<Item type="js" style="font-size:14pt" onenter="menu('menu:loading');preset('zonetest')" 
-						text="Zone test" title="Zones! Zones! Zones! Zones everywhere!"/>
 					<Item type="submenu" onenter="game_setup" style="font-size:16pt;" text="(config)" if="engine.menus[engine.menus.length-1] == 'game'"/>
 					<Item type="exitmenu" text="Cancel" title="Never mind, none of these look interesting..."/>
 				</Menu>
@@ -261,6 +253,7 @@
 	
 	<Menu id="about" title="About">
 		<Item type="text" style="font-size:15pt" text="0xff8800Title: 0xRESETT@progtitle@" />
+		<Item type="text" style="font-size:13pt" text="Built on Armawebtron @version@ (GPL-2.0) — source and licence in this folder" />
 		<Item type="text" style="font-size:15pt" text="Draws heavy inspiration from the excellent lightcycle game Armagetron Advanced." />
 		<Item type="text" style="font-size:15pt" text="0xff8800Version: 0xRESETT@version@" />
 		<Item type="text" style="font-size:15pt" text="0xff8800NetVersion: 0xRESETT@netversion@" />
