@@ -14,7 +14,7 @@ fm = bpy.data.materials.new("floor"); fm.use_nodes = True; b = fm.node_tree.node
 b.inputs["Base Color"].default_value = (0.02, 0.025, 0.035, 1); b.inputs["Metallic"].default_value = 0.6; b.inputs["Roughness"].default_value = 0.25
 floor.data.materials.append(fm)
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (6.4, -5.6, 3.0); cam.rotation_euler = (math.radians(68), 0, math.radians(49))
+cam.location = (9.5, -4.6, 2.6); cam.rotation_euler = (math.radians(76), 0, math.radians(64))
 cam.data.lens = 40
 light = bpy.data.objects.new("key", bpy.data.lights.new("key", "AREA")); sc.collection.objects.link(light)
 light.location = (3, -2, 5); light.rotation_euler = (math.radians(35), math.radians(20), 0); light.data.energy = 900; light.data.size = 4
