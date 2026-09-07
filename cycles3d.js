@@ -7,11 +7,11 @@ window.initCycles3D=function(root,api){
   try{view=localStorage.getItem('tr-cycles-view')||'chase'}catch(e){}
   var wrap=root.querySelector('.cyc'),host=document.createElement('div');host.className='cyc-3d';wrap.insertBefore(host,wrap.firstChild);
   var U='https://cdn.jsdelivr.net/npm/three@0.160.0/',E='/+esm';
-  var WALL_H=10,CAP=6000; /* quads */
+  var WALL_H=12,CAP=6000; /* quads */
   /* Our own cycle model, if one is dropped at this path (any glTF/GLB you have the rights to; Draco-compressed
      meshes and WebP textures are fine). forward: which model axis points ahead; size: length in arena units.
      Without the file the built-in cycle below is used. */
-  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:19,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
+  var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:20,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
   var modelScene=null,modelTried=false;
   var walls,wallLine,mirror,floor,grid,ring,column,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
   var pos,col,idx,linePos,lineCol,pPos,pCol;
