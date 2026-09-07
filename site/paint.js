@@ -5,19 +5,17 @@ window.initPaint = function(root){
   var TOOLS=[['brush','Brush','M4 20c4-8 8-12 16-16'],['pen','Pen','M5 19L19 5M15 5h4v4'],['marker','Marker','M4 20l8-3 8-9-5-5-9 8z'],['line','Line','M4 20L20 4'],['rect','Rectangle','M4 6h16v12H4z'],['ellipse','Ellipse','M12 5a8 7 0 1 0 0 14a8 7 0 1 0 0-14'],['fill','Fill','M7 3l10 10-7 7-7-7 4-4zM19 15c1 2 1 4 0 4s-1-2 0-4'],['erase','Eraser','M4 16l8-8 6 6-4 4H6z']];
   root.innerHTML =
     '<div class="paint-wrap"><div class="paint-left">'+
-    '<div class="paint-modes" role="tablist"><button class="pmode active" data-mode="free" role="tab">Paint</button><button class="pmode" data-mode="trace" role="tab">Trace <span class="t3">· the game</span></button></div>'+
-    '<div class="paint-tools" role="toolbar" aria-label="Paint tools">'+
-    '<span class="ptools">'+TOOLS.map(function(t,i){return '<button class="ptool'+(i===0?' active':'')+'" data-tool="'+t[0]+'" title="'+t[1]+'" aria-label="'+t[1]+'"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="'+t[2]+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></button>'}).join('')+'</span>'+
-    '<label class="t3" id="pSizeWrap">Size <input type="range" id="pSize" min="1" max="60" value="6"></label>'+
-    '<label class="t3" id="pAlphaWrap">Opacity <input type="range" id="pAlpha" min="10" max="100" value="100"></label>'+
-    '<span class="pcolors">'+['#161616','#4A54DC','#00A88F','#F2B07A','#FF5F57','#FEBC2E','#FFFFFF'].map(function(c,i){return '<button class="pcolor'+(i===0?' active':'')+'" data-c="'+c+'" style="background:'+c+'" aria-label="Colour '+c+'"></button>'}).join('')+'<input type="color" id="pPick" value="#161616" title="Any colour" aria-label="Any colour"></span>'+
-    '<button id="pUndo" class="btn btn-secondary sm" title="Undo">Undo</button>'+
-    '<button id="pClear" class="btn btn-secondary sm">Clear</button>'+
-    '</div>'+
-    '<div class="trace-bar" id="tBar" hidden><span id="tLevel" class="trace-level"></span><span id="tTools" class="t3"></span><button id="tCheck" class="btn btn-primary sm">Check my trace</button><button id="tPeek" class="btn btn-secondary sm" title="Hold to see the picture">Peek</button><button id="tNext" class="btn btn-secondary sm" hidden>Next level →</button><button id="tPrev" class="btn btn-secondary sm" title="Previous level">←</button><span id="tScore" class="trace-score"></span></div>'+
+    '<div class="paint-head"><div class="paint-modes" role="tablist"><button class="filter-chip pmode active" data-mode="free" role="tab">Paint</button><button class="filter-chip pmode" data-mode="trace" role="tab">Trace · the game</button></div></div>'+
+    '<div class="panel paint-panel"><div class="paint-tools" role="toolbar" aria-label="Paint tools">'+
+    '<div class="pgroup"><span class="plabel">Tool</span><span class="ptools">'+TOOLS.map(function(t,i){return '<button class="ptool'+(i===0?' active':'')+'" data-tool="'+t[0]+'" title="'+t[1]+'" aria-label="'+t[1]+'"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="'+t[2]+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg></button>'}).join('')+'</span></div>'+
+    '<div class="pgroup" id="pColorGroup"><span class="plabel">Colour</span><span class="pcolors">'+['#161616','#4A54DC','#00A88F','#F2B07A','#FF5F57','#FEBC2E','#FFFFFF'].map(function(c,i){return '<button class="pcolor'+(i===0?' active':'')+'" data-c="'+c+'" style="background:'+c+'" aria-label="Colour '+c+'"></button>'}).join('')+'<label class="ppick" title="Any colour"><input type="color" id="pPick" value="#161616" aria-label="Any colour"><span>+</span></label></span></div>'+
+    '<div class="pgroup"><span class="plabel">Stroke</span><label class="pslider" id="pSizeWrap"><span>Size</span><input type="range" id="pSize" min="1" max="60" value="6"></label><label class="pslider" id="pAlphaWrap"><span>Opacity</span><input type="range" id="pAlpha" min="10" max="100" value="100"></label></div>'+
+    '<div class="pgroup pactions"><button id="pUndo" class="btn btn-secondary sm" title="Undo">Undo</button><button id="pClear" class="btn btn-secondary sm">Clear</button></div>'+
+    '</div></div>'+
+    '<div class="panel trace-bar" id="tBar" hidden><div class="trace-top"><div><span class="plabel">Trace</span><div id="tLevel" class="trace-level"></div><div id="tTools" class="t3"></div></div><div class="trace-actions"><button id="tPrev" class="btn btn-secondary sm" title="Previous level">←</button><button id="tPeek" class="btn btn-secondary sm" title="Hold to see the picture">Peek</button><button id="tCheck" class="btn btn-primary sm">Check my trace</button><button id="tNext" class="btn btn-primary sm" hidden>Next level →</button></div></div><div id="tProgress" class="trace-progress" aria-label="Levels"></div><div id="tScore" class="trace-score" aria-live="polite"></div></div>'+
     '<div class="paint-stage" id="pStage"><canvas class="paint-ref" id="pRef" width="'+CW+'" height="'+CH+'" aria-hidden="true" hidden></canvas><div class="paint-paper" id="pPaper" hidden></div><canvas class="paint-canvas" id="pCanvas" width="'+CW+'" height="'+CH+'" tabindex="0" aria-label="Drawing canvas"></canvas></div>'+
     '<div class="paint-save"><input id="pName" maxlength="24" placeholder="Your name (optional)" aria-label="Your name"><button id="pSave" class="btn btn-primary">Put it on the wall</button><a id="pDown" class="btn btn-secondary" download="paint.png">Download</a><span id="pMsg" class="t3"></span></div></div>'+
-    '<div class="paint-right"><h3 id="pRightTitle">The wall</h3><p class="t3" id="pRightText">Everyone who visits can paint. Everything saved shows up here, for everyone.</p><div id="pGallery" class="wall-host"><p class="t3">Loading the wall…</p></div></div></div>';
+    '<div class="paint-right"><div class="panel"><h3 id="pRightTitle">The wall</h3><p class="t3" id="pRightText">Everyone who visits can paint. Everything saved shows up here, for everyone.</p><div id="pGallery" class="wall-host"><p class="t3">Loading the wall…</p></div></div></div></div>';
 
   var canvas=root.querySelector('#pCanvas'),ctx=canvas.getContext('2d'),refC=root.querySelector('#pRef'),refCtx=refC.getContext('2d'),paper=root.querySelector('#pPaper');
   var color='#161616',size=6,alpha=1,tool='brush',drawing=false,last=null,startP=null,base=null,undo=[],mode='free';
@@ -92,6 +90,7 @@ window.initPaint = function(root){
   var T=window.TRTrace,lvl=0,lastScore=null,BEST={};
   try{BEST=JSON.parse(localStorage.getItem('tr-trace-best')||'{}')||{}}catch(e){}
   var bar=root.querySelector('#tBar'),tLevel=root.querySelector('#tLevel'),tTools=root.querySelector('#tTools'),tScore=root.querySelector('#tScore'),tNext=root.querySelector('#tNext'),tPrev=root.querySelector('#tPrev');
+  function progress(){var u=unlocked();root.querySelector('#tProgress').innerHTML=T.LEVELS.map(function(L,k){var st=k===lvl?'cur':(BEST[k]||0)>=60?'done':k<=u?'open':'locked';return '<button class="tdot '+st+'" data-l="'+k+'" title="Level '+(k+1)+' · '+L.name+(BEST[k]?' · best '+BEST[k]:'')+'"'+(st==='locked'?' disabled':'')+'>'+(k+1)+'</button>'}).join('');root.querySelectorAll('.tdot').forEach(function(b){b.addEventListener('click',function(){loadLevel(+b.dataset.l)})})}
   function unlocked(){var n=0;while(n<T.LEVELS.length-1&&(BEST[n]||0)>=60)n++;return n}
   var GROUPS={shapes:['line','rect','ellipse'],marker:['marker','pen'],fill:['fill'],erase:['erase']};
   function allowTools(allow){ /* null = everything */
@@ -99,7 +98,7 @@ window.initPaint = function(root){
     root.querySelector('#pSizeWrap').hidden=!!allow&&allow.indexOf('size')<0;if(allow&&allow.indexOf('size')<0){size=6;root.querySelector('#pSize').value=6}
     root.querySelector('#pAlphaWrap').hidden=!!allow&&allow.indexOf('opacity')<0;if(allow&&allow.indexOf('opacity')<0){alpha=1;root.querySelector('#pAlpha').value=100}
     root.querySelector('#pUndo').hidden=!!allow&&allow.indexOf('undo')<0;
-    root.querySelector('.pcolors').hidden=!!allow;
+    root.querySelector('#pColorGroup').hidden=!!allow;
     if(allow){color='#161616';setTool('brush')}
   }
   function loadLevel(i){
@@ -109,8 +108,9 @@ window.initPaint = function(root){
     T.prepare(L).then(function(){if(lvl===i){refCtx.setTransform(K,0,0,K,0,0);L.draw(refCtx);refCtx.setTransform(1,0,0,1,0,0);if(L.photo)tScore.textContent=''}}).catch(function(e){tScore.textContent=e.message});
     paper.style.background='rgba(255,255,255,'+L.paper+')';
     allowTools(L.tools);
-    tLevel.textContent='Level '+(i+1)+' of '+T.LEVELS.length+' · '+L.name+(BEST[i]?' · best '+BEST[i]+'/100':'');
-    tTools.textContent='Paper '+Math.round(L.paper*100)+'% · tools: '+(L.tools.length?L.tools.join(', '):'brush only')+(L.credit?' · photo: '+L.credit:'')+(L.photo?' · trace the outlines':'');
+    tLevel.textContent='Level '+(i+1)+' · '+L.name+(BEST[i]?' · best '+BEST[i]+'/100':'');
+    tTools.innerHTML='<span class="chip">Paper '+Math.round(L.paper*100)+'%</span><span class="chip">'+(L.tools.length?L.tools.join(' · '):'brush only')+'</span>'+(L.credit?'<span class="chip">photo: '+L.credit+'</span>':'')+(L.photo?'<span class="chip">trace the outlines</span>':'');
+    progress();
     tNext.hidden=true;tPrev.hidden=i===0;
   }
   function setMode(m){
@@ -126,9 +126,9 @@ window.initPaint = function(root){
   root.querySelector('#tCheck').addEventListener('click',function(){
     var r=T.score(T.LEVELS[lvl],userData());lastScore=r.score;
     if(r.score>(BEST[lvl]||0)){BEST[lvl]=r.score;try{localStorage.setItem('tr-trace-best',JSON.stringify(BEST))}catch(e){}}
-    tScore.textContent=r.score+'/100'+(r.score>=95?' — perfect!':r.score>=60?' — unlocked the next level':' — 60 unlocks the next level')+' (covered '+r.coverage+'%, on the line '+r.precision+'%)';
-    tLevel.textContent='Level '+(lvl+1)+' of '+T.LEVELS.length+' · '+T.LEVELS[lvl].name+' · best '+BEST[lvl]+'/100';
-    tNext.hidden=!(r.score>=60&&lvl<T.LEVELS.length-1);
+    tScore.innerHTML='<strong>'+r.score+'</strong><span>/100</span><em>'+(r.score>=95?'Perfect.':r.score>=60?'Next level unlocked.':'60 unlocks the next level.')+' Covered '+r.coverage+'% · on the line '+r.precision+'%</em>';
+    tLevel.textContent='Level '+(lvl+1)+' · '+T.LEVELS[lvl].name+' · best '+BEST[lvl]+'/100';
+    tNext.hidden=!(r.score>=60&&lvl<T.LEVELS.length-1);progress();
   });
   tNext.addEventListener('click',function(){loadLevel(lvl+1)});tPrev.addEventListener('click',function(){loadLevel(Math.max(0,lvl-1))});
   var peek=root.querySelector('#tPeek');function peekOn(){paper.style.opacity='0'}function peekOff(){paper.style.opacity=''}
