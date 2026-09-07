@@ -39,9 +39,9 @@ def apply_all(obj):
 
 # ---- shell: side profile (y = length, z = height), extruded across x, rounded ----
 # front (-y) to back (+y): low nose, up over the front wheel, canopy hump, long tail over the rear wheel
-profile = [(-2.05, 0.62), (-1.95, 1.05), (-1.6, 1.5), (-1.15, 1.62), (-0.7, 1.55), (-0.35, 1.72), (0.05, 1.88), (0.5, 1.86),
-           (1.0, 1.72), (1.5, 1.5), (1.95, 1.15), (2.1, 0.7), (2.1, 0.62),
-           (1.55, 0.62), (1.05, 0.62), (0.45, 0.62), (-0.35, 0.62), (-1.05, 0.62), (-1.6, 0.62)]
+profile = [(-2.05, 0.62), (-2.02, 0.85), (-1.92, 1.1), (-1.75, 1.36), (-1.5, 1.54), (-1.2, 1.62), (-0.9, 1.6), (-0.6, 1.58), (-0.35, 1.7),
+           (-0.1, 1.84), (0.15, 1.9), (0.45, 1.88), (0.75, 1.8), (1.05, 1.7), (1.35, 1.56), (1.65, 1.36), (1.9, 1.12), (2.06, 0.86), (2.1, 0.62),
+           (1.6, 0.62), (1.1, 0.62), (0.6, 0.62), (0.1, 0.62), (-0.4, 0.62), (-0.9, 0.62), (-1.4, 0.62), (-1.8, 0.62)]
 HALF_W = 0.34
 bm = bmesh.new()
 top = [bm.verts.new((HALF_W, y, z)) for y, z in profile]
@@ -55,15 +55,9 @@ me = bpy.data.meshes.new("shell"); bm.to_mesh(me); bm.free()
 shell = bpy.data.objects.new("shell", me); bpy.context.scene.collection.objects.link(shell)
 bpy.context.view_layer.objects.active = shell; shell.select_set(True)
 bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.normals_make_consistent(inside=False); bpy.ops.object.mode_set(mode="OBJECT")
-# round side windows through the shell: the dark wheel disc shows through them, Tron-style
 WHEEL_R, WHEEL_Z, WIN_R = 0.7, 0.7, 0.5
-for y in (-1.38, 1.42):
-    bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=WIN_R, depth=1.2, location=(0, y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
-    cutter = bpy.context.object
-    mod = shell.modifiers.new("arch", "BOOLEAN"); mod.operation = "DIFFERENCE"; mod.object = cutter
-    apply_all(shell)
-    bpy.data.objects.remove(cutter, do_unlink=True)
-bevel(shell, 0.11, 5)
+bevel(shell, 0.09, 3)
+sub = shell.modifiers.new("subd", "SUBSURF"); sub.levels = 2; sub.render_levels = 2
 add(shell, SHELL)
 
 # ---- canopy: dark glass hump set into the shell ----
@@ -75,9 +69,12 @@ add(canopy, GLASS)
 for y, tag in ((-1.38, "front"), (1.42, "rear")):
     bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=WHEEL_R, depth=0.6, location=(0, y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
     disc = bpy.context.object; disc.name = f"wheel_{tag}"; add(disc, DARK); bevel(disc, 0.04, 3)
-    bpy.ops.mesh.primitive_torus_add(major_radius=WIN_R - 0.02, minor_radius=0.035, major_segments=56, minor_segments=8, location=(0.345, y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
-    rim = bpy.context.object; rim.name = f"glow_rim_{tag}"; add(rim, GLOW)
-    rim2 = rim.copy(); rim2.data = rim.data.copy(); bpy.context.scene.collection.objects.link(rim2); rim2.location.x = -0.345
+    # wheel "window": a dark disc sitting just proud of the shell flank, ringed by a glow line (clean topology, same look)
+    for sx in (1, -1):
+        bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=WIN_R, depth=0.05, location=(sx * (HALF_W + 0.02), y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
+        win = bpy.context.object; win.name = f"window_{tag}"; add(win, DARK)
+        bpy.ops.mesh.primitive_torus_add(major_radius=WIN_R - 0.02, minor_radius=0.035, major_segments=56, minor_segments=8, location=(sx * (HALF_W + 0.03), y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
+        rim = bpy.context.object; rim.name = f"glow_rim_{tag}"; add(rim, GLOW)
     bpy.ops.mesh.primitive_cylinder_add(vertices=24, radius=0.12, depth=0.72, location=(0, y, WHEEL_Z), rotation=(0, math.pi / 2, 0))
     hub = bpy.context.object; hub.name = f"glow_hub_{tag}"; add(hub, GLOW)
 

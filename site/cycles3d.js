@@ -24,7 +24,7 @@ window.initCycles3D=function(root,api){
     try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'})}catch(e){host.remove();view='flat';return}
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
     host.appendChild(renderer.domElement);
-    scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);scene.fog=new THREE.FogExp2(0x02040a,0.00085);
+    scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);scene.fog=new THREE.FogExp2(0x02040a,0.00028);
     camera=new THREE.PerspectiveCamera(62,1,1,6000);
     scene.add(new THREE.HemisphereLight(0x6f9fcf,0x0a0d14,1.1));var sun=new THREE.DirectionalLight(0xdfefff,1.4);sun.position.set(300,500,200);scene.add(sun);
     camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-58,24,0);lookOff=new THREE.Vector3(80,3,0);tmpV=new THREE.Vector3();
@@ -48,7 +48,7 @@ window.initCycles3D=function(root,api){
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
     /* post: bloom is what makes the ribbons glow */
     composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
-    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.85,.45,.18);composer.addPass(bloom);composer.addPass(new OutputPass());
+    var bloom=new UnrealBloomPass(new THREE.Vector2(800,600),.7,.25,.22);composer.addPass(bloom);composer.addPass(new OutputPass());
     resize();
     if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(host)}else window.addEventListener('resize',resize);
     ready=true;apply();
