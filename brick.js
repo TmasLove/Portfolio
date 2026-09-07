@@ -27,8 +27,8 @@ window.initBrick=function(root){
     for(var c=0;c<L.rows;c++)for(var r=0;r<L.cols;r++){var hp=L.hp(c,r);bricks.push({x:r*(BW+BP)+BOL,y:c*(BH+BP)+BOT,hp:hp,max:hp})}
     balls=[newBall()];chaos=[];drops=[];launched=false;chaosDue=6;levelFlash=1.6;
   }
-  function newBall(){var s=2.6*LEVELS[level].speed;return{x:W/2,y:H-30,dx:s*(Math.random()<.5?1:-1),dy:-s,main:true}}
-  function newChaos(){var s=2.4*LEVELS[level].speed;return{x:60+Math.random()*(W-120),y:60,dx:s*(Math.random()<.5?1:-1),dy:s,main:false,wait:0}}
+  function newBall(){var s=3.6*LEVELS[level].speed;return{x:W/2,y:H-30,dx:s*(Math.random()<.5?1:-1),dy:-s,main:true}}
+  function newChaos(){var s=3.3*LEVELS[level].speed;return{x:60+Math.random()*(W-120),y:60,dx:s*(Math.random()<.5?1:-1),dy:s,main:false,wait:0}}
   function reset(){level=0;score=0;lives=3;over=false;paddleW=80;slowT=0;wideT=0;buildLevel(0);paddleX=(W-paddleW)/2}
   function finish(msg,won){
     running=false;over=true;ui.hidden=false;

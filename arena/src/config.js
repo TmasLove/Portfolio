@@ -1093,6 +1093,14 @@ function preset(name)
 			applysettings(tmp_settings);
 			commands.INCLUDE("tilthr_old.cfg",false,leave);
 			break;
+		case "sumo":
+			applysettings(tmp_settings);
+			commands.INCLUDE("sumo.cfg",false,leave);
+			break;
+		case "sumosurv":
+			applysettings(tmp_settings);
+			commands.INCLUDE("sumosurvival.cfg",false,leave);
+			break;
 		case "ft":
 			applysettings(tmp_settings);
 			commands.RINCLUDE("vov/configs/fasttrack.cfg",function(){leave();loadcfg("SP_NUM_AIS 4\nALLOW_TEAM_NAME_COLOR 1")});
