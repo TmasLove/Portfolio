@@ -64,8 +64,10 @@ window.initCycles=function(root){
   function humSet(on,speed){if(!humGain)return;try{humGain.gain.linearRampToValueAtTime(on&&!muted?.05:0,audio.currentTime+.08);hum.frequency.linearRampToValueAtTime(60+speed*.4,audio.currentTime+.08)}catch(e){}}
   function blip(freq,dur){if(!audio||muted)return;try{var o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=freq;g.gain.value=.05;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch(e){}}
 
-  function mk(i,x,y,d,human){return{i:i,x:x,y:y,d:d,alive:true,human:human,color:COLORS[i],name:NAMES[i],speed:CFG.base,shield:CFG.shieldMax,brakeCharge:CFG.brakeMax,braking:false,lastTurn:-1,trail:[[x,y]],len:0,grinding:false,touching:false,protect:0,respawn:0,deaths:0,lastHit:null,target:null,retarget:0}}
+  function mk(i,x,y,d,human){return{i:i,x:x,y:y,d:d,alive:true,human:human,color:COLORS[i],name:NAMES[i],speed:CFG.base*smul(),shield:CFG.shieldMax,brakeCharge:CFG.brakeMax,braking:false,lastTurn:-1,trail:[[x,y]],len:0,grinding:false,touching:false,protect:0,respawn:0,deaths:0,lastHit:null,target:null,retarget:0}}
   function wallLen(){return mode>=4?DM.wallLen:CFG.wallLen}
+  function smul(){return mode>=4?1.3:1} /* the big grids run faster */
+  var KMH=2.6,fps=60; /* display factor: our units → a cyclearena-like km/h readout */
   function radius(c){return CFG.radMin+(CFG.radMax-CFG.radMin)*c.shield/CFG.shieldMax}
   function reset(){
     over=false;booms=[];clock=0;
@@ -148,9 +150,9 @@ window.initCycles=function(root){
       var boost=0;[(c.d+1)%4,(c.d+3)%4].forEach(function(sd){var rr=ray(c.x,c.y,sd,c,CFG.boostNear,segs);if(rr.d<CFG.boostNear){var mul=rr.seg==='rim'?CFG.rimMul:rr.seg[4]==='static'?CFG.staticMul:(rr.seg[4]===c?1:CFG.enemyMul);boost+=CFG.boostAccel*mul*(1/(rr.d+CFG.boostOffset)-1/(CFG.boostOffset+CFG.boostNear))*CFG.boostOffset*4}});
       c.grinding=boost>0;
       c.speed+=boost*dt;
-      var l=c.speed-CFG.base;
+      var l=c.speed-CFG.base*smul();
       if(l>0)c.speed-=.1*l*dt;else if(l<0&&!braking)c.speed+=-l*CFG.recover*dt; /* measured on a live arena: speed closes ~45%/s of the gap to cruise, and bleeds ~10%/s above it */
-      c.speed=Math.max(CFG.min,Math.min(CFG.max,c.speed));
+      c.speed=Math.max(CFG.min*smul(),Math.min(CFG.max*smul(),c.speed));
       /* move. Three cases, none of them freezes you:
          hard  — a wall squarely across the path: you stop against it and grind (shield drains, you shrink, die at 0)
          soft  — only your shield's width clips a wall end (a gap narrower than you): you SQUEEZE through at 40% speed while the shield drains faster
@@ -212,7 +214,7 @@ window.initCycles=function(root){
       if(mode===5&&!inZone(x,y,90))continue;
       for(var d=0;d<4;d++)dmin=Math.min(dmin,ray(x,y,d,null,600,segs).d);
       if(dmin>bestD){bestD=dmin;best=[x,y]}if(dmin>=400)break}
-    if(!best)best=[AW/2,AH/2];var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.outside=false;c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base;c.protect=DM.protect;c.lastTurn=-1;c.pending=null;c.braking=false;c.touching=false;
+    if(!best)best=[AW/2,AH/2];var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.outside=false;c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base*smul();c.protect=DM.protect;c.lastTurn=-1;c.pending=null;c.braking=false;c.touching=false;
     if(c.human){countEl.hidden=true;humSet(true,CFG.base)}
   }
   function standings(){if(mode===5)return cycles.slice().sort(function(a,b){return zoneScore[b.i]-zoneScore[a.i]});return cycles.slice().sort(function(a,b){return score[b.i]-score[a.i]||a.deaths-b.deaths})}
@@ -242,17 +244,17 @@ window.initCycles=function(root){
       if(c.alive){var r=radius(c)*s;ctx.globalAlpha=c.protect>0?.5+.5*Math.sin(now*12):1;ctx.fillStyle=c.touching?c.color:'#fff';ctx.fillRect(ox+c.x*s-3,oy+c.y*s-3,6,6);ctx.strokeStyle=c.touching?'rgba(255,255,255,.75)':'rgba(255,255,255,.28)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(ox+c.x*s,oy+c.y*s,Math.max(4,r+(c.touching?Math.random()*3:0)),0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}});
     booms=booms.filter(function(b){return b.t>0});booms.forEach(function(b){b.x+=b.vx*.016;b.y+=b.vy*.016;b.t-=.025;ctx.globalAlpha=Math.max(0,b.t);ctx.fillStyle=b.c;ctx.fillRect(ox+b.x*s,oy+b.y*s,3,3)});ctx.globalAlpha=1;
     var me=cycles[0];
-    var st=(me.alive?Math.round(me.speed)+' km/h'+(me.grinding?'  BOOST':'')+(me.braking&&me.brakeCharge>0?'  BRAKE':'')+(me.touching?'  SHIELD':''):'crashed');
+    var st=(me.alive?Math.round(me.speed*KMH)+' km/h'+(me.grinding?'  BOOST':'')+(me.braking&&me.brakeCharge>0?'  BRAKE':'')+(me.touching?'  SHIELD':''):'crashed');
     if(level){hudS.textContent=level.name+(BEST[level.id]?'   best '+BEST[level.id].toFixed(2)+'s':'');hudR.textContent=st+'   ·   '+(level.limit?Math.max(0,level.limit-clock).toFixed(1)+'s left':clock.toFixed(1)+'s')}
-    else if(mode===5){var st5=standings();hudS.textContent=st5.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+Math.round(shares[c.i]*100)+'%'}).join('   ')+(st5.indexOf(me)>3?'   ·   you #'+(st5.indexOf(me)+1)+' '+Math.round(shares[0]*100)+'%':'');hudR.textContent=(me.alive&&me.outside?'OUTSIDE THE ZONE   ':me.protect>0?'PROTECTED   ':'')+st+'   ·   zone '+Math.round(zoneR()/AW*200)+'%   ·   '+Math.max(0,ZONE.time-clock).toFixed(0)+'s'}
-    else if(mode===4){var st4=standings();hudS.textContent=st4.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+score[c.i]}).join('   ')+(st4.indexOf(me)>3?'   ·   you #'+(st4.indexOf(me)+1)+' '+score[0]:'');hudR.textContent=(me.protect>0?'PROTECTED   ':'')+st+'   ·   '+Math.max(0,DM.time-clock).toFixed(0)+'s'}
+    else if(mode===5){var st5=standings();hudS.textContent=st5.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+Math.round(shares[c.i]*100)+'%'}).join('   ')+(st5.indexOf(me)>3?'   ·   you #'+(st5.indexOf(me)+1)+' '+Math.round(shares[0]*100)+'%':'');hudR.textContent=(me.alive&&me.outside?'OUTSIDE THE ZONE   ':me.protect>0?'PROTECTED   ':'')+st+'   ·   zone '+Math.round(zoneR()/AW*200)+'%   ·   '+Math.max(0,ZONE.time-clock).toFixed(0)+'s   ·   '+Math.round(fps)+' fps'}
+    else if(mode===4){var st4=standings();hudS.textContent=st4.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+score[c.i]}).join('   ')+(st4.indexOf(me)>3?'   ·   you #'+(st4.indexOf(me)+1)+' '+score[0]:'');hudR.textContent=(me.protect>0?'PROTECTED   ':'')+st+'   ·   '+Math.max(0,DM.time-clock).toFixed(0)+'s   ·   '+Math.round(fps)+' fps'}
     else{hudS.textContent=cycles.map(function(c){return c.name+' '+score[c.i]}).join('   ');hudR.textContent=st+'   ·   round '+(round+1)}
     shieldEl.style.width=(me.shield/CFG.shieldMax*100)+'%';shieldEl.style.background=me.shield<CFG.shieldMax*.35?'#FF5F57':'#00E0C6';brakeEl.style.width=(me.brakeCharge/CFG.brakeMax*100)+'%';
   }
   function frame(ts){
     if(!running)return;
-    if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;
-    if(countdown>0){countdown-=dt;countEl.hidden=false;countEl.textContent=countdown>0?Math.ceil(countdown):'GO';if(countdown<=0){setTimeout(function(){countEl.hidden=true},400);humSet(true,CFG.base)}draw();if(g3)g3.render(dt);raf=requestAnimationFrame(frame);return}
+    if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;if(dt>0)fps+=(1/dt-fps)*.05;
+    if(countdown>0){countdown-=dt;countEl.hidden=false;countEl.textContent=countdown>0?Math.ceil(countdown):'GO';if(countdown<=0){setTimeout(function(){countEl.hidden=true},400);humSet(true,CFG.base*smul())}draw();if(g3)g3.render(dt);raf=requestAnimationFrame(frame);return}
     step(dt);draw();if(g3)g3.render(dt);var me=cycles[0];humSet(me.alive,me.speed);
     raf=requestAnimationFrame(frame);
   }
