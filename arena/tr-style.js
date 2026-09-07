@@ -33,8 +33,9 @@ if(typeof window.round !== "function")
 	}
 	window.__trGridBuilds = 0;
 
-	/* walls: taller, additive light with a bright top edge (the cyberpunk look), same colours the players chose */
-	var WALL_SCALE = 1.9;
+	/* walls: the stock lit wall (that is what reads best on a dark floor), a little taller, with a self-lit tint
+	   in the rider's colour so it does not go grey in shadow, and a bright top edge */
+	var WALL_SCALE = 1.25;
 	if(typeof createWall === "function")
 	{
 		var stockCreateWall = createWall;
@@ -44,15 +45,17 @@ if(typeof window.round !== "function")
 			var wall = group.children[0], line = group.children[1];
 			if(wall && wall.material)
 			{
-				wall.material = new THREE.MeshBasicMaterial({
+				wall.material = new THREE.MeshLambertMaterial({
 					side: THREE.DoubleSide, color: cycle.tailColor,
-					transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending
+					emissive: new THREE.Color(cycle.tailColor).multiplyScalar(0.35),
+					transparent: settings.ALPHA_BLEND, opacity: 0.78
 				});
 				wall.scale.z = WALL_SCALE;
 			}
 			if(line && line.material)
 			{
-				line.material = new THREE.LineBasicMaterial({ color: cycle.tailColor, transparent: true, opacity: 1 });
+				var bright = new THREE.Color(cycle.tailColor).lerp(new THREE.Color(0xffffff), 0.45);
+				line.material = new THREE.LineBasicMaterial({ color: bright });
 				line.scale.z = WALL_SCALE;
 			}
 			return group;
