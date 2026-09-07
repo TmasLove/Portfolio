@@ -10,7 +10,7 @@ window.initCycles=function(root){
     '<div class="cyc-hud"><span class="cyc-score"></span><span class="cyc-round"></span></div>'+
     '<div class="cyc-meters"><span class="cyc-meter"><i class="cyc-shield"></i></span><span class="cyc-meter"><i class="cyc-brake"></i></span></div>'+
     '<div class="cyc-count" hidden></div>'+
-    '<div class="cyc-ui"><div class="cyc-menu"><h2>LIGHT CYCLES</h2><p>Steer with the arrow keys (or WASD). Space brakes. Run close and parallel to a wall to boost. Touching a wall drains your shield and shrinks you — get off it before it empties.</p><p class="cyc-small">M mutes · Trails fade behind you, so the grid keeps opening up · Inspired by Armagetron Advanced</p><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button></div><p class="cyc-small">2 players: WASD + Q/E + Space vs arrows + , . + Shift. Bind two keys to one turn and press both for a double bind (180°).</p></div></div></div>';
+    '<div class="cyc-ui"><div class="cyc-menu"><h2>LIGHT CYCLES</h2><p>Steer with the arrow keys (or WASD): in the chase view left and right turn you, from above they point the way. Space brakes. Run close and parallel to a wall to boost. Touching a wall drains your shield and shrinks you — get off it before it empties.</p><p class="cyc-small">V switches the view (chase · overview · flat) · M mutes · Trails fade behind you, so the grid keeps opening up · Inspired by Armagetron Advanced</p><div class="cyc-opts"><button class="cyc-btn" data-start="1">Solo vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button></div><p class="cyc-small">2 players: WASD + Q/E + Space vs arrows + , . + Shift. Bind two keys to one turn and press both for a double bind (180°).</p></div></div></div>';
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,AW=1000,AH=1000;
@@ -37,7 +37,7 @@ window.initCycles=function(root){
       msg:[[120,60,'Grind inside the tunnel, not the rim'],[120,240,'Both walls push you at once']]},
     {id:'bind',name:'Double bind',tier:'training',w:1000,h:600,spawn:[500,130,1],goal:[500,40,30],limit:6,
       walls:[[200,100,200,400,'#d946ef'],[200,400,800,400,'#d946ef'],[800,100,800,400,'#d946ef']],
-      msg:[[300,250,'You cannot reverse — but two turns can'],[300,300,'Press LEFT + UP (or RIGHT + UP) together to flip 180°']]},
+      msg:[[300,250,'You cannot reverse — but two turns can'],[300,300,'Press two left keys at once (A + Q, or ← + ,) to flip 180°']]},
     {id:'novice1',name:'Novice 1',tier:'novice',w:1000,h:700,spawn:[60,60,0],goal:[940,640,40],limit:20,
       walls:[[300,0,300,500,'#06b6d4'],[600,200,600,700,'#06b6d4'],[850,0,850,450,'#06b6d4']],msg:[]},
     {id:'novice2',name:'Corridors',tier:'novice',w:1200,h:700,spawn:[60,75,0],goal:[1140,650,35],limit:16,
@@ -53,6 +53,7 @@ window.initCycles=function(root){
   var level=null,levelIx=0,statics=[],clock=0,BEST={};
   try{BEST=JSON.parse(localStorage.getItem('tr-cycles-best')||'{}')||{}}catch(e){}
   var audio=null,hum=null,humGain=null;
+  var g3=window.initCycles3D?window.initCycles3D(root,{cycles:function(){return cycles},statics:function(){return statics},level:function(){return level},size:function(){return [AW,AH]},booms:function(){return booms},now:function(){return now},mode:function(){return mode},radius:function(c){return radius(c)}}):null;
   function sound(){if(muted)return;try{if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();if(!hum){hum=audio.createOscillator();hum.type='sawtooth';humGain=audio.createGain();humGain.gain.value=0;var f=audio.createBiquadFilter();f.type='lowpass';f.frequency.value=600;hum.connect(f);f.connect(humGain);humGain.connect(audio.destination);hum.start()}if(audio.state==='suspended')audio.resume()}catch(e){}}
   function humSet(on,speed){if(!humGain)return;try{humGain.gain.linearRampToValueAtTime(on&&!muted?.05:0,audio.currentTime+.08);hum.frequency.linearRampToValueAtTime(60+speed*.4,audio.currentTime+.08)}catch(e){}}
   function blip(freq,dur){if(!audio||muted)return;try{var o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=freq;g.gain.value=.05;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch(e){}}
@@ -174,8 +175,8 @@ window.initCycles=function(root){
   function frame(ts){
     if(!running)return;
     if(!last)last=ts;var dt=Math.min(.05,(ts-last)/1000);last=ts;
-    if(countdown>0){countdown-=dt;countEl.hidden=false;countEl.textContent=countdown>0?Math.ceil(countdown):'GO';if(countdown<=0){setTimeout(function(){countEl.hidden=true},400);humSet(true,CFG.base)}draw();raf=requestAnimationFrame(frame);return}
-    step(dt);draw();var me=cycles[0];humSet(me.alive,me.speed);
+    if(countdown>0){countdown-=dt;countEl.hidden=false;countEl.textContent=countdown>0?Math.ceil(countdown):'GO';if(countdown<=0){setTimeout(function(){countEl.hidden=true},400);humSet(true,CFG.base)}draw();if(g3)g3.render(dt);raf=requestAnimationFrame(frame);return}
+    step(dt);draw();if(g3)g3.render(dt);var me=cycles[0];humSet(me.alive,me.speed);
     raf=requestAnimationFrame(frame);
   }
   function wire(){menu.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});menu.querySelectorAll('[data-level]').forEach(function(b){b.addEventListener('click',function(){levelIx=+b.dataset.level;start(3)})});menu.querySelectorAll('[data-levels]').forEach(function(b){b.addEventListener('click',levelMenu)});menu.querySelectorAll('[data-keys]').forEach(function(b){b.addEventListener('click',keysMenu)})}
@@ -196,8 +197,8 @@ window.initCycles=function(root){
     menu.innerHTML='<h2>SURVIVAL</h2><p>Fixed walls, a ring to reach, a clock. Same physics as the arena.</p>'+tiers.map(function(t){return '<p class="cyc-small" style="margin:8px 0 4px;text-transform:uppercase;letter-spacing:.12em">'+t+'</p><div class="cyc-opts">'+LEVELS.map(function(l,i){return l.tier===t?'<button class="cyc-btn cyc-lvl" data-level="'+i+'">'+l.name+(BEST[l.id]?'<small>'+BEST[l.id].toFixed(2)+'s</small>':'')+'</button>':''}).join('')+'</div>'}).join('')+'<div class="cyc-opts"><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-start="1">Back to the arena</button></div>';
     wire();
   }
-  function start(m){if(m!==mode){score=[0,0,0,0];round=0}mode=m;reset();ui.hidden=true;running=true;last=0;countdown=m===3?1:2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
-  function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;if(act==='brake'){c.braking=on;return}if(on)turn(c,act)}
+  function start(m){if(m!==mode){score=[0,0,0,0];round=0}mode=m;reset();if(g3)g3.reset();ui.hidden=true;running=true;last=0;countdown=m===3?1:2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
+  function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;if(act==='brake'){c.braking=on;return}if(!on)return;if(typeof act==='number'&&g3&&g3.chase()&&mode!==2){if(act===2)act='left';else if(act===0)act='right';else return}turn(c,act)} /* chase view: the left key turns left, the right key turns right, whatever the heading */
   /* Controls. Every action can have any number of keys — that is how a double bind works: bind two keys to
      "turn left", press both at once, and the two 90° turns land back to back for a 180° flip. Solo mode
      listens to both players' keys; 2-player mode splits them. Saved in this browser. */
@@ -216,6 +217,7 @@ window.initCycles=function(root){
     if(listening){if(!on)return;e.preventDefault();if(k!=='Escape'){var arr=KEYS[listening.p][listening.a];if(arr.indexOf(k)<0)arr.push(k);saveKeys()}listening=null;keysMenu();return}
     if(on&&e.repeat)return;
     if(on&&k==='m'){muted=!muted;humSet(running&&!muted,cycles[0]?cycles[0].speed:CFG.base);return}
+    if(on&&k==='v'&&g3){var vv=g3.cycleView();hudR.textContent='view: '+vv;if(!running)draw();return}
     var hit=false;
     KEYS.forEach(function(map,p){var who=mode===2?p:0;ACTIONS.forEach(function(a){if(map[a[0]].indexOf(k)>=0){human(who,ACT[a[0]],on);hit=true}})});
     if(hit)e.preventDefault();
@@ -235,6 +237,6 @@ window.initCycles=function(root){
   canvas.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)<10)return;human(0,dx>0?'right':'left',true)});
   wire();
   reset();draw();
-  root.__cyc={keys:function(){return KEYS},step:step,turn:turn,draw:draw,cycles:function(){return cycles},cfg:CFG,levels:LEVELS,level:function(i){levelIx=i;start(3);countdown=0;countEl.hidden=true},state:function(){return{over:over,clock:clock,best:BEST,mode:mode}},go:function(m){start(m||1);countdown=0;countEl.hidden=true}};
-  return {stop:function(){running=false;cancelAnimationFrame(raf);document.removeEventListener('keydown',kd);document.removeEventListener('keyup',ku);humSet(false,0);try{if(audio)audio.close()}catch(e){}}};
+  root.__cyc={keys:function(){return KEYS},g3:g3,step:step,turn:turn,draw:draw,cycles:function(){return cycles},cfg:CFG,levels:LEVELS,level:function(i){levelIx=i;start(3);countdown=0;countEl.hidden=true},state:function(){return{over:over,clock:clock,best:BEST,mode:mode}},go:function(m){start(m||1);countdown=0;countEl.hidden=true}};
+  return {stop:function(){running=false;cancelAnimationFrame(raf);if(g3)g3.stop();document.removeEventListener('keydown',kd);document.removeEventListener('keyup',ku);humSet(false,0);try{if(audio)audio.close()}catch(e){}}};
 };
