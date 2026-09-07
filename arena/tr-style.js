@@ -25,6 +25,17 @@ if(typeof window.round !== "function")
 		return changed;
 	}
 	pinFloor();
+
+	/* sound: off unless the player chose a level in Configure → Sound (that choice lives in user.cfg). M mutes/unmutes in play. */
+	try { var ucfg = localStorage.getItem("user.cfg") || ""; if(!/SOUND_QUALITY/.test(ucfg)) settings.SOUND_QUALITY = 0; } catch(e){ settings.SOUND_QUALITY = 0; }
+	window.addEventListener("keydown", function(e)
+	{
+		if(e.key !== "m" && e.key !== "M") return;
+		var t = e.target; if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+		settings.SOUND_QUALITY = settings.SOUND_QUALITY > 0 ? 0 : 3;
+		if(window.engine && engine.console && engine.console.print) engine.console.print(settings.SOUND_QUALITY > 0 ? "Sound on (M mutes)\n" : "Sound off (M unmutes)\n");
+	});
+
 	/* presets repaint the floor; re-pin once after a preset is applied */
 	if(typeof preset === "function")
 	{
