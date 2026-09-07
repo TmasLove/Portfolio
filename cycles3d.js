@@ -136,16 +136,16 @@ window.initCycles3D=function(root,api){
   }
   function placeAds(AW,AH){
     ads.forEach(function(a){scene.remove(a)});ads=[];if(towers){scene.remove(towers);towers=null}
-    var W=AW*.22,H=W*448/768,off=150,cy=H/2+40,k=0;
+    var W=AW*.26,H=W*448/768,off=420,cy=H/2+230,k=0; /* stadium screens: high above the walls and set back, not in your face */
     var spots=[];[0.22,0.5,0.78].forEach(function(f){spots.push([AW*f,-off,0]);spots.push([AW*f,AH+off,Math.PI])});[0.3,0.7].forEach(function(f){spots.push([-off,AH*f,Math.PI/2]);spots.push([AW+off,AH*f,-Math.PI/2])});
     spots.forEach(function(sp,i){var ad=ADS[i%ADS.length],accent=ADCOL[i%ADCOL.length];
       var m=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshBasicMaterial({map:adTexture(ad,accent),side:THREE.DoubleSide}));m.position.set(sp[0],cy,sp[1]);m.rotation.y=sp[2];
       var frame=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.LineBasicMaterial({color:accent}));m.add(frame);
-      var post=new THREE.Mesh(new THREE.BoxGeometry(W*.06,cy,W*.06),new THREE.MeshBasicMaterial({color:0x0a0e14}));post.position.set(0,-cy/2,-2);m.add(post);
+      var post=new THREE.Mesh(new THREE.BoxGeometry(W*.05,cy,W*.05),new THREE.MeshBasicMaterial({color:0x0a0e14}));post.position.set(0,-cy/2,-2);m.add(post);var postEdge=new THREE.LineSegments(new THREE.EdgesGeometry(post.geometry),new THREE.LineBasicMaterial({color:accent,transparent:true,opacity:.35}));post.add(postEdge);
       scene.add(m);ads.push(m)});
     /* skyline: dark towers with lit edges, well outside the rim, deterministic so it does not flicker between rebuilds */
     towers=new THREE.Group();var seed=7;function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
-    for(var i=0;i<34;i++){var side=i%4,f=rnd(),dist=off+120+rnd()*700,w=60+rnd()*140,h=120+rnd()*520,x=0,z=0;
+    for(var i=0;i<34;i++){var side=i%4,f=rnd(),dist=off+200+rnd()*800,w=60+rnd()*140,h=120+rnd()*520,x=0,z=0;
       if(side===0){x=AW*f;z=-dist}else if(side===1){x=AW*f;z=AH+dist}else if(side===2){x=-dist;z=AH*f}else{x=AW+dist;z=AH*f}
       var g=new THREE.BoxGeometry(w,h,w),t=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x05070b}));t.position.set(x,h/2,z);
       var col=[0x0d6b62,0x4a2a7a,0x7a2340,0x0c4f7a][i%4];t.add(new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.75})));
