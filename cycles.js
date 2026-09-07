@@ -128,7 +128,8 @@ window.initCycles=function(root){
     if(!c.alive)return;
     var nd=side==='left'?(c.d+3)%4:side==='right'?(c.d+1)%4:side;
     if(nd===c.d||nd===(c.d+2)%4)return;
-    if(now-c.lastTurn<CFG.turnDelay){c.queue=c.queue||[];if(c.queue.length<CFG.turnMemory)c.queue.push(side);return}
+    var lp=c.trail[c.trail.length-1];
+    if(now-c.lastTurn<CFG.turnDelay||Math.abs(c.x-lp[0])+Math.abs(c.y-lp[1])<0.5){c.queue=c.queue||[];if(c.queue.length<CFG.turnMemory)c.queue.push(side);return} /* never two corners at the same spot: that writes a zero-length wall and flips you onto your own line */
     c.trail.push([c.x,c.y]);c.d=nd;c.speed*=CFG.turnFactor;c.lastTurn=now;
     if(c.human)blip(c.speed*1.6+220,.05);
   }

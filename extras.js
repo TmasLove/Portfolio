@@ -54,6 +54,7 @@ var NEWS=[
  ['Canary','Free Windows diagnostic tool that finds failing drives and crash causes your vendor software calls healthy.','canary'],
  ['Rehab Pro','iPhone app that builds a daily rehab plan around where it hurts, how it hurts today, and the time you actually have.','rehabpro'],
  ['Brick Breaker','The 2015 game is back from the archive. Left/Right to play.','brick'],
+ ['Armawebtron','Armagetron Advanced in the browser — the open-source classic, hosted here as-is (GPL). Rubber, holes, zones, custom maps.','arena'],
  ['Lightwall','A Tron-style light cycle arena: King of the Arena and King of the Zone on a big grid, classic, 2 players, Survival ladder. Hug a wall to go faster.','cycles'],
  ['Meme Maker','Create, download & post memes to an anonymous public feed.','meme'],
  ['Music','Chill Web — '+'@tmizle on Apple Music.','music'],
