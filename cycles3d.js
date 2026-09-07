@@ -22,7 +22,7 @@ window.initCycles3D=function(root,api){
 
   function build(EffectComposer,RenderPass,UnrealBloomPass,OutputPass){
     try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'})}catch(e){host.remove();view='flat';return}
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5)); /* re-capped in resize() for big canvases */
     host.appendChild(renderer.domElement);
     scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);scene.fog=new THREE.FogExp2(0x02040a,0.00028);
     camera=new THREE.PerspectiveCamera(55,1,1,8000);
@@ -56,7 +56,7 @@ window.initCycles3D=function(root,api){
     if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(host)}else window.addEventListener('resize',resize);
     ready=true;apply();
   }
-  function resize(){if(!renderer)return;var w=host.clientWidth||wrap.clientWidth||900,h=host.clientHeight||wrap.clientHeight||640;renderer.setSize(w,h,false);composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+  function resize(){if(!renderer)return;var w=host.clientWidth||wrap.clientWidth||900,h=host.clientHeight||wrap.clientHeight||640;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,w*h>1200000?1:1.5));renderer.setSize(w,h,false); /* full-screen: render at 1x so bloom stays cheap */composer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
   function apply(){var on=ready&&view!=='flat';host.hidden=!on;root.classList.toggle('cyc-has3d',on);try{localStorage.setItem('tr-cycles-view',view)}catch(e){}}
   function cycleView(){var order=ready?['chase','high','overview','flat']:['flat'];view=order[(order.indexOf(view)+1)%order.length];apply();return view}
   function hex(c){return new THREE.Color(c)}
