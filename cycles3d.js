@@ -115,7 +115,7 @@ window.initCycles3D=function(root,api){
     else{ring.visible=column.visible=false}
     floor.scale.set(AW*4,AH*4,1);floor.position.set(AW/2,0.05,AH/2);
     if(grid){scene.remove(grid);grid.geometry.dispose();grid.material.dispose()}
-    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x0e6a60,0x0a3f3a);grid.material.transparent=true;grid.material.opacity=.75;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
+    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x15928a,0x0f5e57);grid.material.transparent=true;grid.material.opacity=.95;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
   }
   function quad(n,x0,z0,x1,z1,h,r,g,b){
     var p=n*12;pos[p]=x0;pos[p+1]=0;pos[p+2]=z0;pos[p+3]=x1;pos[p+4]=0;pos[p+5]=z1;pos[p+6]=x1;pos[p+7]=h;pos[p+8]=z1;pos[p+9]=x0;pos[p+10]=h;pos[p+11]=z0;
