@@ -1,4 +1,4 @@
-/* Light Cycles — the 3D view. The simulation in cycles.js is untouched; this only draws it: a chase camera
+/* Lightwall — the 3D view. The simulation in cycles.js is untouched; this only draws it: a chase camera
    behind your cycle, wall ribbons that glow (bloom), a mirrored grid floor, the goal ring, floor notes and
    crash sparks. Three.js is fetched on demand from jsDelivr; if it cannot load or WebGL is missing, the
    game keeps its flat view. Press V to switch chase / overview / flat. */
@@ -111,7 +111,7 @@ window.initCycles3D=function(root,api){
     else{ring.visible=column.visible=false}
     floor.scale.set(AW*4,AH*4,1);floor.position.set(AW/2,0.05,AH/2);
     if(grid){scene.remove(grid);grid.geometry.dispose();grid.material.dispose()}
-    var size=Math.max(AW,AH);grid=new THREE.GridHelper(size*3,Math.round(size*3/50),0x0f6b63,0x0b3d39);grid.material.transparent=true;grid.material.opacity=.55;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
+    var size=Math.max(AW,AH),gs=size>1500?100:50;grid=new THREE.GridHelper(size*3,Math.round(size*3/gs),0x0f6b63,0x0b3d39);grid.material.transparent=true;grid.material.opacity=.55;grid.position.set(AW/2,0.1,AH/2);scene.add(grid);
   }
   function quad(n,x0,z0,x1,z1,h,r,g,b){
     var p=n*12;pos[p]=x0;pos[p+1]=0;pos[p+2]=z0;pos[p+3]=x1;pos[p+4]=0;pos[p+5]=z1;pos[p+6]=x1;pos[p+7]=h;pos[p+8]=z1;pos[p+9]=x0;pos[p+10]=h;pos[p+11]=z0;
@@ -133,7 +133,7 @@ window.initCycles3D=function(root,api){
     wallLine.geometry.setDrawRange(0,n*2);wallLine.geometry.attributes.position.needsUpdate=true;wallLine.geometry.attributes.color.needsUpdate=true;wallLine.geometry.computeBoundingSphere();
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
-    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.3:.05;if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
+    cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.3:(c.protect>0?.06+.05*Math.sin(now*10):.04);if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
     /* sparks */
