@@ -13,7 +13,7 @@ window.initCycles3D=function(root,api){
      Without the file the built-in cycle below is used. */
   var MODEL={url:'/assets/models/cycle.glb',forward:'+z',size:20,lift:0}; /* cycle.glb is our own, built in Blender by scratchpad/build_cycle.py */
   var modelScene=null,modelTried=false;
-  var walls,wallLine,mirror,floor,grid,ring,column,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
+  var walls,wallLine,mirror,floor,grid,ring,column,zone,zoneRing,points,cycleMeshes=[],notes=[],noteLevel=null,ro=null;
   var pos,col,idx,linePos,lineCol,pPos,pCol;
   var camPos,camLook,camOff,lookOff,tmpV,DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   Promise.all([import(U+'+esm'),import(U+'examples/jsm/postprocessing/EffectComposer.js'+E),import(U+'examples/jsm/postprocessing/RenderPass.js'+E),import(U+'examples/jsm/postprocessing/UnrealBloomPass.js'+E),import(U+'examples/jsm/postprocessing/OutputPass.js'+E)])
@@ -25,9 +25,9 @@ window.initCycles3D=function(root,api){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
     host.appendChild(renderer.domElement);
     scene=new THREE.Scene();scene.background=new THREE.Color(0x02040a);scene.fog=new THREE.FogExp2(0x02040a,0.00028);
-    camera=new THREE.PerspectiveCamera(62,1,1,6000);
+    camera=new THREE.PerspectiveCamera(55,1,1,8000);
     scene.add(new THREE.HemisphereLight(0x6f9fcf,0x0a0d14,1.1));var sun=new THREE.DirectionalLight(0xdfefff,1.4);sun.position.set(300,500,200);scene.add(sun);
-    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-58,24,0);lookOff=new THREE.Vector3(80,3,0);tmpV=new THREE.Vector3();
+    camPos=new THREE.Vector3(500,600,1400);camLook=new THREE.Vector3(500,0,500);camOff=new THREE.Vector3(-100,52,0);lookOff=new THREE.Vector3(120,4,0);tmpV=new THREE.Vector3();
     /* floor: a dark slab you can faintly see the walls mirrored in, plus the grid */
     floor=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:0x05070c,transparent:true,opacity:.82,depthWrite:false}));floor.rotation.x=-Math.PI/2;floor.position.y=0.05;scene.add(floor);
     grid=null;
@@ -43,6 +43,9 @@ window.initCycles3D=function(root,api){
     /* goal ring + light column (survival) */
     ring=new THREE.Mesh(new THREE.TorusGeometry(1,.06,10,64),new THREE.MeshBasicMaterial({color:0xffd166}));ring.rotation.x=Math.PI/2;ring.visible=false;scene.add(ring);
     column=new THREE.Mesh(new THREE.CylinderGeometry(1,1,90,32,1,true),new THREE.MeshBasicMaterial({color:0xffd166,transparent:true,opacity:.035,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));column.visible=false;scene.add(column);
+    /* the shrinking zone (King of the Zone): a faint wall of light and a line on the floor */
+    zone=new THREE.Mesh(new THREE.CylinderGeometry(1,1,70,96,1,true),new THREE.MeshBasicMaterial({color:0xff7a7a,transparent:true,opacity:.05,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));zone.visible=false;scene.add(zone);
+    zoneRing=new THREE.Mesh(new THREE.TorusGeometry(1,.004,6,128),new THREE.MeshBasicMaterial({color:0xff9a9a}));zoneRing.rotation.x=Math.PI/2;zoneRing.visible=false;scene.add(zoneRing);
     /* crash sparks */
     pPos=new Float32Array(600*3);pCol=new Float32Array(600*3);var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pPos,3));pg.setAttribute('color',new THREE.BufferAttribute(pCol,3));pg.setDrawRange(0,0);
     points=new THREE.Points(pg,new THREE.PointsMaterial({size:5,vertexColors:true,transparent:true,opacity:.9,sizeAttenuation:true}));scene.add(points);
@@ -134,6 +137,7 @@ window.initCycles3D=function(root,api){
     /* cycles */
     while(cycleMeshes.length<cycles.length)cycleMeshes.push(mkCycle(cycles[cycleMeshes.length].color));
     cycleMeshes.forEach(function(m,i){var c=cycles[i];if(!c){m.visible=false;return}m.visible=c.alive;m.position.set(c.x,0,c.y);m.rotation.y=Math.atan2(-DIRS[c.d][1],DIRS[c.d][0]);var r=api.radius(c);m.userData.shield.scale.setScalar(Math.max(2.5,r*1.3));m.userData.shield.material.opacity=c.touching?.3:(c.protect>0?.06+.05*Math.sin(now*10):.04);if(m.userData.tint)m.userData.tint.material.color.set(c.touching?'#ffffff':c.color)});
+    var z=api.zone();zone.visible=zoneRing.visible=!!z;if(z){zone.position.set(z.x,35,z.y);zone.scale.set(z.r,1,z.r);zoneRing.position.set(z.x,1,z.y);zoneRing.scale.setScalar(z.r);zone.material.opacity=.04+.02*Math.sin(now*2)}
     /* goal pulse */
     if(level){var p=1+Math.sin(now*4)*.06;ring.scale.setScalar(level.goal[2]*p);column.material.opacity=.03+Math.sin(now*3)*.012}
     /* sparks */
@@ -142,7 +146,7 @@ window.initCycles3D=function(root,api){
     /* camera */
     var me=cycles[0],mode=api.mode(),chase=(view==='chase'||view==='high')&&mode!==2&&me&&me.alive,hi=view==='high';
     if(chase){ /* smooth the OFFSET from the bike, not the world position, so the camera never trails at speed; turns still swing round */
-      var d=DIRS[me.d],back=hi?110:58,up=hi?62:24,ahead=hi?70:80;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*6));tmpV.set(d[0]*ahead,3,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*8));
+      var d=DIRS[me.d],back=hi?170:100,up=hi?110:52,ahead=hi?110:120;tmpV.set(-d[0]*back,up,-d[1]*back);camOff.lerp(tmpV,1-Math.exp(-dt*3.5));tmpV.set(d[0]*ahead,4,d[1]*ahead);lookOff.lerp(tmpV,1-Math.exp(-dt*5)); /* far enough back to read the grid; the swing on a turn is slow so it does not throw you */
       camPos.set(me.x+camOff.x,camOff.y,me.y+camOff.z);camLook.set(me.x+lookOff.x,lookOff.y,me.y+lookOff.z)}
     else{var big=Math.max(AW,AH*1.3);tmpV.set(AW/2,big*.72,AH/2+big*.62);camPos.lerp(tmpV,1-Math.exp(-dt*2.5));tmpV.set(AW/2,0,AH/2);camLook.lerp(tmpV,1-Math.exp(-dt*2.5))}
     camera.position.copy(camPos);camera.lookAt(camLook);

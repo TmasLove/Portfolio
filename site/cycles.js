@@ -10,13 +10,18 @@ window.initCycles=function(root){
     '<div class="cyc-hud"><span class="cyc-score"></span><span class="cyc-round"></span></div>'+
     '<div class="cyc-meters"><span class="cyc-meter"><i class="cyc-shield"></i></span><span class="cyc-meter"><i class="cyc-brake"></i></span></div>'+
     '<div class="cyc-count" hidden></div>'+
-    '<div class="cyc-ui"><div class="cyc-menu"><h2>LIGHTWALL</h2><p>Arrow keys (or WASD): in the chase views left and right turn you and down brakes; from above they point the way and Space brakes. Run close and parallel to a wall to boost. Touching a wall drains your shield and shrinks you — get off it before it empties.</p><p class="cyc-small">V or the View button switches the camera (chase · high chase · overview · flat) · M mutes · Trails fade behind you, so the grid keeps opening up · Inspired by Armagetron Advanced</p><div class="cyc-opts"><button class="cyc-btn" data-start="4">Deathmatch · 8 riders</button><button class="cyc-btn" data-start="1">Classic · vs 3 bots</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button></div><p class="cyc-small">Deathmatch: a big grid, respawns, 3 minutes, most kills wins — a kill is someone crashing into YOUR wall. 2 players: WASD + Q/E + Space vs arrows + , . + Shift. Bind two keys to one turn and press both for a double bind (180°).</p></div></div></div>';
+    '<div class="cyc-ui"><div class="cyc-menu"></div></div></div>';
   var canvas=root.querySelector('.cyc-canvas'),ctx=canvas.getContext('2d');
   var ui=root.querySelector('.cyc-ui'),menu=root.querySelector('.cyc-menu'),hudS=root.querySelector('.cyc-score'),hudR=root.querySelector('.cyc-round'),countEl=root.querySelector('.cyc-count'),shieldEl=root.querySelector('.cyc-shield'),brakeEl=root.querySelector('.cyc-brake');
   var W=canvas.width,H=canvas.height,AW=1000,AH=1000;
   var CFG={base:230,min:130,max:520,recover:.45,turnFactor:.95,turnDelay:.03,brake:80,brakeMax:1,brakeDrain:1,brakeRegen:.5,wallLen:1750,shieldMax:2.5,shieldDrain:1.2,shieldRegen:5,boostAccel:160,boostOffset:5,boostNear:24,rimMul:.5,enemyMul:1.1,staticMul:1.2,radMin:1.2,radMax:6};
-  var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#FF8A3D','#4FC3FF','#F25CFF','#9CFF57'],NAMES=['You','Vex','Halo','Kilo','Nyx','Onyx','Zephyr','Quill'];
+  var RIDER='You';try{RIDER=(localStorage.getItem('tr-cycles-name')||'You').slice(0,14)||'You'}catch(e){}
+  var COLORS=['#00E0C6','#FF5F57','#FEBC2E','#8B7DFF','#FF8A3D','#4FC3FF','#F25CFF','#9CFF57'],NAMES=[RIDER,'Vex','Halo','Kilo','Nyx','Onyx','Zephyr','Quill'];
   var DM={size:2400,riders:8,time:180,respawn:3,protect:2,wallLen:3200};
+  var ZONE={time:180,shrink:150,r0:.47,r1:.13,drain:.75,reach:520};
+  var zoneScore=[0,0,0,0,0,0,0,0],shares=[0,0,0,0,0,0,0,0],shareTick=0;
+  function zoneR(){return AW*(ZONE.r0+(ZONE.r1-ZONE.r0)*Math.min(1,clock/ZONE.shrink))}
+  function inZone(x,y,margin){return Math.hypot(x-AW/2,y-AH/2)<=zoneR()-(margin||0)}
   var DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
   /* Survival levels. Own layouts; units are arena units, origin top-left. wall: [x0,y0,x1,y1,color].
      goal: a ring to reach. limit: seconds allowed (0 = none). msg: notes painted on the floor. */
@@ -54,13 +59,13 @@ window.initCycles=function(root){
   var level=null,levelIx=0,statics=[],clock=0,BEST={};
   try{BEST=JSON.parse(localStorage.getItem('tr-cycles-best')||'{}')||{}}catch(e){}
   var audio=null,hum=null,humGain=null;
-  var g3=window.initCycles3D?window.initCycles3D(root,{cycles:function(){return cycles},statics:function(){return statics},level:function(){return level},size:function(){return [AW,AH]},booms:function(){return booms},now:function(){return now},mode:function(){return mode},radius:function(c){return radius(c)}}):null;
+  var g3=window.initCycles3D?window.initCycles3D(root,{cycles:function(){return cycles},statics:function(){return statics},level:function(){return level},size:function(){return [AW,AH]},booms:function(){return booms},now:function(){return now},mode:function(){return mode},radius:function(c){return radius(c)},zone:function(){return mode===5?{x:AW/2,y:AH/2,r:zoneR()}:null}}):null;
   function sound(){if(muted)return;try{if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();if(!hum){hum=audio.createOscillator();hum.type='sawtooth';humGain=audio.createGain();humGain.gain.value=0;var f=audio.createBiquadFilter();f.type='lowpass';f.frequency.value=600;hum.connect(f);f.connect(humGain);humGain.connect(audio.destination);hum.start()}if(audio.state==='suspended')audio.resume()}catch(e){}}
   function humSet(on,speed){if(!humGain)return;try{humGain.gain.linearRampToValueAtTime(on&&!muted?.05:0,audio.currentTime+.08);hum.frequency.linearRampToValueAtTime(60+speed*.4,audio.currentTime+.08)}catch(e){}}
   function blip(freq,dur){if(!audio||muted)return;try{var o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=freq;g.gain.value=.05;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch(e){}}
 
   function mk(i,x,y,d,human){return{i:i,x:x,y:y,d:d,alive:true,human:human,color:COLORS[i],name:NAMES[i],speed:CFG.base,shield:CFG.shieldMax,brakeCharge:CFG.brakeMax,braking:false,lastTurn:-1,trail:[[x,y]],len:0,grinding:false,touching:false,protect:0,respawn:0,deaths:0,lastHit:null,target:null,retarget:0}}
-  function wallLen(){return mode===4?DM.wallLen:CFG.wallLen}
+  function wallLen(){return mode>=4?DM.wallLen:CFG.wallLen}
   function radius(c){return CFG.radMin+(CFG.radMax-CFG.radMin)*c.shield/CFG.shieldMax}
   function reset(){
     over=false;booms=[];clock=0;
@@ -71,8 +76,8 @@ window.initCycles=function(root){
       return;
     }
     level=null;statics=[];
-    if(mode===4){
-      AW=AH=DM.size;cycles=[];
+    if(mode===4||mode===5){
+      AW=AH=DM.size;cycles=[];zoneScore=[0,0,0,0,0,0,0,0];shares=[0,0,0,0,0,0,0,0];shareTick=0;
       for(var i=0;i<DM.riders;i++){var a=i/DM.riders*Math.PI*2,r=AW*.36,x=AW/2+Math.cos(a)*r,y=AH/2+Math.sin(a)*r;
         var d=Math.abs(Math.cos(a))>Math.abs(Math.sin(a))?(Math.cos(a)>0?2:0):(Math.sin(a)>0?3:1); /* face the middle */
         var c=mk(i,x,y,d,i===0);c.protect=DM.protect;cycles.push(c)}
@@ -105,6 +110,10 @@ window.initCycles=function(root){
     var need=c.speed*.5;
     if(f<need){ if(fl<12&&fr<12){c.braking=true;return} turn(c,fl>fr?'left':(fr>fl?'right':(Math.random()<.5?'left':'right'))); return }
     c.braking=false;
+    if(mode===5){ /* the zone: head for the middle when outside or near the edge */
+      var dcx=AW/2-c.x,dcy=AH/2-c.y,far=Math.hypot(dcx,dcy)>zoneR()-90;
+      if(far){var wantZ=Math.abs(dcx)>Math.abs(dcy)?(dcx>0?0:2):(dcy>0?1:3);if(wantZ!==c.d){if(wantZ===l&&fl>need)turn(c,'left');else if(wantZ===r&&fr>need)turn(c,'right');else if(wantZ===(c.d+2)%4){if(fl>=fr&&fl>need)turn(c,'left');else if(fr>need)turn(c,'right')}}return}
+    }
     c.retarget-=dt;if(!c.target||!c.target.alive||c.retarget<=0){var others=cycles.filter(function(o){return o!==c&&o.alive});c.target=others.length?others[Math.floor(Math.random()*others.length)]:null;c.retarget=3+Math.random()*4}
     var me=c.target||cycles[0];
     if(Math.random()<dt*.9&&me.alive&&me!==c){var want=Math.abs(me.x-c.x)>Math.abs(me.y-c.y)?(me.x>c.x?0:2):(me.y>c.y?1:3);if(want===l&&fl>need*1.6)turn(c,'left');else if(want===r&&fr>need*1.6)turn(c,'right')}
@@ -128,7 +137,7 @@ window.initCycles=function(root){
   function step(dt){
     now+=dt;if(!over)clock+=dt;var segs=segments();
     cycles.forEach(function(c){
-      if(!c.alive){if(mode===4&&c.respawn>0){c.respawn-=dt;if(c.respawn<=0)respawnAt(c)}return}
+      if(!c.alive){if(mode>=4&&c.respawn>0){c.respawn-=dt;if(c.respawn<=0)respawnAt(c)}return}
       if(c.protect>0)c.protect-=dt;
       if(!c.human)think(c,segs,dt);
       if(c.pending&&now-c.lastTurn>=CFG.turnDelay){var pd=c.pending;c.pending=null;turn(c,pd)}
@@ -148,10 +157,19 @@ window.initCycles=function(root){
         c.x+=DIRS[c.d][0]*Math.max(0,rr2.d-rad);c.y+=DIRS[c.d][1]*Math.max(0,rr2.d-rad);
         c.touching=true;c.lastHit=rr2.seg;if(c.protect<=0)c.shield-=CFG.shieldDrain*dt;
         if(c.shield<=0){c.alive=false;c.deaths++;boom(c);if(c.human)blip(90,.4);
-          if(mode===4){var owner=rr2.seg!=='rim'&&rr2.seg[4]&&rr2.seg[4].i!==undefined?rr2.seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}
+          if(mode>=4){var owner=rr2.seg!=='rim'&&rr2.seg[4]&&rr2.seg[4].i!==undefined?rr2.seg[4]:null;if(owner&&owner!==c){score[owner.i]++;if(owner.human||c.human)blip(owner.human?660:180,.15)}c.respawn=DM.respawn;if(c.human){countEl.hidden=false}}}
       }else{c.x+=DIRS[c.d][0]*dist;c.y+=DIRS[c.d][1]*dist;c.touching=false;c.shield=Math.min(CFG.shieldMax,c.shield+CFG.shieldMax/CFG.shieldRegen*dt)}
+      if(mode===5){c.outside=!inZone(c.x,c.y);if(c.outside&&c.protect<=0){c.shield-=ZONE.drain*dt;if(c.shield<=0){c.alive=false;c.deaths++;boom(c);c.respawn=DM.respawn;if(c.human){blip(90,.4);countEl.hidden=false}}}}
       trimTrail(c);
     });
+    if(mode===5){
+      if(over)return;var me5=cycles[0];
+      shareTick-=dt;if(shareTick<=0){shareTick=.5;shares=control()}
+      cycles.forEach(function(c){if(c.alive)zoneScore[c.i]+=shares[c.i]*dt});
+      if(me5.alive)countEl.hidden=true;else countEl.textContent='respawn '+Math.ceil(me5.respawn);
+      if(clock>=ZONE.time){over=true;humSet(false,0);setTimeout(endMatch,600)}
+      return;
+    }
     if(mode===4){
       if(over)return;var me4=cycles[0];
       if(me4.alive)countEl.hidden=true;else countEl.textContent='respawn '+Math.ceil(me4.respawn);
@@ -169,19 +187,30 @@ window.initCycles=function(root){
     if(!over&&alive.length<=1){over=true;var w=alive[0];if(w)score[w.i]++;round++;humSet(false,0);setTimeout(function(){endRound(w)},900)}
     else if(!over&&mode===1&&!cycles[0].alive){over=true;round++;humSet(false,0);setTimeout(function(){endRound(null,true)},900)}
   }
-  function respawnAt(c){ /* a free spot: room in all four directions */
+  function control(){ /* sample the zone; each point belongs to the rider whose wall or cycle is nearest (within reach) */
+    var R=zoneR(),cx=AW/2,cy=AH/2,own=[0,0,0,0,0,0,0,0],total=0;
+    var per=cycles.map(function(c){var segs=[];var t=c.trail;for(var i=1;i<t.length;i++)segs.push([t[i-1][0],t[i-1][1],t[i][0],t[i][1]]);segs.push([t[t.length-1][0],t[t.length-1][1],c.x,c.y]);return c.alive?segs:[]});
+    function dseg(px,py,s){var x0=s[0],y0=s[1],x1=s[2],y1=s[3],dx=x1-x0,dy=y1-y0,L=dx*dx+dy*dy,t=L?Math.max(0,Math.min(1,((px-x0)*dx+(py-y0)*dy)/L)):0;return Math.hypot(px-(x0+dx*t),py-(y0+dy*t))}
+    for(var ri=0;ri<14;ri++){var rr=R*(ri+.5)/14,n=6+ri*3;for(var k=0;k<n;k++){var a=k/n*Math.PI*2,px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr,best=ZONE.reach,who=-1;
+      for(var i=0;i<per.length;i++){var sg=per[i];for(var j=0;j<sg.length;j++){var d=dseg(px,py,sg[j]);if(d<best){best=d;who=i}}}
+      total++;if(who>=0)own[who]++}}
+    return own.map(function(o){return o/total});
+  }
+  function respawnAt(c){ /* a free spot: room in all four directions (inside the zone in zone mode) */
     var segs=segments(),best=null,bestD=-1;
-    for(var t=0;t<40;t++){var x=AW*.1+Math.random()*AW*.8,y=AH*.1+Math.random()*AH*.8,dmin=1e9;
+    for(var t=0;t<60;t++){var x=AW*.1+Math.random()*AW*.8,y=AH*.1+Math.random()*AH*.8,dmin=1e9;
+      if(mode===5&&!inZone(x,y,90))continue;
       for(var d=0;d<4;d++)dmin=Math.min(dmin,ray(x,y,d,null,600,segs).d);
       if(dmin>bestD){bestD=dmin;best=[x,y]}if(dmin>=400)break}
-    var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base;c.protect=DM.protect;c.lastTurn=-1;c.pending=null;c.braking=false;c.touching=false;
+    if(!best)best=[AW/2,AH/2];var d0=Math.floor(Math.random()*4);c.x=best[0];c.y=best[1];c.outside=false;c.d=d0;c.trail=[[c.x,c.y]];c.alive=true;c.shield=CFG.shieldMax;c.brakeCharge=CFG.brakeMax;c.speed=CFG.base;c.protect=DM.protect;c.lastTurn=-1;c.pending=null;c.braking=false;c.touching=false;
     if(c.human){countEl.hidden=true;humSet(true,CFG.base)}
   }
-  function standings(){return cycles.slice().sort(function(a,b){return score[b.i]-score[a.i]||a.deaths-b.deaths})}
+  function standings(){if(mode===5)return cycles.slice().sort(function(a,b){return zoneScore[b.i]-zoneScore[a.i]});return cycles.slice().sort(function(a,b){return score[b.i]-score[a.i]||a.deaths-b.deaths})}
   function endMatch(){
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');countEl.hidden=true;
-    var st=standings(),you=st.indexOf(cycles[0])+1;
-    menu.innerHTML='<h2>'+(you===1?'You take the grid':'#'+you+' of '+st.length)+'</h2><p class="cyc-small">'+st.map(function(c,i){return (i+1)+'. '+c.name+' '+score[c.i]+'K / '+c.deaths+'D'}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="4">Again</button><button class="cyc-btn" data-start="1">Classic</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button></div>';
+    var st=standings(),you=st.indexOf(cycles[0])+1,tot=zoneScore.reduce(function(a,b){return a+b},0)||1;
+    var title=you===1?(mode===5?'King of the Zone':'King of the Arena'):'#'+you+' of '+st.length+(mode===5?' — '+st[0].name+' is King of the Zone':' — '+st[0].name+' is King of the Arena');
+    menu.innerHTML='<h2>'+title+'</h2><p class="cyc-small">'+st.map(function(c,i){return (i+1)+'. '+c.name+' '+(mode===5?Math.round(zoneScore[c.i]/tot*100)+'% zone · '+score[c.i]+'K':score[c.i]+'K / '+c.deaths+'D')}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Again</button><button class="cyc-btn" data-start="'+(mode===5?4:5)+'">'+(mode===5?'King of the Arena':'King of the Zone')+'</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
   function boom(c){for(var i=0;i<40;i++)booms.push({x:c.x,y:c.y,vx:(Math.random()-.5)*160,vy:(Math.random()-.5)*160,t:1,c:c.color})}
@@ -191,6 +220,7 @@ window.initCycles=function(root){
     var s=Math.min(W/AW,H/AH)*.96,ox=(W-AW*s)/2,oy=(H-AH*s)/2;
     ctx.strokeStyle='rgba(0,224,198,.1)';ctx.lineWidth=1;ctx.beginPath();var gs=AW>1500?100:50;for(var g=0;g<=AW;g+=gs){ctx.moveTo(ox+g*s,oy);ctx.lineTo(ox+g*s,oy+AH*s)}for(g=0;g<=AH;g+=gs){ctx.moveTo(ox,oy+g*s);ctx.lineTo(ox+AW*s,oy+g*s)}ctx.stroke();
     ctx.strokeStyle='rgba(0,224,198,.45)';ctx.lineWidth=2;ctx.strokeRect(ox,oy,AW*s,AH*s);
+    if(mode===5){var R=zoneR();ctx.strokeStyle='rgba(255,120,120,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(ox+AW/2*s,oy+AH/2*s,R*s,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(255,80,80,.07)';ctx.beginPath();ctx.rect(ox,oy,AW*s,AH*s);ctx.arc(ox+AW/2*s,oy+AH/2*s,R*s,0,Math.PI*2,true);ctx.fill()}
     if(level){
       ctx.font='600 '+Math.max(10,Math.round(11*s*1.6))+'px ui-monospace,Menlo,monospace';ctx.fillStyle='rgba(159,245,233,.42)';ctx.textBaseline='middle';
       level.msg.forEach(function(m){ctx.fillText(m[2],ox+m[0]*s,oy+m[1]*s)});
@@ -203,6 +233,7 @@ window.initCycles=function(root){
     var me=cycles[0];
     var st=(me.alive?Math.round(me.speed)+' km/h'+(me.grinding?'  BOOST':'')+(me.braking&&me.brakeCharge>0?'  BRAKE':'')+(me.touching?'  SHIELD':''):'crashed');
     if(level){hudS.textContent=level.name+(BEST[level.id]?'   best '+BEST[level.id].toFixed(2)+'s':'');hudR.textContent=st+'   ·   '+(level.limit?Math.max(0,level.limit-clock).toFixed(1)+'s left':clock.toFixed(1)+'s')}
+    else if(mode===5){var st5=standings();hudS.textContent=st5.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+Math.round(shares[c.i]*100)+'%'}).join('   ')+(st5.indexOf(me)>3?'   ·   you #'+(st5.indexOf(me)+1)+' '+Math.round(shares[0]*100)+'%':'');hudR.textContent=(me.alive&&me.outside?'OUTSIDE THE ZONE   ':me.protect>0?'PROTECTED   ':'')+st+'   ·   zone '+Math.round(zoneR()/AW*200)+'%   ·   '+Math.max(0,ZONE.time-clock).toFixed(0)+'s'}
     else if(mode===4){var st4=standings();hudS.textContent=st4.slice(0,4).map(function(c,i){return (i+1)+' '+c.name+' '+score[c.i]}).join('   ')+(st4.indexOf(me)>3?'   ·   you #'+(st4.indexOf(me)+1)+' '+score[0]:'');hudR.textContent=(me.protect>0?'PROTECTED   ':'')+st+'   ·   '+Math.max(0,DM.time-clock).toFixed(0)+'s'}
     else{hudS.textContent=cycles.map(function(c){return c.name+' '+score[c.i]}).join('   ');hudR.textContent=st+'   ·   round '+(round+1)}
     shieldEl.style.width=(me.shield/CFG.shieldMax*100)+'%';shieldEl.style.background=me.shield<CFG.shieldMax*.35?'#FF5F57':'#00E0C6';brakeEl.style.width=(me.brakeCharge/CFG.brakeMax*100)+'%';
@@ -214,27 +245,27 @@ window.initCycles=function(root){
     step(dt);draw();if(g3)g3.render(dt);var me=cycles[0];humSet(me.alive,me.speed);
     raf=requestAnimationFrame(frame);
   }
-  function wire(){menu.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});menu.querySelectorAll('[data-level]').forEach(function(b){b.addEventListener('click',function(){levelIx=+b.dataset.level;start(3)})});menu.querySelectorAll('[data-levels]').forEach(function(b){b.addEventListener('click',levelMenu)});menu.querySelectorAll('[data-keys]').forEach(function(b){b.addEventListener('click',keysMenu)});viewBtns()}
+  function wire(){menu.querySelectorAll('[data-start]').forEach(function(b){b.addEventListener('click',function(){start(+b.dataset.start)})});menu.querySelectorAll('[data-level]').forEach(function(b){b.addEventListener('click',function(){levelIx=+b.dataset.level;start(3)})});menu.querySelectorAll('[data-levels]').forEach(function(b){b.addEventListener('click',levelMenu)});menu.querySelectorAll('[data-keys]').forEach(function(b){b.addEventListener('click',keysMenu)});menu.querySelectorAll('[data-lobby]').forEach(function(b){b.addEventListener('click',lobby)});viewBtns()}
   function viewLabel(){var v=g3?g3.view():'flat';return 'View: '+({chase:'chase',high:'high chase',overview:'overview',flat:'flat'}[v]||v)}
   function viewBtns(){menu.querySelectorAll('[data-view]').forEach(function(b){b.textContent=viewLabel();b.onclick=function(){if(g3)g3.cycleView();viewBtns();draw()}})}
   function endRound(winner,youDied){
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
-    menu.innerHTML='<h2>'+(winner?(winner.human?winner.name+(winner.i===0?' win':' wins')+' the round':winner.name+' takes it'):(youDied?'You crashed':'Everyone crashed'))+'</h2><p>'+cycles.map(function(c){return c.name+': '+score[c.i]}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Next round</button><button class="cyc-btn" data-start="'+(mode===1?2:1)+'">'+(mode===1?'2 players':'Solo vs bots')+'</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button></div>';
+    menu.innerHTML='<h2>'+(winner?(winner.human?winner.name+(winner.i===0?' win':' wins')+' the round':winner.name+' takes it'):(youDied?'You crashed':'Everyone crashed'))+'</h2><p>'+cycles.map(function(c){return c.name+': '+score[c.i]}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Next round</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
   function endLevel(won,how){
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var next=levelIx+1<LEVELS.length;
-    menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' — new best':' · best '+BEST[level.id].toFixed(2)+'s'):' — '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-start="1">Arena</button><button class="cyc-btn" data-view="1"></button></div>';
+    menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' — new best':' · best '+BEST[level.id].toFixed(2)+'s'):' — '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
   function levelMenu(){
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var tiers=[];LEVELS.forEach(function(l){if(tiers.indexOf(l.tier)<0)tiers.push(l.tier)});
-    menu.innerHTML='<h2>SURVIVAL</h2><p>Fixed walls, a ring to reach, a clock. Same physics as the arena.</p>'+tiers.map(function(t){return '<p class="cyc-small" style="margin:8px 0 4px;text-transform:uppercase;letter-spacing:.12em">'+t+'</p><div class="cyc-opts">'+LEVELS.map(function(l,i){return l.tier===t?'<button class="cyc-btn cyc-lvl" data-level="'+i+'">'+l.name+(BEST[l.id]?'<small>'+BEST[l.id].toFixed(2)+'s</small>':'')+'</button>':''}).join('')+'</div>'}).join('')+'<div class="cyc-opts"><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button><button class="cyc-btn" data-start="1">Back to the arena</button></div>';
+    menu.innerHTML='<h2>SURVIVAL</h2><p>Fixed walls, a ring to reach, a clock. Same physics as the arena.</p>'+tiers.map(function(t){return '<p class="cyc-small" style="margin:8px 0 4px;text-transform:uppercase;letter-spacing:.12em">'+t+'</p><div class="cyc-opts">'+LEVELS.map(function(l,i){return l.tier===t?'<button class="cyc-btn cyc-lvl" data-level="'+i+'">'+l.name+(BEST[l.id]?'<small>'+BEST[l.id].toFixed(2)+'s</small>':'')+'</button>':''}).join('')+'</div>'}).join('')+'<div class="cyc-opts"><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button><button class="cyc-btn" data-lobby="1">Lobby</button></div>';
     wire();
   }
-  function start(m){if(m!==mode||m===4){score=[0,0,0,0,0,0,0,0];round=0}mode=m;reset();if(g3)g3.reset();ui.hidden=true;running=true;last=0;countdown=m===3?1:2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
+  function start(m){if(m!==mode||m>=4){score=[0,0,0,0,0,0,0,0];round=0}mode=m;reset();if(g3)g3.reset();ui.hidden=true;running=true;last=0;countdown=m===3?1:2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
   function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;var chase=g3&&g3.chase()&&mode!==2;if(act==='brake'||(chase&&act===1)){c.braking=on;return}if(!on)return;if(typeof act==='number'&&chase){if(act===2)act='left';else if(act===0)act='right';else return}turn(c,act)} /* chase view: the left key turns left, the right key turns right, whatever the heading */
   /* Controls. Every action can have any number of keys — that is how a double bind works: bind two keys to
      "turn left", press both at once, and the two 90° turns land back to back for a 180° flip. Solo mode
@@ -266,15 +297,30 @@ window.initCycles=function(root){
     menu.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){var q=b.dataset.del.split(':');KEYS[+q[0]][q[1]].splice(+q[2],1);saveKeys();keysMenu()})});
     menu.querySelectorAll('[data-add]').forEach(function(b){b.addEventListener('click',function(){var q=b.dataset.add.split(':');listening={p:+q[0],a:q[1]};keysMenu();canvas.focus()})});
     menu.querySelector('[data-keysreset]').addEventListener('click',function(){KEYS=JSON.parse(JSON.stringify(DEF));saveKeys();keysMenu()});
-    menu.querySelector('[data-back]').addEventListener('click',function(){listening=null;mode===3?levelMenu():endRoundMenu()});
+    menu.querySelector('[data-back]').addEventListener('click',function(){listening=null;lobby()});
   }
-  function endRoundMenu(){menu.classList.remove('cyc-wide');menu.innerHTML='<h2>LIGHTWALL</h2><div class="cyc-opts"><button class="cyc-btn" data-start="4">Deathmatch</button><button class="cyc-btn" data-start="1">Classic</button><button class="cyc-btn" data-start="2">2 players</button><button class="cyc-btn" data-levels="1">Survival</button><button class="cyc-btn" data-keys="1">Controls</button><button class="cyc-btn" data-view="1"></button></div>';wire()}
+  var MODES=[[4,'King of the Arena','8 riders · respawns · 3 minutes · most kills'],[5,'King of the Zone','8 riders · the zone shrinks · own the most space'],[1,'Classic','You vs 3 bots · last cycle standing'],[2,'2 players','One keyboard · WASD vs arrows'],['levels','Survival','Solo levels · dig, grind, double bind, beat the clock']];
+  var picked=4;try{picked=JSON.parse(localStorage.getItem('tr-cycles-mode')||'4')}catch(e){}
+  function lobby(){
+    running=false;ui.hidden=false;humSet(false,0);menu.classList.add('cyc-wide');countEl.hidden=true;
+    menu.innerHTML='<div class="cyc-lobby"><div class="cyc-lobby-head"><h2>LIGHTWALL</h2><p class="cyc-tag">Tron-style light cycles. Your wall is your weapon.</p></div>'+
+      '<div class="cyc-modes">'+MODES.map(function(m){return '<button class="cyc-mode'+(String(m[0])===String(picked)?' sel':'')+'" data-mode="'+m[0]+'"><strong>'+m[1]+'</strong><span>'+m[2]+'</span></button>'}).join('')+'</div>'+
+      '<div class="cyc-lobby-side"><label class="cyc-name">Rider name<input id="cycName" maxlength="14" value="'+RIDER.replace(/"/g,'&quot;')+'" autocomplete="off" spellcheck="false"></label><button class="cyc-btn cyc-play" data-play="1">PLAY</button><div class="cyc-opts"><button class="cyc-btn cyc-mini" data-keys="1">Controls</button><button class="cyc-btn cyc-mini" data-view="1"></button><button class="cyc-btn cyc-mini" data-help="1">How to play</button></div></div>'+
+      '<div class="cyc-help" hidden><p>Arrow keys or WASD. In the chase views left and right turn you and down brakes; from above the arrows point the way and Space brakes. Run close and parallel to a wall to boost — the closer, the faster. Touching a wall drains your shield and shrinks you: dig through a gap, or get off it before it empties.</p><p>Two turn keys at once flip you 180° (a double bind). V or the View button switches the camera. M mutes. Trails fade behind you, so the grid keeps opening up.</p><p class="cyc-small">Inspired by Armagetron Advanced · own code and art</p></div></div>';
+    menu.querySelectorAll('[data-mode]').forEach(function(b){b.addEventListener('click',function(){picked=isNaN(+b.dataset.mode)?b.dataset.mode:+b.dataset.mode;try{localStorage.setItem('tr-cycles-mode',JSON.stringify(picked))}catch(e){}menu.querySelectorAll('[data-mode]').forEach(function(x){x.classList.toggle('sel',x===b)})});b.addEventListener('dblclick',play)});
+    menu.querySelector('[data-play]').addEventListener('click',play);
+    var nameEl=menu.querySelector('#cycName');nameEl.addEventListener('input',function(){RIDER=(nameEl.value.trim()||'You').slice(0,14);NAMES[0]=RIDER;if(cycles[0])cycles[0].name=RIDER;try{localStorage.setItem('tr-cycles-name',RIDER)}catch(e){}});
+    nameEl.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Enter')play()});nameEl.addEventListener('keyup',function(e){e.stopPropagation()});
+    menu.querySelector('[data-help]').addEventListener('click',function(){var h=menu.querySelector('.cyc-help');h.hidden=!h.hidden});
+    wire();
+  }
+  function play(){if(picked==='levels')levelMenu();else start(+picked)}
+  function endRoundMenu(){lobby()}
   function kd(e){key(e,true)}function ku(e){key(e,false)}
   canvas.tabIndex=0;canvas.addEventListener('keydown',kd);canvas.addEventListener('keyup',ku);document.addEventListener('keydown',function(e){if(e.target!==canvas)kd(e)});document.addEventListener('keyup',function(e){if(e.target!==canvas)ku(e)});canvas.addEventListener('mousedown',function(){canvas.focus()});
   var tx=0;canvas.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
   canvas.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)<10)return;human(0,dx>0?'right':'left',true)});
-  wire();
-  reset();draw();
+  reset();draw();lobby();
   root.__cyc={keys:function(){return KEYS},g3:g3,dm:DM,respawn:respawnAt,step:step,turn:turn,draw:draw,cycles:function(){return cycles},cfg:CFG,levels:LEVELS,level:function(i){levelIx=i;start(3);countdown=0;countEl.hidden=true},state:function(){return{over:over,clock:clock,best:BEST,mode:mode}},go:function(m){start(m||1);countdown=0;countEl.hidden=true}};
   return {stop:function(){running=false;cancelAnimationFrame(raf);if(g3)g3.stop();document.removeEventListener('keydown',kd);document.removeEventListener('keyup',ku);humSet(false,0);try{if(audio)audio.close()}catch(e){}}};
 };
