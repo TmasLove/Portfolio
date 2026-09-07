@@ -29,7 +29,7 @@ if(typeof window.round !== "function")
 	if(typeof preset === "function")
 	{
 		var stockPreset = preset;
-		preset = function(){ var r = stockPreset.apply(this, arguments); setTimeout(pinFloor, 30); return r; };
+		preset = function(name){ var r = stockPreset.apply(this, arguments); setTimeout(pinFloor, 30); if(name === 'classic'){ setTimeout(function(){ settings.CYCLE_SPEED = 30; settings.CYCLE_ACCEL = 15; settings.CYCLE_DELAY = 0.05; }, 40); } return r; }; /* classic at 20 felt slow */
 	}
 	window.__trGridBuilds = 0;
 
