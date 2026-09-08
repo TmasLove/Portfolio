@@ -85,7 +85,7 @@ var DOCK=[
  {key:'terminal',label:'Terminal',art:'terminal'},
  {key:'trash',label:'Trash',icon:'/assets/icons/dock-trash.png',fit:'plain',init:'T'}
 ];
-var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},faq:{title:'FAQ',url:'/faq/',icon:'/assets/icons/dock-contacts.png',fit:'plain',hidden:true},about:{title:'About',url:'/about/',icon:'/assets/icons/dock-contacts.png',fit:'plain'},contact:{title:'Contact',url:'/contact/',icon:'/assets/icons/dock-mail.png',fit:'plain'},tools:{title:'Tools',url:'/tools/',icon:'/assets/icons/dock-settings.png',fit:'plain'}};
+var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',fit:'plain'},faq:{title:'FAQ',url:'/faq/',icon:'/assets/icons/dock-contacts.png',fit:'plain',hidden:true},about:{title:'About',url:'/about/',icon:'/assets/icons/dock-contacts.png',fit:'plain'},contact:{title:'Contact',url:'/contact/',icon:'/assets/icons/dock-mail.png',fit:'plain'},tools:{title:'Tools',url:'/tools/',art:'tools'}};
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -350,7 +350,7 @@ function openApp(key){
   if(isPhone())return openSheet(key);
   var app=appByKey(key);
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
-  var fn={finder:openWork,launchpad:openLP,cycles:openCycles,arena:openArena,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
+  var fn={finder:openWork,launchpad:openLP,settings:function(){window.TR&&TR.extras&&TR.extras.openSettings&&TR.extras.openSettings()},cycles:openCycles,arena:openArena,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
   if(fn)return fn();
   if(REG[key])return REG[key].open();
 }
@@ -455,6 +455,8 @@ if(lGrid){
     ltiles.push(b);
   });
   Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
+  /* the gear is Settings, like on a phone: wallpaper, appearance, motion (Tommy: "open up the system settings for the website") */
+  var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'});sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
 }
 /* the phone launcher pages sideways like an iPhone home screen: as many rows as fit, 4 per row, dots underneath */
 function layoutPages(){
@@ -477,6 +479,7 @@ function openSheet(key){
   if(key==='finder')return openSheetPage('work');
   if(key==='launchpad'){sheet.hidden=true;return openLP()}
   if(key==='paint'){var p=document.createElement('div');p.className='page';sheetBody.appendChild(p);return window.initPaint(p)}
+  if(key==="settings"){if(window.TR&&TR.extras&&TR.extras.openSettings)TR.extras.openSettings();return}
   if(key==='arena'){var fa=document.createElement('iframe');fa.src='/arena/';fa.title='Lightwall';fa.style.cssText='width:100%;height:70vh;border:0;background:#000;display:block';sheetBody.appendChild(fa);return}
   if(key==='cycles'){var gc=document.createElement('div');gc.className='game-host cyc-host';sheetBody.appendChild(gc);var cg=window.initCycles(gc);sheetBody.__stop=function(){cg&&cg.stop()};return}
   if(key==='brick'){var g=document.createElement('div');g.className='game-host';sheetBody.appendChild(g);var game=window.initBrick(g);sheetBody.__stop=function(){game&&game.stop()};return}

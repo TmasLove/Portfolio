@@ -490,3 +490,6 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
   .ldock .lapp{height:auto;width:58px}
   .ldock .lapp .sq{margin:0 auto}
 }
+
+/* Settings as a phone sheet: the Control Centre controls laid out for a page */
+.cc-page .cc{position:static;width:auto;max-width:none;box-shadow:none;background:transparent;backdrop-filter:none;border:none;padding:0;color:var(--text)}.cc-page .cc-tile{color:var(--text)}.cc-page .cc-walls{grid-template-columns:repeat(3,1fr)}.cc-page .cc-wall{height:72px}.cc-page .cc-links{display:none}
