@@ -568,7 +568,7 @@ document.addEventListener('keydown',function(e){
 });
 
 /* boot: About opens on a fresh login (Tommy: "have it land on About instead of Work") */
-if(!isPhone())setTimeout(openAbout,reduced?0:260);
+setTimeout(function(){if(isPhone())openSheetPage('about');else openAbout()},reduced?0:260);
 window.trOpen=openApp;
 window.TR={esc:esc,sqHTML:sqHTML,ART:ART,APPS:APPS,DOCK:DOCK,PAGES:PAGES,ME:ME,openMap:openMap,createWindow:createWindow,closeWindow:closeWindow,minimize:minimize,restore:restore,topWin:topWin,openApp:openApp,openPage:openPage,openLP:openLP,openSpot:openSpot,closeMenus:closeMenus,isPhone:isPhone,register:function(key,title,open,sheet){REG[key]={title:title,open:open,sheet:sheet}}};
 })();
