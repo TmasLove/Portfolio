@@ -72,7 +72,7 @@ var FOLDERS=[
  {key:'apps',label:'Apps',members:function(){return APPS.filter(function(a){return a.category==='apps'})}},
  {key:'sites',label:'Websites',members:function(){return APPS.filter(function(a){return a.category==='web'})}},
  {key:'tools',label:'Tools',members:function(){return APPS.filter(function(a){return a.category==='tool'})}},
- {key:'games',label:'Games',members:function(){return EXTRA}}
+ {key:'games',label:'Games',members:function(){return EXTRA.concat([{key:'paint',title:'Paint',art:'paint'}])}}
 ];
 var DOCK=[
  {key:'finder',label:'Finder',icon:'/assets/icons/dock-finder.png',fit:'plain',init:'F'},
@@ -172,7 +172,7 @@ function tick(){
   var d=new Date();
   var txt=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+'  '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
   var mb=document.getElementById('mbClock');if(mb)mb.textContent=txt;
-  var lc=document.getElementById('lClock');if(lc)lc.textContent=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  var lc=document.getElementById('lClock');if(lc)lc.textContent=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M$/i,'');
 }
 tick();setInterval(tick,30000);
 
@@ -447,26 +447,45 @@ function openInfo(r){if(isPhone()){sheet.hidden=false;sheetTitle.textContent=r[0
 
 /* ---------- phone launcher ---------- */
 var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock'),lDots=document.getElementById('lDots'),ltiles=[];
+/* iOS home-screen widgets: a Clock and a Calendar, each 2x2 tiles wide (they cost 4 grid slots in layoutPages) */
+function widgetTile(kind){
+  var b=document.createElement('button');b.className='lwidget lw-'+kind;b.__slots=4;b.type='button';
+  if(kind==='clock'){b.setAttribute('aria-label','Clock');b.innerHTML='<div class="lw-card"><svg class="lw-face" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#111"/>'+[0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){var a=i*Math.PI/6,x1=50+Math.sin(a)*(i%3?42:40),y1=50-Math.cos(a)*(i%3?42:40),x2=50+Math.sin(a)*46,y2=50-Math.cos(a)*46;return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#fff" stroke-width="'+(i%3?1.5:3)+'" stroke-linecap="round"/>'}).join('')+'<line class="lw-h" x1="50" y1="54" x2="50" y2="26" stroke="#fff" stroke-width="5" stroke-linecap="round"/><line class="lw-m" x1="50" y1="54" x2="50" y2="14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/><line class="lw-s" x1="50" y1="58" x2="50" y2="12" stroke="#ff9f0a" stroke-width="1.5" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="#ff9f0a"/></svg><span class="lw-city">Miami</span></div><span class="label">Clock</span>'}
+  else{b.setAttribute('aria-label','Calendar');b.innerHTML='<div class="lw-card lw-cal"><span class="lw-dow"></span><span class="lw-day"></span><span class="lw-note">Say hi</span><span class="lw-sub">Open for freelance and full-time work</span></div><span class="label">Calendar</span>';b.addEventListener('click',function(){openSheetPage('contact')})}
+  return b;
+}
+function tickWidgets(){
+  var d=new Date(),clk=document.querySelector('.lw-clock');
+  if(clk){var h=d.getHours()%12,m=d.getMinutes(),s=d.getSeconds();var set=function(sel,deg){var el=clk.querySelector(sel);if(el)el.setAttribute('transform','rotate('+deg.toFixed(1)+' 50 50)')};set('.lw-h',(h+m/60)*30);set('.lw-m',(m+s/60)*6);set('.lw-s',s*6)}
+  var cal=document.querySelector('.lw-calendar');
+  if(cal){cal.querySelector('.lw-dow').textContent=d.toLocaleDateString('en-US',{weekday:'long'});cal.querySelector('.lw-day').textContent=d.getDate()}
+}
 if(lGrid){
+  ltiles.push(widgetTile('clock'),widgetTile('calendar'));setInterval(tickWidgets,1000);tickWidgets();
   APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}})).forEach(function(a){
     var b=document.createElement('button');b.className='lapp';
     b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
     ltiles.push(b);
   });
-  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
+  /* Tools is a home-screen tile; the dock holds four like an iPhone (Work, About, Contact, Settings) */
+  var tb=document.createElement('button');tb.className='lapp';tb.innerHTML=sqHTML({art:'tools'})+'<span class="label">Tools</span>';tb.addEventListener('click',function(){openSheetPage('tools')});ltiles.push(tb);
+  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
   /* the gear is Settings, like on a phone: wallpaper, appearance, motion (Tommy: "open up the system settings for the website") */
   var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'});sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
 }
 /* the phone launcher pages sideways like an iPhone home screen: as many rows as fit, 4 per row, dots underneath */
 function layoutPages(){
   if(!lGrid||!ltiles.length)return;var rows=Math.max(3,Math.floor((lGrid.clientHeight-16)/112)),per=rows*4,pages=[];
-  lGrid.innerHTML='';for(var k=0;k<ltiles.length;k+=per){var pg=document.createElement('div');pg.className='lpage';ltiles.slice(k,k+per).forEach(function(t){pg.appendChild(t)});lGrid.appendChild(pg);pages.push(pg)}
+  lGrid.innerHTML='';var pg=null,used=per;
+  ltiles.forEach(function(t){var cost=t.__slots||1;if(used+cost>per){pg=document.createElement('div');pg.className='lpage';lGrid.appendChild(pg);pages.push(pg);used=0}pg.appendChild(t);used+=cost});
   if(lDots){lDots.innerHTML=pages.map(function(_,n){return '<span class="ldot'+(n===0?' on':'')+'" data-p="'+n+'"></span>'}).join('');lDots.hidden=pages.length<2;lDots.querySelectorAll('.ldot').forEach(function(d){d.addEventListener('click',function(){lGrid.scrollTo({left:lGrid.clientWidth*(+d.dataset.p),behavior:'smooth'})})})}
   lGrid.scrollLeft=0;
 }
 if(lGrid){layoutPages();var lw=lGrid.clientWidth,lh=lGrid.clientHeight;window.addEventListener('resize',function(){if(lGrid.clientWidth!==lw||Math.abs(lGrid.clientHeight-lh)>40){lw=lGrid.clientWidth;lh=lGrid.clientHeight;layoutPages()}});
-  lGrid.addEventListener('scroll',function(){if(!lDots)return;var n=Math.round(lGrid.scrollLeft/Math.max(1,lGrid.clientWidth));lDots.querySelectorAll('.ldot').forEach(function(d,k){d.classList.toggle('on',k===n)})},{passive:true})}
+  var lFoot=document.getElementById('lFoot'),footT=null;
+  lGrid.addEventListener('scroll',function(){if(!lDots)return;var n=Math.round(lGrid.scrollLeft/Math.max(1,lGrid.clientWidth));lDots.querySelectorAll('.ldot').forEach(function(d,k){d.classList.toggle('on',k===n)});if(lFoot&&!lDots.hidden){lFoot.classList.add('paging');clearTimeout(footT);footT=setTimeout(function(){lFoot.classList.remove('paging')},900)}},{passive:true});
+  var lPill=document.getElementById('lSearchPill');if(lPill)lPill.addEventListener('click',function(){openSpot()})}
 var sheet=document.getElementById('sheet'),sheetBody=document.getElementById('sheetBody'),sheetTitle=document.getElementById('sheetTitle');
 function openSheetPage(slug){sheet.hidden=false;sheetTitle.textContent=PAGES[slug].title;sheetBody.__wired=false;loadPage(sheetBody,PAGES[slug].url,{keepTitle:true});if(slug==='work')setTimeout(function(){var d=document.createElement('div');d.className='page docs-strip';d.innerHTML='<h3>Documents</h3>'+DOCS.map(function(x){return '<a class="btn btn-secondary sm" href="'+x[1]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a> '}).join('');sheetBody.appendChild(d)},600)}
 function openSheet(key){
@@ -492,7 +511,7 @@ function openSheet(key){
   if(key==='brave'){sheetBody.innerHTML='<div class="browser">'+braveStart()+'</div>';sheetBody.querySelectorAll('.dial').forEach(function(b){b.addEventListener('click',function(){var a=appByKey(b.dataset.key);window.open(a.live,'_blank','noopener')})});return}
 }
 function closeSheet(){sheet.hidden=true;if(sheetBody.__stop){sheetBody.__stop();sheetBody.__stop=null}sheetBody.innerHTML=''}
-var sc=document.getElementById('sheetClose');if(sc)sc.addEventListener('click',closeSheet);
+var sc=document.getElementById('sheetClose');if(sc)sc.addEventListener('click',closeSheet);var shb=document.getElementById('sheetHome');if(shb)shb.addEventListener('click',closeSheet);
 
 /* ---------- launchpad ---------- */
 var lp=document.getElementById('launchpad'),lpGrid=document.getElementById('lpGrid'),lpInput=document.getElementById('lpInput');
