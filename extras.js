@@ -26,8 +26,9 @@ function applySettings(){
 var S=applySettings();
 var WALL_API='https://tommyroldan-wall.troldan92.workers.dev';
 /* the wallpaper is shared: whoever changed it last set it for the next visitor. Theme and motion stay per device. */
-try{fetch(WALL_API+'/api/settings').then(function(r){return r.json()}).then(function(d){if(d&&d.wall&&WALLS.some(function(w){return w[0]===d.wall})&&d.wall!==store.get('wall','dusk')){store.set('wall',d.wall);applySettings()}}).catch(function(){})}catch(e){}
-function shareWall(id){try{fetch(WALL_API+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wall:id})}).catch(function(){})}catch(e){}}
+try{fetch(WALL_API+'/api/settings').then(function(r){return r.json()}).then(function(d){if(!d)return;if(d.wall&&WALLS.some(function(w){return w[0]===d.wall})&&d.wall!==store.get('wall','dusk')){store.set('wall',d.wall);applySettings()}if(d.clock&&d.clock!==store.get('clock','classic')){store.set('clock',d.clock);if(window.TR&&TR.setClockFace)TR.setClockFace(d.clock,true)}}).catch(function(){})}catch(e){}
+function shareSetting(o){try{fetch(WALL_API+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)}).catch(function(){})}catch(e){}}
+function shareWall(id){shareSetting({wall:id})}
 function ccHTML(){
   var s=applySettings();
   return '<div class="cc"><div class="cc-row"><button class="cc-tile'+(s.theme==='dark'?' on':'')+'" data-cc="theme"><span class="cc-ico">'+(s.theme==='dark'?'☾':'☀')+'</span><span><b>Appearance</b><small>'+(s.theme==='dark'?'Dark':'Light')+'</small></span></button><button class="cc-tile'+(s.motion?' on':'')+'" data-cc="motion"><span class="cc-ico">✦</span><span><b>Motion</b><small>'+(s.motion?'On':'Reduced')+'</small></span></button></div>'+
@@ -169,5 +170,5 @@ function openSettings(){
   if(T.isPhone&&T.isPhone()){var sh=document.getElementById('sheet'),sb=document.getElementById('sheetBody'),st=document.getElementById('sheetTitle');if(!sh)return;sh.hidden=false;st.textContent='Settings';sb.__wired=false;sb.innerHTML='<div class="page"><p class="t3">Appearance and wallpaper. The wallpaper you pick is what the next visitor sees.</p><div class="cc-page">'+ccHTML()+'</div></div>';bindCC(sb.querySelector('.cc-page'));return}
   openPanel('cc',ccBtn);
 }
-T.extras={openSettings:openSettings,openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openStickies:openStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
+T.extras={shareSetting:shareSetting,store:store,openSettings:openSettings,openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openStickies:openStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
 })();

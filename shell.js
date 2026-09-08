@@ -450,13 +450,33 @@ var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock'
 /* iOS home-screen widgets: a Clock and a Calendar, each 2x2 tiles wide (they cost 4 grid slots in layoutPages) */
 function widgetTile(kind){
   var b=document.createElement('button');b.className='lwidget lw-'+kind;b.__slots=4;b.type='button';
-  if(kind==='clock'){b.setAttribute('aria-label','Clock');b.innerHTML='<div class="lw-card"><svg class="lw-face" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#111"/>'+[0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){var a=i*Math.PI/6,x1=50+Math.sin(a)*(i%3?42:40),y1=50-Math.cos(a)*(i%3?42:40),x2=50+Math.sin(a)*46,y2=50-Math.cos(a)*46;return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="#fff" stroke-width="'+(i%3?1.5:3)+'" stroke-linecap="round"/>'}).join('')+'<line class="lw-h" x1="50" y1="54" x2="50" y2="26" stroke="#fff" stroke-width="5" stroke-linecap="round"/><line class="lw-m" x1="50" y1="54" x2="50" y2="14" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/><line class="lw-s" x1="50" y1="58" x2="50" y2="12" stroke="#ff9f0a" stroke-width="1.5" stroke-linecap="round"/><circle cx="50" cy="50" r="3" fill="#ff9f0a"/></svg><span class="lw-city">Miami</span></div><span class="label">Clock</span>';b.addEventListener('click',function(){openSheetPage('about')})}
+  if(kind==='clock'){b.setAttribute('aria-label','Clock — tap to change the watch face');b.classList.add('lw-clock');b.innerHTML=clockFaceHTML(clockFace());b.title='Tap to change the watch face';b.addEventListener('click',function(){var i=(CLOCK_FACES.indexOf(clockFace())+1)%CLOCK_FACES.length;setClockFace(CLOCK_FACES[i],false)})}
   else{b.setAttribute('aria-label','Calendar');b.innerHTML='<div class="lw-card lw-cal"><span class="lw-dow"></span><span class="lw-day"></span><span class="lw-note">Say hi</span><span class="lw-sub">Open for freelance and full-time work</span></div><span class="label">Calendar</span>';b.addEventListener('click',function(){openSheetPage('contact')})}
   return b;
 }
+/* watch faces: tapping the Clock cycles them; the pick is kept here and shared, so the next visitor gets the last one (Tommy: "make it so the user can change the widget watch and it saves for the next user") */
+var CLOCK_FACES=['classic','ivory','neon','digital'],CLOCK_NAMES={classic:'Classic',ivory:'Ivory',neon:'Neon',digital:'Digital'};
+function clockFace(){try{var v=JSON.parse(localStorage.getItem('tr.clock'));if(CLOCK_FACES.indexOf(v)>=0)return v}catch(e){}return 'classic'}
+function analogSVG(o){var ticks=[0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){var a=i*Math.PI/6,x1=50+Math.sin(a)*(i%3?42:40),y1=50-Math.cos(a)*(i%3?42:40),x2=50+Math.sin(a)*46,y2=50-Math.cos(a)*46;return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+o.tick+'" stroke-width="'+(i%3?1.5:3)+'" stroke-linecap="round"/>'}).join('');
+  return '<svg class="lw-face" viewBox="0 0 100 100" aria-hidden="true">'+(o.glow?'<defs><filter id="lwglow"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>':'')+'<circle cx="50" cy="50" r="48" fill="'+o.face+'"'+(o.ring?' stroke="'+o.ring+'" stroke-width="1.5"':'')+'/>'+ticks+'<g'+(o.glow?' filter="url(#lwglow)"':'')+'><line class="lw-h" x1="50" y1="54" x2="50" y2="26" stroke="'+o.hand+'" stroke-width="5" stroke-linecap="round"/><line class="lw-m" x1="50" y1="54" x2="50" y2="14" stroke="'+o.hand+'" stroke-width="3.5" stroke-linecap="round"/><line class="lw-s" x1="50" y1="58" x2="50" y2="12" stroke="'+o.sec+'" stroke-width="1.5" stroke-linecap="round"/></g><circle cx="50" cy="50" r="3" fill="'+o.sec+'"/></svg>'}
+function clockFaceHTML(face){
+  var inner;
+  if(face==='ivory')inner='<div class="lw-card lw-light">'+analogSVG({face:'#fbfaf6',tick:'#1a1a1a',hand:'#1a1a1a',sec:'#ff3b30',ring:'rgba(0,0,0,.08)'})+'<span class="lw-city lw-city-dark">Miami</span></div>';
+  else if(face==='neon')inner='<div class="lw-card lw-neon">'+analogSVG({face:'#07090c',tick:'rgba(0,224,198,.55)',hand:'#00e0c6',sec:'#ff2d95',ring:'rgba(0,224,198,.35)',glow:true})+'<span class="lw-city lw-city-neon">Miami</span></div>';
+  else if(face==='digital')inner='<div class="lw-card lw-digital"><span class="lw-dtime">--:--</span><span class="lw-dsec">--</span><span class="lw-ddate"></span><span class="lw-city">Miami</span></div>';
+  else inner='<div class="lw-card">'+analogSVG({face:'#111',tick:'#fff',hand:'#fff',sec:'#ff9f0a'})+'<span class="lw-city">Miami</span></div>';
+  return inner+'<span class="label">Clock · '+CLOCK_NAMES[face]+'</span>';
+}
+function setClockFace(face,quiet){
+  if(CLOCK_FACES.indexOf(face)<0)return;
+  try{localStorage.setItem('tr.clock',JSON.stringify(face))}catch(e){}
+  var w=document.querySelector('.lw-clock');if(w){w.innerHTML=clockFaceHTML(face);tickWidgets()}
+  if(!quiet&&window.TR&&TR.extras&&TR.extras.shareSetting)TR.extras.shareSetting({clock:face});
+}
 function tickWidgets(){
   var d=new Date(),clk=document.querySelector('.lw-clock');
-  if(clk){var h=d.getHours()%12,m=d.getMinutes(),s=d.getSeconds();var set=function(sel,deg){var el=clk.querySelector(sel);if(el)el.setAttribute('transform','rotate('+deg.toFixed(1)+' 50 50)')};set('.lw-h',(h+m/60)*30);set('.lw-m',(m+s/60)*6);set('.lw-s',s*6)}
+  if(clk){var h=d.getHours()%12,m=d.getMinutes(),s=d.getSeconds();var set=function(sel,deg){var el=clk.querySelector(sel);if(el)el.setAttribute('transform','rotate('+deg.toFixed(1)+' 50 50)')};set('.lw-h',(h+m/60)*30);set('.lw-m',(m+s/60)*6);set('.lw-s',s*6);
+    var dt=clk.querySelector('.lw-dtime');if(dt){dt.textContent=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M$/i,'');clk.querySelector('.lw-dsec').textContent=(s<10?'0':'')+s;clk.querySelector('.lw-ddate').textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}}
   var cal=document.querySelector('.lw-calendar');
   if(cal){cal.querySelector('.lw-dow').textContent=d.toLocaleDateString('en-US',{weekday:'long'});cal.querySelector('.lw-day').textContent=d.getDate()}
 }
@@ -568,7 +588,7 @@ document.addEventListener('keydown',function(e){
 });
 
 /* boot: About opens on a fresh login (Tommy: "have it land on About instead of Work") */
-setTimeout(function(){if(isPhone())openSheetPage('about');else openAbout()},reduced?0:260);
+if(!isPhone())setTimeout(openAbout,reduced?0:260);
 window.trOpen=openApp;
-window.TR={esc:esc,sqHTML:sqHTML,ART:ART,APPS:APPS,DOCK:DOCK,PAGES:PAGES,ME:ME,openMap:openMap,createWindow:createWindow,closeWindow:closeWindow,minimize:minimize,restore:restore,topWin:topWin,openApp:openApp,openPage:openPage,openLP:openLP,openSpot:openSpot,closeMenus:closeMenus,isPhone:isPhone,register:function(key,title,open,sheet){REG[key]={title:title,open:open,sheet:sheet}}};
+window.TR={setClockFace:setClockFace,esc:esc,sqHTML:sqHTML,ART:ART,APPS:APPS,DOCK:DOCK,PAGES:PAGES,ME:ME,openMap:openMap,createWindow:createWindow,closeWindow:closeWindow,minimize:minimize,restore:restore,topWin:topWin,openApp:openApp,openPage:openPage,openLP:openLP,openSpot:openSpot,closeMenus:closeMenus,isPhone:isPhone,register:function(key,title,open,sheet){REG[key]={title:title,open:open,sheet:sheet}}};
 })();

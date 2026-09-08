@@ -508,3 +508,8 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 
 /* Settings as a phone sheet: the Control Centre controls laid out for a page */
 .cc-page .cc{position:static;width:auto;max-width:none;box-shadow:none;background:transparent;backdrop-filter:none;border:none;padding:0;color:var(--text)}.cc-page .cc-tile{color:var(--text)}.cc-page .cc-walls{grid-template-columns:repeat(3,1fr)}.cc-page .cc-wall{height:72px}.cc-page .cc-links{display:none}
+
+/* watch faces for the phone Clock widget */
+.lw-light{background:rgba(251,250,246,.92)}.lw-city-dark{color:rgba(0,0,0,.55)}
+.lw-neon{background:rgba(7,9,12,.85);box-shadow:inset 0 0 0 1px rgba(0,224,198,.35),0 0 24px rgba(0,224,198,.18)}.lw-city-neon{color:#00e0c6;text-shadow:0 0 8px rgba(0,224,198,.8)}
+.lw-digital{gap:2px}.lw-dtime{font-size:2.4rem;font-weight:300;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}.lw-dsec{font-size:.8rem;color:#ff9f0a;font-variant-numeric:tabular-nums;margin-top:-2px}.lw-ddate{font-size:.72rem;color:rgba(255,255,255,.7);margin-top:8px}
