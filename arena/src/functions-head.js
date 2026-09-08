@@ -553,8 +553,8 @@ String.prototype.filter = function() //! Filter illegal player characters. Heavi
 global.tStringify = function(str) //! 
 {
 	str = str.replace(/\$\w*/g,function(i){console.log(i.replace("\$",""));});
-	str = str.replace(new RegExp("@progtitle@",'g'),"Lightwall"); // tommyroldan.com name; the engine is Armawebtron (see About + COPYING)
-	str = str.replace(new RegExp("@progtitleshort@",'g'),"Lightwall");
+	str = str.replace(new RegExp("@progtitle@",'g'),"Armagetron"); // tommyroldan.com: named for Armagetron Advanced, the game this is a port of; engine is Armawebtron (see About + COPYING)
+	str = str.replace(new RegExp("@progtitleshort@",'g'),"Armagetron");
 	str = str.replace(new RegExp("@progname@",'g'),"webtron");
 	str = str.replace(new RegExp("@version@",'g'),"1.0.0-beta8");
 	if(str.indexOf("@netversion@") >= 0)

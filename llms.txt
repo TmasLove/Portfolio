@@ -14,7 +14,7 @@ the Latin market a lot; he is Colombian and fluent in Spanish.
 Typical stack: React, Next.js, Vite, Tailwind CSS, TypeScript, Node.js, React
 Native, Expo, Shopify/Liquid, and Python.
 
-The site is called TommyOS: the portfolio presented as a desktop operating system in the browser. On a computer it is a Mac-style desktop with windows, a dock, Launchpad and Spotlight; on a phone it is an iPhone-style home screen with pages and widgets. Every project is an app icon that opens a case file with the live site inside, and every page below is also a plain HTML route. The Games folder holds Lightwall (a light-cycles arena), Brick Breaker, Meme Maker and Paint, which includes Trace, a tracing game scored against free photos and line art. Visitors can change the wallpaper, and the last choice is what the next visitor sees.
+The site is called TommyOS: the portfolio presented as a desktop operating system in the browser. On a computer it is a Mac-style desktop with windows, a dock, Launchpad and Spotlight; on a phone it is an iPhone-style home screen with pages and widgets. Every project is an app icon that opens a case file with the live site inside, and every page below is also a plain HTML route. The Games folder holds Armagetron (Armagetron Advanced, the light-cycles game, in the browser), Brick Breaker, Meme Maker and Paint, which includes Trace, a tracing game scored against free photos and line art. Visitors can change the wallpaper, and the last choice is what the next visitor sees.
 
 ## Pages
 
@@ -26,7 +26,7 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 - [Contact](https://tommyroldan.com/contact/): Project inquiry form — the way to start a project.
 - [Paint](https://tommyroldan.com/paint/): Draw and post to the public wall.
 - [Brick Breaker](https://tommyroldan.com/brick-breaker/): The 2015 canvas game, playable.
-- [Lightwall](https://tommyroldan.com/arena/): Light-cycles arena in the browser — Armagetron-style rules, bots named after the estate agents, billboards for the apps on this site.
+- [Armagetron](https://tommyroldan.com/arena/): Armagetron Advanced in the browser, the light-cycles game Tommy grew up playing — built on the open-source Armawebtron port, real Armagetron rules (rubber, grinding), bots named after the estate agents, billboards for the apps on this site.
 - [Trace](https://tommyroldan.com/paint/): Inside Paint — trace a photo or drawing under tracing paper; closer lines score higher, fewer tools on harder levels.
 - [Meme Maker](https://tommyroldan.com/meme/): Follow MeMe revived — make a meme, post it, no sign-up.
 
