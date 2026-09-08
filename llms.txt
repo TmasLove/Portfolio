@@ -7,8 +7,9 @@
 
 Tommy Roldan works across four areas: fast marketing websites, e-commerce and
 Shopify storefronts, cross-platform mobile apps built with React Native and Expo,
-and custom AI agents and workflow automation. He also serves as CTO and Head of
-LATAM Sales at TerryCo Group.
+and custom AI agents and workflow automation. He also serves as CTO of TerryCo Group, NST Pharma, World Resort Rescue and
+Clear Care Dental Group, and as Head of LATAM Sales at NST Pharma, which deals in
+the Latin market a lot; he is Colombian and fluent in Spanish.
 
 Typical stack: React, Next.js, Vite, Tailwind CSS, TypeScript, Node.js, React
 Native, Expo, Shopify/Liquid, and Python.
