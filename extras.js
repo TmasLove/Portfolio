@@ -24,6 +24,10 @@ function applySettings(){
   return s;
 }
 var S=applySettings();
+var WALL_API='https://tommyroldan-wall.troldan92.workers.dev';
+/* the wallpaper is shared: whoever changed it last set it for the next visitor. Theme and motion stay per device. */
+try{fetch(WALL_API+'/api/settings').then(function(r){return r.json()}).then(function(d){if(d&&d.wall&&WALLS.some(function(w){return w[0]===d.wall})&&d.wall!==store.get('wall','dusk')){store.set('wall',d.wall);applySettings()}}).catch(function(){})}catch(e){}
+function shareWall(id){try{fetch(WALL_API+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wall:id})}).catch(function(){})}catch(e){}}
 function ccHTML(){
   var s=applySettings();
   return '<div class="cc"><div class="cc-row"><button class="cc-tile'+(s.theme==='dark'?' on':'')+'" data-cc="theme"><span class="cc-ico">'+(s.theme==='dark'?'☾':'☀')+'</span><span><b>Appearance</b><small>'+(s.theme==='dark'?'Dark':'Light')+'</small></span></button><button class="cc-tile'+(s.motion?' on':'')+'" data-cc="motion"><span class="cc-ico">✦</span><span><b>Motion</b><small>'+(s.motion?'On':'Reduced')+'</small></span></button></div>'+
@@ -33,7 +37,7 @@ function ccHTML(){
 function toast(title,body){var host=document.getElementById('toasts');if(!host)return;var t=document.createElement('div');t.className='toast';t.innerHTML='<b>'+esc(title)+'</b><span>'+esc(body)+'</span>';host.appendChild(t);setTimeout(function(){t.classList.add('out');setTimeout(function(){t.remove()},300)},4200)}
 function bindCC(root){
   root.querySelectorAll('[data-cc]').forEach(function(b){b.addEventListener('click',function(){var k=b.dataset.cc;if(k==='theme')store.set('theme',store.get('theme','light')==='dark'?'light':'dark');if(k==='motion')store.set('motion',!store.get('motion',true));root.innerHTML=ccHTML();bindCC(root)})});
-  root.querySelectorAll('[data-wall]').forEach(function(b){b.addEventListener('click',function(){store.set('wall',b.dataset.wall);root.innerHTML=ccHTML();bindCC(root)})});
+  root.querySelectorAll('[data-wall]').forEach(function(b){b.addEventListener('click',function(){store.set('wall',b.dataset.wall);shareWall(b.dataset.wall);root.innerHTML=ccHTML();bindCC(root)})});
   root.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){closePanels();var k=b.dataset.open;if(k==='launchpad')T.openLP();if(k==='spotlight')T.openSpot();if(k==='mission')openMission();if(k==='tour')startTour(true)})});
 }
 /* ---------- menu bar panels ---------- */
@@ -161,5 +165,9 @@ function endTour(){tour.hidden=true;document.querySelectorAll('.tour-spot').forE
 setTimeout(function(){startTour(false)},1400);
 
 /* expose for the shell's menus */
-T.extras={openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openStickies:openStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
+function openSettings(){
+  if(T.isPhone&&T.isPhone()){var sh=document.getElementById('sheet'),sb=document.getElementById('sheetBody'),st=document.getElementById('sheetTitle');if(!sh)return;sh.hidden=false;st.textContent='Settings';sb.__wired=false;sb.innerHTML='<div class="page"><p class="t3">Appearance and wallpaper. The wallpaper you pick is what the next visitor sees.</p><div class="cc-page">'+ccHTML()+'</div></div>';bindCC(sb.querySelector('.cc-page'));return}
+  openPanel('cc',ccBtn);
+}
+T.extras={openSettings:openSettings,openMission:openMission,startTour:function(){startTour(true)},addSticky:addSticky,resetStickies:resetStickies,openStickies:openStickies,openCC:function(){openPanel('cc',ccBtn)},toggleTheme:function(){store.set('theme',store.get('theme','light')==='dark'?'light':'dark');applySettings()},showDesktop:showDesktop,toast:toast};
 })();
