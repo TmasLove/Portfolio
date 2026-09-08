@@ -105,7 +105,7 @@ document.addEventListener('keydown',function(e){if(e.key==='F3'){e.preventDefaul
 
 /* ---------- stickies ---------- */
 var stickHost=null; /* the Stickies app's board; created when the window opens */
-var STICKY_SEED=[{c:'yellow',t:'Tommy Roldan\nWeb Developer & Creative\nMiami, FL\n\ntroldan@terryco.com',x:24,y:20},{c:'blue',t:'Building products that move the work forward.\n\nBuilding since 2015.\nSteady output, sharp lines.\nPowered by café con leche.',x:290,y:60}];
+var STICKY_SEED=[{c:'yellow',t:'Tommy Roldan\nWeb Developer & Creative\nMiami, FL\n\hi@tommyroldan.com',x:24,y:20},{c:'blue',t:'Building products that move the work forward.\n\nBuilding since 2015.\nSteady output, sharp lines.\nPowered by café con leche.',x:290,y:60}];
 function renderStickies(){
   if(!stickHost||!document.body.contains(stickHost))return;stickHost.innerHTML='';
   var list=store.get('stickies',null);if(list===null){list=STICKY_SEED;store.set('stickies',list)}
