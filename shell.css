@@ -342,7 +342,10 @@ html.dark .win-title .tname{color:var(--text)}
 html.dark .sheet-top{background:rgba(27,26,31,.92);border-bottom-color:var(--border)}
 html.dark .sheet-top .sheet-title{color:var(--text)}
 html.dark .sheet-home{color:var(--accent-text)}
-html.dark .menu,html.dark .panel-drop,html.dark .spotlight-box{background:rgba(38,36,44,.82);color:var(--text)}
+/* The tour card hardcodes a white background while everything on it - heading, body, the
+   Skip button - inherits --text, which flips to near-white in dark. White on white: the tour
+   ran invisibly. It gets the same dark surface as the other popovers. */
+html.dark .menu,html.dark .panel-drop,html.dark .spotlight-box,html.dark .tour-card{background:rgba(38,36,44,.82);color:var(--text)}
 html.dark .fside{background:rgba(255,255,255,.04)}
 html.dark .browser-toolbar,html.dark .bookmarks{background:rgba(255,255,255,.06)}
 html.dark .browser-toolbar .url{background:rgba(255,255,255,.08);color:var(--text-2)}
