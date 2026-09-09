@@ -33,6 +33,28 @@ button{font-family:inherit}
 /* The roles list sizes its own squircle. NOT .sq.xs - shell.css already owns that name for
    the dial widgets at 18px, and it loads after this file, so an .sq.xs here silently lost
    everywhere the desktop is involved and only looked right on the standalone page. */
+/* Colour that carries meaning rather than decoration: indigo is the technical side, mint the
+   commercial one. It is the same pair the Position chips use, and it restates the page's own
+   lead - bridging business, sales and technology - without another sentence. */
+/* The card stack was the flattest stretch of the page: white panels, black headings, grey
+   taglines, repeated six times. A hairline gives each card a lit edge, and the tagline takes
+   the accent instead of grey - it is a strapline, not filler. Miami neon: the site's own indigo
+   running into magenta. Two hues that meet through violet read as a gradient; the earlier sweep
+   through indigo, teal and peach read as a rainbow. */
+.about-grid .panel{position:relative;overflow:hidden}
+.about-grid .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#4A54DC,#F5478A)}
+.about-grid .sub{color:var(--accent-text)}
+.chip.tech{background:var(--accent-soft);color:var(--accent-text);box-shadow:inset 0 0 0 1px rgba(74,84,220,.22)}
+.chip.biz{background:rgba(0,168,143,.13);color:#00614F;box-shadow:inset 0 0 0 1px rgba(0,168,143,.30)}
+.chip.learn{background:rgba(242,176,122,.20);color:#8A5320;box-shadow:inset 0 0 0 1px rgba(242,176,122,.50)}
+/* A wash in the same Miami neon, so the hero is not one more white card. Indigo into magenta,
+   kept faint - two hues, not a sweep through the spectrum. Painted as a layer rather
+   than a background-image: shell.css resets .panel's background wholesale for the dark desktop,
+   which would drop a background-image on the floor. */
+.about-hero{position:relative;isolation:isolate;overflow:hidden}
+.about-hero::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(142deg,rgba(74,84,220,.16),rgba(245,71,138,.11) 72%)}
 .role .sq{width:34px;height:34px;box-shadow:0 3px 8px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(0,0,0,.06)}
 .role .sq.letter::before{font-size:15px}
 /* Position: one row per company, because four CTO seats read as a list, not a sentence.
