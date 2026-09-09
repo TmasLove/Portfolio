@@ -574,6 +574,12 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .cn-bar span.b-watch{background:#F2FF00}
 .cn-bar span.b-critical{background:#FF3F00}
 .cn-used{margin-top:var(--cn-bar-used);font-size:var(--cn-f-body)}
+.cn-sec{margin:var(--cn-block) 0 calc(var(--cn-block) * .45);font-size:calc(var(--cn-f-body) * .92);color:#808080}
+.cn-drow{display:flex;align-items:center;gap:7px;padding:1.5px 0;font-size:calc(var(--cn-f-body) * .96)}
+.cn-dname{width:44%;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cn-dbar{flex:1;height:calc(var(--cn-bar-h) * .8);border-radius:99px;background:#2D2D2D;overflow:hidden}
+.cn-dbar span{display:block;height:100%;border-radius:99px}
+.cn-dnum{width:14px;flex:none;text-align:right;color:#808080;font-variant-numeric:tabular-nums}
 .cn-wait{display:flex;align-items:center;gap:7px;margin-top:var(--cn-block);font-size:var(--cn-f-body)}
 .cn-dot{width:7px;height:7px;border-radius:50%;background:#FF3F00;flex:none}
 html:not(.still) .cn-dot{animation:cnBreathe 2.2s ease-in-out infinite}

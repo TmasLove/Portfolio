@@ -41,7 +41,15 @@
 
   /* ---------- the snapshot (kept in step with lr.js) ---------- */
   var STAMP = 'Sat Sep 5, 2026, 7:30 PM';
-  var AGENTS = 37, WAITING = 3;
+  var AGENTS = 37, WAITING = 3, DEPT_COUNT = 8;
+  /* The floor as lr.js has it — same names, same headcount, same colours, so the card and the
+     real command centre cannot drift apart. Unassigned is Tommy himself. */
+  var DEPTS = [
+    ['Marketing', 11, '#3987e5'], ['Clear Care Dental', 7, '#c98500'], ['Studio', 5, '#199e70'],
+    ['Sales', 5, '#d95926'], ['Support', 4, '#d55181'], ['Research', 2, '#9085e9'],
+    ['Floor & Chat', 1, '#8b93a3'], ['Runtime', 1, '#8b93a3'], ['Unassigned', 1, '#6c7178']
+  ];
+  var DEPT_MAX = DEPTS.reduce(function (m, d) { return Math.max(m, d[1]) }, 1);
 
   var G = {
     grid: '<rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/>',
@@ -143,12 +151,16 @@
   function paint(g) {
     var head = '<div class="cn-head">' + glyphSVG(g.glyph) + '<span class="cn-title">' + g.name + '</span></div>';
     if (g.estate) {
-      var share = Math.round(11 / AGENTS * 100);
       sheet.innerHTML = head +
         block('Floor load', 'right now', g.load, band(g.load), g.load + '% busy') +
-        block('Biggest desk', 'Marketing', share, 'ample', '11 of ' + AGENTS + ' agents') +
+        '<div class="cn-sec">' + AGENTS + ' agents · ' + DEPT_COUNT + ' departments</div>' +
+        DEPTS.map(function (d) {
+          return '<div class="cn-drow"><span class="cn-dname">' + d[0] + '</span>' +
+            '<span class="cn-dbar"><span style="width:' + Math.round(d[1] / DEPT_MAX * 100) + '%;background:' + d[2] + '"></span></span>' +
+            '<span class="cn-dnum">' + d[1] + '</span></div>';
+        }).join('') +
         '<div class="cn-wait"><span class="cn-dot"></span>' + WAITING + ' waiting on you</div>' +
-        '<div class="cn-stamp">' + AGENTS + ' agents across 8 departments, from the snapshot of ' + STAMP +
+        '<div class="cn-stamp">Headcount from the snapshot of ' + STAMP +
         '. Load is animated, not measured. <a href="https://littleriver.site" target="_blank" rel="noopener">littleriver.site&nbsp;→</a></div>';
       return;
     }
