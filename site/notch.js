@@ -27,10 +27,15 @@
   var host = document.querySelector('.desktop') || document.body; if (!host) return;
 
   var EDGE = 'left';    /* which screen edge it clings to — the icons live on the right */
-  var RING_PT = 34;     /* the strip's anchor. Their spec says 44; smaller suits a browser. */
+  var RING_PT = 28;     /* the strip's anchor. Their spec says 44; smaller suits a browser. */
+  var AIR = 0.6;        /* Their padding and cell spacing, tightened. Kept as its own knob so the
+                           ring and its label stay in the proportions they drew — only the gaps
+                           between cells give, which is where a strip pinned to a browser edge
+                           wastes height. Set to 1 for their spacing exactly. */
 
   var S = RING_PT / 117, SC = 44 / 117;
   function px(n) { return +(n * S).toFixed(2) }     /* strip, at our anchor */
+  function air(n) { return +(n * S * AIR).toFixed(2) }
   function cpx(n) { return +(n * SC).toFixed(2) }   /* card, at theirs */
   function fs(v, cap) { return +(v / 0.714).toFixed(2) }  /* their cap-height -> point size */
 
@@ -94,7 +99,7 @@
   root.style.cssText = [
     /* strip, at our anchor */
     '--cn-depth:' + px(186) + 'px', '--cn-curl:' + px(103) + 'px', '--cn-corner:' + px(78.8) + 'px',
-    '--cn-pad-t:' + px(69.5) + 'px', '--cn-pad-b:' + px(50.1) + 'px', '--cn-gap:' + px(83.5) + 'px',
+    '--cn-pad-t:' + air(69.5) + 'px', '--cn-pad-b:' + air(50.1) + 'px', '--cn-gap:' + air(83.5) + 'px',
     '--cn-ring:' + RING + 'px', '--cn-label-gap:' + px(26.9) + 'px', '--cn-f-pct:' + fs(px(27)) + 'px',
     /* card, at theirs */
     '--cn-card-w:' + cpx(600) + 'px', '--cn-card-r:' + cpx(49.5) + 'px', '--cn-card-p:' + cpx(32) + 'px',
