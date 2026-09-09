@@ -1,12 +1,12 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hire a Miami Web Developer | Tommy Roldan</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=20260909b"><link rel="canonical" href="https://tommyroldan.com/contact/">
-<meta name="description" content="Got a project, a beer, or an idea? Send a note — websites, web apps, e-commerce and AI agents, from Miami.">
-<meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS — Tommy Roldan">
-<meta property="og:title" content="Hire a Miami Web Developer | Tommy Roldan"><meta property="og:description" content="Got a project, a beer, or an idea? Send a note — websites, web apps, e-commerce and AI agents, from Miami.">
-<meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="TommyOS — Tommy Roldan’s desktop portfolio: a Mac-style desktop with the About window open, Tommy’s photo, and the dock"><meta property="og:url" content="https://tommyroldan.com/contact/">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Hire a Miami Web Developer | Tommy Roldan"><meta name="twitter:description" content="Got a project, a beer, or an idea? Send a note — websites, web apps, e-commerce and AI agents, from Miami."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos.jpg">
+<link rel="stylesheet" href="/styles.css?v=20260909c"><link rel="canonical" href="https://tommyroldan.com/contact/">
+<meta name="description" content="Got a project, a beer, or an idea? Send a note: websites, web apps, e-commerce and AI agents, from Miami.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
+<meta property="og:title" content="Hire a Miami Web Developer | Tommy Roldan"><meta property="og:description" content="Got a project, a beer, or an idea? Send a note: websites, web apps, e-commerce and AI agents, from Miami.">
+<meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="TommyOS, Tommy Roldan’s desktop portfolio: a Mac-style desktop with the About window open, Tommy’s photo, and the dock"><meta property="og:url" content="https://tommyroldan.com/contact/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Hire a Miami Web Developer | Tommy Roldan"><meta name="twitter:description" content="Got a project, a beer, or an idea? Send a note: websites, web apps, e-commerce and AI agents, from Miami."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos.jpg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ContactPage", "url": "https://tommyroldan.com/contact/", "mainEntity": {"@type": "Person", "name": "Tommy Roldan", "email": "mailto:hi@tommyroldan.com"}}</script>
 </head><body>
 <header class="page-header"><a class="back-link" href="/">← Tommy Roldan</a></header>
@@ -42,9 +42,9 @@ document.querySelector('.contact-form').addEventListener('submit',function(e){
   e.preventDefault();var f=this,b=f.querySelector('button[type=submit]'),d={};
   ['name','email','company','projectType','budget','message'].forEach(function(k){d[k]=f.querySelector('[name="'+k+'"]').value});
   b.disabled=true;b.textContent='Sending…';
-  fetch('https://formsubmit.co/ajax/hi@tommyroldan.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'—','Project type':d.projectType||'—',Budget:d.budget||'—',Message:d.message,_subject:'Portfolio inquiry — '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
+  fetch('https://formsubmit.co/ajax/hi@tommyroldan.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
   .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return j.success==='true'||j.success===true||r.ok})})
-  .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent — thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
+  .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent. Thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
   .catch(function(){b.disabled=false;b.textContent='Send message →';var p=document.createElement('p');p.className='form-err';p.innerHTML='Something went wrong. <a href="mailto:hi@tommyroldan.com">Email me directly</a>.';f.appendChild(p)});
 });
 </script>

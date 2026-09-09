@@ -1,4 +1,4 @@
-/* Meme Maker — Tommy's 2018 "Follow MeMe" generator (TmasLove/second-proj), without the signup.
+/* Meme Maker: Tommy's 2018 "Follow MeMe" generator (TmasLove/second-proj), without the signup.
    Same Impact top/bottom text and word-wrapping as the original memeScript.js; the feed is the public wall. */
 window.initMeme=function(root){
   root.innerHTML='<div class="meme-wrap"><div class="meme-left"><h2 class="meme-title">Create New Meme</h2><canvas class="meme-canvas" width="750" height="500" aria-label="Meme canvas"></canvas>'+
@@ -46,7 +46,7 @@ window.initMeme=function(root){
   post.addEventListener('click',function(){
     post.disabled=true;msg.textContent='Posting…';
     var data=canvas.toDataURL('image/jpeg',.88),who=root.querySelector('.meme-name').value;
-    TRWall.post('meme',data,who).then(function(r){msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';post.disabled=false;var mine={id:'just-now',src:data,ts:Date.now(),name:who||''};TRWall.list('meme').then(function(res){res.items.unshift(mine);feed.innerHTML=TRWall.galleryHTML(res,'meme')});setTimeout(renderFeed,65000)}).catch(function(err){msg.textContent=err.message||'Could not post.';post.disabled=false});
+    TRWall.post('meme',data,who).then(function(r){msg.textContent=r.online?'On the wall.':'Wall offline, saved on this device.';post.disabled=false;var mine={id:'just-now',src:data,ts:Date.now(),name:who||''};TRWall.list('meme').then(function(res){res.items.unshift(mine);feed.innerHTML=TRWall.galleryHTML(res,'meme')});setTimeout(renderFeed,65000)}).catch(function(err){msg.textContent=err.message||'Could not post.';post.disabled=false});
   });
   blank();renderFeed();
 };

@@ -1,4 +1,4 @@
-# TommyOS — Tommy Roldan, Miami Web Developer & Designer
+# TommyOS: Tommy Roldan, Miami Web Developer & Designer
 
 > Freelance web developer and designer based in Miami, Florida, building websites,
 > e-commerce storefronts, iOS/Android apps, and custom AI agents for startups and
@@ -19,21 +19,21 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 ## Pages
 
 - [Home](https://tommyroldan.com/): Overview of services, featured projects, and a FAQ answering the most common questions about cost, timelines, and scope.
-- [Work](https://tommyroldan.com/work/): Full portfolio — apps, web platforms, AI agents, tools, and archived early work.
+- [Work](https://tommyroldan.com/work/): Full portfolio: apps, web platforms, AI agents, tools, and archived early work.
 - [About](https://tommyroldan.com/about/): Background, experience, and the story from Medellín to Miami.
 - [Tools](https://tommyroldan.com/tools/): Free browser-based utilities built to solve real problems.
-- [FAQ](https://tommyroldan.com/faq/): Cost, timelines, Shopify, apps, AI agents, Spanish — answered.
-- [Contact](https://tommyroldan.com/contact/): Project inquiry form — the way to start a project.
+- [FAQ](https://tommyroldan.com/faq/): Cost, timelines, Shopify, apps, AI agents, Spanish, answered.
+- [Contact](https://tommyroldan.com/contact/): Project inquiry form, the way to start a project.
 - [Paint](https://tommyroldan.com/paint/): Draw and post to the public wall.
 - [Brick Breaker](https://tommyroldan.com/brick-breaker/): The 2015 canvas game, playable.
-- [Armagetron](https://tommyroldan.com/arena/): Armagetron Advanced in the browser, the light-cycles game Tommy grew up playing — built on the open-source Armawebtron port, real Armagetron rules (rubber, grinding), bots named after the estate agents, billboards for the apps on this site.
-- [Trace](https://tommyroldan.com/paint/): Inside Paint — trace a photo or drawing under tracing paper; closer lines score higher, fewer tools on harder levels.
-- [Meme Maker](https://tommyroldan.com/meme/): Follow MeMe revived — make a meme, post it, no sign-up.
+- [Armagetron](https://tommyroldan.com/arena/): Armagetron Advanced in the browser, the light-cycles game Tommy grew up playing, built on the open-source Armawebtron port, real Armagetron rules (rubber, grinding), bots named after the estate agents, billboards for the apps on this site.
+- [Trace](https://tommyroldan.com/paint/): Inside Paint: trace a photo or drawing under tracing paper; closer lines score higher, fewer tools on harder levels.
+- [Meme Maker](https://tommyroldan.com/meme/): Follow MeMe revived: make a meme, post it, no sign-up.
 
 ## Products
 
 - [Canary](https://tommyroldan.com/canary/): Free Windows diagnostic tool that finds failing drives and crash causes that vendor software reports as healthy. Reads the SMART counters other tools skip, explains findings in plain English, and says "could not verify" rather than pretending a check passed.
-- [PPT Speech](https://tommyroldan.com/ppt-speech/): Upload any .pptx and have it read aloud slide by slide using your browser's built-in voices. Runs entirely client-side — no server, no upload.
+- [PPT Speech](https://tommyroldan.com/ppt-speech/): Upload any .pptx and have it read aloud slide by slide using your browser's built-in voices. Runs entirely client-side: no server, no upload.
 
 ## Selected client work
 
@@ -43,7 +43,7 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 - [Clear Care Dental Enterprise](https://clearcaredentalenterprise.com/): Enterprise dashboard handling benefits administration, member management, and practice operations at scale.
 - [Dolce Vita Supplements](https://www.dolcevitasupplements.com/): Shopify e-commerce brand for sublingual supplement strips, with editorial storefront design and a frictionless checkout.
 - [Versatile Customs](https://versatile-customs.vercel.app): Storefront for a vehicle wrap studio, built around the 3D visualizer, covering PPF, colour-change wraps, ceramic tint, and lighting.
-- [World Resort Rescue](https://worldresortrescue.com): Full redesign of a consumer-facing resort services site — rebuilt structure, clearer navigation, modern responsive front end.
+- [World Resort Rescue](https://worldresortrescue.com): Full redesign of a consumer-facing resort services site: rebuilt structure, clearer navigation, modern responsive front end.
 - [Cuatro Group](https://cuatro-group.vercel.app/en): Multilingual corporate site, fully internationalized for a global audience.
 - [NST Redesign](https://nst-redesign.vercel.app): Ground-up redesign of the NST Pharma site in React, Vite, and Tailwind.
 

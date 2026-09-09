@@ -22,7 +22,7 @@
 
   <style>
     /* ══════════════════════════════════════════════════════
-       DESIGN TOKENS — Neo-Brutalism (matches portfolio)
+       DESIGN TOKENS: Neo-Brutalism (matches portfolio)
     ══════════════════════════════════════════════════════ */
     :root {
       --cream:   #FFFDF5;
@@ -949,7 +949,7 @@
         <h2>Upload a presentation to begin</h2>
         <p>
           Drop a <strong>.pptx</strong> file or import from <strong>Google Slides</strong>.<br>
-          Everything runs in your browser — nothing is uploaded to any server.
+          Everything runs in your browser. Nothing is uploaded to any server.
         </p>
         <div class="hint">
           Best in <strong>Chrome</strong> or <strong>Edge</strong> &nbsp;·&nbsp;
@@ -1278,19 +1278,19 @@
   /** AI models by provider */
   const AI_MODELS = {
     anthropic: [
-      { id: 'claude-opus-4-5',      label: 'Claude Opus 4.5 — Most capable' },
-      { id: 'claude-sonnet-4-5',    label: 'claude-sonnet-4-5 — Balanced ✅ Recommended' },
-      { id: 'claude-haiku-3-5',     label: 'Claude Haiku 3.5 — Fastest' },
+      { id: 'claude-opus-4-5',      label: 'Claude Opus 4.5 (Most capable)' },
+      { id: 'claude-sonnet-4-5',    label: 'claude-sonnet-4-5 (Balanced ✅ Recommended)' },
+      { id: 'claude-haiku-3-5',     label: 'Claude Haiku 3.5 (Fastest)' },
     ],
     openai: [
-      { id: 'gpt-4.1',        label: 'GPT-4.1 — Latest' },
-      { id: 'gpt-4o',         label: 'GPT-4o — Multimodal' },
-      { id: 'gpt-4o-mini',    label: 'GPT-4o Mini — Fast & cheap' },
+      { id: 'gpt-4.1',        label: 'GPT-4.1 (Latest)' },
+      { id: 'gpt-4o',         label: 'GPT-4o (Multimodal)' },
+      { id: 'gpt-4o-mini',    label: 'GPT-4o Mini (Fast & cheap)' },
     ],
     gemini: [
-      { id: 'gemini-2.0-flash',   label: 'Gemini 2.0 Flash — Fast ✅ Recommended' },
-      { id: 'gemini-1.5-pro',     label: 'Gemini 1.5 Pro — Most capable' },
-      { id: 'gemini-1.5-flash',   label: 'Gemini 1.5 Flash — Efficient' },
+      { id: 'gemini-2.0-flash',   label: 'Gemini 2.0 Flash (Fast ✅ Recommended)' },
+      { id: 'gemini-1.5-pro',     label: 'Gemini 1.5 Pro (Most capable)' },
+      { id: 'gemini-1.5-flash',   label: 'Gemini 1.5 Flash (Efficient)' },
     ],
   };
 
@@ -2056,7 +2056,7 @@
       appendMsg('assistant', 'Upload a presentation first, then I can help you analyse it.');
     }
     if (isOpen && chatMessages.children.length === 0 && slides.length) {
-      appendMsg('assistant', `Hi! I've loaded **${slides.length} slides**. Ask me anything — I can summarise, extract key points, rewrite content, or answer questions about your presentation.`);
+      appendMsg('assistant', `Hi! I've loaded **${slides.length} slides**. Ask me anything. I can summarise, extract key points, rewrite content, or answer questions about your presentation.`);
     }
   });
   $('chat-close-btn').addEventListener('click', () => {

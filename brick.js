@@ -1,4 +1,4 @@
-/* Brick Breaker — Tommy's 2015 canvas game (TmasLove/Brick-), developed further for the desktop.
+/* Brick Breaker: Tommy's 2015 canvas game (TmasLove/Brick-), developed further for the desktop.
    Same colours and messages as the original. New: five levels with tougher bricks, drops (multi-ball, wide paddle,
    slow), the chaos ball that comes back from the top when it is lost, a local best, and a public high-score board
    on the wall. Arrows, mouse or touch move the paddle; Space launches. */
@@ -37,9 +37,9 @@ window.initBrick=function(root){
       (score>0?'<p class="brick-post"><input class="brick-name" maxlength="16" placeholder="Your initials" aria-label="Your name"><button class="brick-btn" data-post><span class="how">Post score</span></button><span class="brick-msg"></span></p>':'');
     startBtn.querySelector('.how').textContent='Play again';
     var pb=menu.querySelector('[data-post]');
-    if(pb)pb.addEventListener('click',function(){pb.disabled=true;var nm=menu.querySelector('.brick-name').value;TRWall.postScore(nm,score,level+1).then(function(r){menu.querySelector('.brick-msg').textContent=r.online?' On the board.':' Board offline — kept on this device.';showBoard()}).catch(function(e){menu.querySelector('.brick-msg').textContent=' '+(e.message||'Could not post.');pb.disabled=false})});
+    if(pb)pb.addEventListener('click',function(){pb.disabled=true;var nm=menu.querySelector('.brick-name').value;TRWall.postScore(nm,score,level+1).then(function(r){menu.querySelector('.brick-msg').textContent=r.online?' On the board.':' Board offline, kept on this device.';showBoard()}).catch(function(e){menu.querySelector('.brick-msg').textContent=' '+(e.message||'Could not post.');pb.disabled=false})});
   }
-  function showBoard(){board.hidden=false;board.innerHTML='<p class="how"><strong>High scores</strong></p><p>Loading…</p>';TRWall.scores().then(function(res){var rows=res.items.slice(0,10);board.innerHTML='<p class="how"><strong>High scores</strong>'+(res.online?'':' (offline — this device)')+'</p>'+(rows.length?'<ol>'+rows.map(function(s){return '<li><b>'+(s.name||'???').replace(/</g,'&lt;')+'</b> '+s.score+' <small>L'+(s.level||1)+'</small></li>'}).join('')+'</ol>':'<p>No scores yet. Yours could be first.</p>')})}
+  function showBoard(){board.hidden=false;board.innerHTML='<p class="how"><strong>High scores</strong></p><p>Loading…</p>';TRWall.scores().then(function(res){var rows=res.items.slice(0,10);board.innerHTML='<p class="how"><strong>High scores</strong>'+(res.online?'':' (offline, this device)')+'</p>'+(rows.length?'<ol>'+rows.map(function(s){return '<li><b>'+(s.name||'???').replace(/</g,'&lt;')+'</b> '+s.score+' <small>L'+(s.level||1)+'</small></li>'}).join('')+'</ol>':'<p>No scores yet. Yours could be first.</p>')})}
   function hitBrick(b){
     for(var i=0;i<bricks.length;i++){var k=bricks[i];
       if(b.x+R>k.x&&b.x-R<k.x+BW&&b.y+R>k.y&&b.y-R<k.y+BH){

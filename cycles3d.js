@@ -1,4 +1,4 @@
-/* Lightwall — the 3D view. The simulation in cycles.js is untouched; this only draws it: a chase camera
+/* Lightwall: the 3D view. The simulation in cycles.js is untouched; this only draws it: a chase camera
    behind your cycle, wall ribbons that glow (bloom), a mirrored grid floor, the goal ring, floor notes and
    crash sparks. Three.js is fetched on demand from jsDelivr; if it cannot load or WebGL is missing, the
    game keeps its flat view. Press V to switch chase / overview / flat. */

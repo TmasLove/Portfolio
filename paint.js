@@ -78,7 +78,7 @@ window.initPaint = function(root){
     var data=flattened(),who=root.querySelector('#pName').value;
     if(mode==='trace'&&lastScore!==null)who=(who?who+' · ':'')+'Trace L'+(lvl+1)+' '+lastScore+'/100';
     TRWall.post('paint',data,who).then(function(r){
-      msg.textContent=r.online?'On the wall.':'Wall offline — saved on this device.';btn.disabled=false;
+      msg.textContent=r.online?'On the wall.':'Wall offline, saved on this device.';btn.disabled=false;
       var mine={id:'just-now',src:data,ts:Date.now(),name:who||''};
       TRWall.list('paint').then(function(res){if(!res.items.some(function(i){return i.ts>mine.ts-3000&&i.name===mine.name&&i.id!=='just-now'}))res.items.unshift(mine);g.innerHTML=TRWall.galleryHTML(res,'paint')});
       setTimeout(renderGallery,65000);
