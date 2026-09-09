@@ -513,3 +513,75 @@ html.dark .gb-sort button.on{background:rgba(255,255,255,.14)}
 .lw-light{background:rgba(251,250,246,.92)}.lw-city-dark{color:rgba(0,0,0,.55)}
 .lw-neon{background:rgba(7,9,12,.85);box-shadow:inset 0 0 0 1px rgba(0,224,198,.35),0 0 24px rgba(0,224,198,.18)}.lw-city-neon{color:#00e0c6;text-shadow:0 0 8px rgba(0,224,198,.8)}
 .lw-digital{gap:2px}.lw-dtime{font-size:2.4rem;font-weight:300;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}.lw-dsec{font-size:.8rem;color:#ff9f0a;font-variant-numeric:tabular-nums;margin-top:-2px}.lw-ddate{font-size:.72rem;color:rgba(255,255,255,.7);margin-top:8px}
+
+
+/* ---------- Codenotch, rebuilt for TommyOS (see notch.js) ----------
+   Palette sampled by vinzdg/codenotch off their own design frame: #303030 track,
+   #2D2D2D bar track, #00FF88 ample / #F2FF00 watch / #FF3F00 critical, #808080 secondary.
+   Every length arrives as a CSS var from notch.js, derived from their Design.px(). */
+.cn{position:absolute;top:0;bottom:0;z-index:480;pointer-events:none;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Space Grotesk",sans-serif}
+.cn-left{left:0}
+.cn-body{position:absolute;top:50%;transform:translateY(-50%);width:var(--cn-depth);
+  padding:var(--cn-pad-t) 0 var(--cn-pad-b);display:flex;flex-direction:column;align-items:center;gap:var(--cn-gap);
+  background:#000;pointer-events:auto}
+.cn-left .cn-body{left:0;border-radius:0 var(--cn-corner) var(--cn-corner) 0}
+/* the same #303030 hairline their card carries: on a real Mac the notch sits against the
+   bezel, but TommyOS wallpapers go dark, and pure black on near-black disappears */
+.cn-body{box-shadow:0 0 0 .5px rgba(48,48,48,.85),0 8px 30px rgba(0,0,0,.35)}
+
+/* the concave fillets where the body flares into the screen edge — the notch silhouette */
+.cn-body::before,.cn-body::after{content:"";position:absolute;width:var(--cn-curl);height:var(--cn-curl);background:#000}
+.cn-left .cn-body::before{left:0;top:calc(-1 * var(--cn-curl));
+  -webkit-mask-image:radial-gradient(circle var(--cn-curl) at 100% 0,transparent 99%,#000 100%);
+          mask-image:radial-gradient(circle var(--cn-curl) at 100% 0,transparent 99%,#000 100%)}
+.cn-left .cn-body::after{left:0;bottom:calc(-1 * var(--cn-curl));
+  -webkit-mask-image:radial-gradient(circle var(--cn-curl) at 100% 100%,transparent 99%,#000 100%);
+          mask-image:radial-gradient(circle var(--cn-curl) at 100% 100%,transparent 99%,#000 100%)}
+
+.cn-cell{display:flex;flex-direction:column;align-items:center;gap:var(--cn-label-gap);border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cn-well{position:relative;display:grid;place-items:center;width:var(--cn-ring);height:var(--cn-ring);transition:transform .18s ease}
+.cn-cell:active .cn-well{transform:scale(.94)}
+.cn-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.cn-ring circle{fill:none}
+.cn-track{stroke:#303030}
+.cn-prog{stroke-linecap:round;transition:stroke-dasharray .6s cubic-bezier(.22,1,.36,1)}
+.cn-prog.b-ample{stroke:#00FF88}
+.cn-prog.b-watch{stroke:#F2FF00}
+.cn-prog.b-critical{stroke:#FF3F00}
+.cn-act{stroke:rgba(255,255,255,.82);stroke-linecap:round;opacity:0;transform-origin:50% 50%}
+.cn-cell.is-busy .cn-act{opacity:1;animation:cnSpin 1.1s linear infinite}
+@keyframes cnSpin{to{transform:rotate(360deg)}}
+.cn-glyph{position:relative;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cn-cell.is-waiting .cn-glyph{animation:cnBreathe 2.2s ease-in-out infinite}
+@keyframes cnBreathe{0%,100%{opacity:1}50%{opacity:.42}}
+.cn-pct{color:#fff;font-size:var(--cn-f-pct);font-weight:600;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+
+/* the tooltip: their card, with the tail welded to it so the two read as one silhouette */
+.cn-card{position:absolute;width:var(--cn-card-w);pointer-events:auto;filter:drop-shadow(0 12px 34px rgba(0,0,0,.55))}
+.cn-left .cn-card{left:calc(var(--cn-depth) + var(--cn-tail-gap))}
+.cn-sheet{background:#000;border-radius:var(--cn-card-r);padding:var(--cn-card-p);color:#fff;box-shadow:inset 0 0 0 1px #303030}
+.cn-tail{position:absolute;width:var(--cn-tail-l);height:var(--cn-tail-h);background:#000}
+.cn-left .cn-tail{left:calc(-1 * var(--cn-tail-l) + 1px);clip-path:polygon(100% 0,100% 100%,0 50%)}
+.cn-head{display:flex;align-items:center;gap:var(--cn-head-gap);margin-bottom:var(--cn-head-block)}
+.cn-head .cn-glyph{width:calc(var(--cn-f-title) * 1.25);height:calc(var(--cn-f-title) * 1.25);flex:none}
+.cn-title{font-size:var(--cn-f-title);font-weight:600;letter-spacing:-.01em}
+.cn-block + .cn-block{margin-top:var(--cn-block)}
+.cn-brow{display:flex;justify-content:space-between;gap:10px;font-size:var(--cn-f-body);margin-bottom:var(--cn-label-bar)}
+.cn-dim{color:#808080}
+.cn-bar{height:var(--cn-bar-h);border-radius:99px;background:#2D2D2D;overflow:hidden}
+.cn-bar span{display:block;height:100%;border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1)}
+.cn-bar span.b-ample{background:#00FF88}
+.cn-bar span.b-watch{background:#F2FF00}
+.cn-bar span.b-critical{background:#FF3F00}
+.cn-used{margin-top:var(--cn-bar-used);font-size:var(--cn-f-body)}
+.cn-wait{display:flex;align-items:center;gap:7px;margin-top:var(--cn-block);font-size:var(--cn-f-body)}
+.cn-dot{width:7px;height:7px;border-radius:50%;background:#FF3F00;flex:none}
+html:not(.still) .cn-dot{animation:cnBreathe 2.2s ease-in-out infinite}
+.cn-stamp{margin-top:var(--cn-block);color:#808080;font-size:calc(var(--cn-f-body) * .94);line-height:1.45}
+.cn-stamp a{color:#fff;text-decoration:none}
+.cn-stamp a:hover{text-decoration:underline}
+
+/* the phone has its own status bar, and a short desktop drops the tail of the floor */
+@media (max-width:900px){.cn{display:none}}
+@media (max-height:800px){.cn-cell[data-k="sales"]{display:none}}
+@media (max-height:680px){.cn-cell[data-k="studio"]{display:none}}
