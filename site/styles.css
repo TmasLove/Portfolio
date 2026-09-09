@@ -30,6 +30,22 @@ button{font-family:inherit}
 .sq svg{position:relative;z-index:1;width:100%;height:100%;display:block}
 .sq.letter{background:linear-gradient(160deg,#5D67E6,#3A43C4)}
 .sq.letter::before{content:attr(data-init);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:700;font-size:26px}
+/* The roles list sizes its own squircle. NOT .sq.xs - shell.css already owns that name for
+   the dial widgets at 18px, and it loads after this file, so an .sq.xs here silently lost
+   everywhere the desktop is involved and only looked right on the standalone page. */
+.role .sq{width:34px;height:34px;box-shadow:0 3px 8px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 1px rgba(0,0,0,.06)}
+.role .sq.letter::before{font-size:15px}
+/* Position: one row per company, because four CTO seats read as a list, not a sentence.
+   The CTO chip uses the accent tokens, which shell.css already flips for the dark desktop. */
+.roles{margin-top:16px}
+.roles-label{display:block;font-family:var(--font-display);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.role-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:9px}
+.role{display:flex;align-items:center;gap:10px}
+.role-body{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0}
+.role-org{font-family:var(--font-display);font-weight:600;font-size:.9375rem;color:var(--text)}
+.tag{font-family:var(--font-display);font-size:.66rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:var(--r-chip);white-space:nowrap}
+.tag.tech{background:var(--accent-soft);color:var(--accent-text);box-shadow:inset 0 0 0 1px rgba(74,84,220,.26)}
+.tag.sales{background:rgba(0,168,143,.14);color:#00614F;box-shadow:inset 0 0 0 1px rgba(0,168,143,.34)}
 .sq.plain{background:none;box-shadow:0 6px 16px rgba(0,0,0,.32)}
 .sq.sm{width:44px;height:44px}
 .sq.sm.letter::before{font-size:18px}
