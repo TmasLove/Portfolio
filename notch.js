@@ -7,10 +7,11 @@
    frame, so px(n) = n * 44/117 reproduces their proportions at any size. Palette hexes are the
    ones they sampled off that frame: #303030 track, #00FF88 / #F2FF00 / #FF3F00 bands.
 
-   Two anchors here rather than their one. The strip is set smaller than 44pt because a browser
-   desktop is not a Mac bezel and it was dominating the screen; the card keeps their 44pt anchor,
-   because the strip is decoration and the card is text somebody has to read. Shrinking both
-   together made the body type illegible.
+   The strip runs at their 44pt anchor. It was briefly dropped to 28 when this held six cells and
+   stood 612px tall, but grouping the rings into four folders solved the height on its own, and at
+   28 the whole thing read as a sliver on a wide display. The card carries its own copy of the
+   anchor so the two can part company again: the strip is decoration and can be resized freely,
+   while the card is text somebody has to read and must not follow it down.
 
    Our twist is what the rings count. Codenotch shows how much of somebody else's allowance is
    left. Three of these are the desktop's own folders, filling as you open what is inside them,
@@ -27,10 +28,10 @@
   var host = document.querySelector('.desktop') || document.body; if (!host) return;
 
   var EDGE = 'left';    /* which screen edge it clings to; the icons live on the right */
-  var RING_PT = 28;     /* the strip's anchor. Their spec says 44; smaller suits a browser. */
-  var AIR = 0.6;        /* Their padding and cell spacing, tightened. Kept as its own knob so the
-                           ring and its label stay in the proportions they drew; only the gaps
-                           between cells give, which is where a strip pinned to a browser edge
+  var RING_PT = 44;     /* the strip's anchor, which is their spec exactly */
+  var AIR = 0.8;        /* Their padding and cell spacing, taken in slightly. Kept as its own knob
+                           so the ring and its label stay in the proportions they drew; only the
+                           gaps between cells give, which is where a strip pinned to a browser edge
                            wastes height. Set to 1 for their spacing exactly. */
 
   var S = RING_PT / 117, SC = 44 / 117;
