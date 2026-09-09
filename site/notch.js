@@ -1,21 +1,21 @@
 /* Codenotch, rebuilt for TommyOS.
 
-   A port of the UI from vinzdg/codenotch (MIT) — the macOS app that pins a black notch to a
+   A port of the UI from vinzdg/codenotch (MIT): the macOS app that pins a black notch to a
    screen edge and fills a ring per AI provider with how much of that vendor's limit you have
    burned. The geometry is theirs rather than eyeballed: their Design.swift derives the whole
-   surface from a single anchor — the provider ring is 44pt and measures 117px in their design
-   frame — so px(n) = n * 44/117 reproduces their proportions at any size. Palette hexes are the
+   surface from a single anchor: the provider ring is 44pt and measures 117px in their design
+   frame, so px(n) = n * 44/117 reproduces their proportions at any size. Palette hexes are the
    ones they sampled off that frame: #303030 track, #00FF88 / #F2FF00 / #FF3F00 bands.
 
    Two anchors here rather than their one. The strip is set smaller than 44pt because a browser
    desktop is not a Mac bezel and it was dominating the screen; the card keeps their 44pt anchor,
-   because the strip is decoration and the card is text somebody has to read — shrinking both
+   because the strip is decoration and the card is text somebody has to read. Shrinking both
    together made the body type illegible.
 
    Our twist is what the rings count. Codenotch shows how much of somebody else's allowance is
    left. Three of these are the desktop's own folders, filling as you open what is inside them,
    so the ring that is reddest is the one you have not looked at yet; the fourth is Little River,
-   the estate, which is the opposite point — that floor is ours and it is busy. Their three live
+   the estate, which is the opposite point: that floor is ours and it is busy. Their three live
    states carry over unchanged, because Little River already has all three: an arc spins while it
    is working, and it holds amber while approvals are waiting on Tommy.
 
@@ -26,10 +26,10 @@
   var T = window.TR; if (!T) return;
   var host = document.querySelector('.desktop') || document.body; if (!host) return;
 
-  var EDGE = 'left';    /* which screen edge it clings to — the icons live on the right */
+  var EDGE = 'left';    /* which screen edge it clings to; the icons live on the right */
   var RING_PT = 28;     /* the strip's anchor. Their spec says 44; smaller suits a browser. */
   var AIR = 0.6;        /* Their padding and cell spacing, tightened. Kept as its own knob so the
-                           ring and its label stay in the proportions they drew — only the gaps
+                           ring and its label stay in the proportions they drew; only the gaps
                            between cells give, which is where a strip pinned to a browser edge
                            wastes height. Set to 1 for their spacing exactly. */
 
@@ -42,7 +42,7 @@
   /* ---------- the snapshot (kept in step with lr.js) ---------- */
   var STAMP = 'Sat Sep 5, 2026, 7:30 PM';
   var AGENTS = 37, WAITING = 3, DEPT_COUNT = 8;
-  /* The floor as lr.js has it — same names, same headcount, same colours, so the card and the
+  /* The floor as lr.js has it: same names, same headcount, same colours, so the card and the
      real command centre cannot drift apart. Unassigned is Tommy himself. */
   var DEPTS = [
     ['Marketing', 11, '#3987e5'], ['Clear Care Dental', 7, '#c98500'], ['Studio', 5, '#199e70'],
@@ -76,7 +76,7 @@
   }
 
   /* Their bands. For the estate a full ring is a busy floor, so high is the loud one. For a
-     folder it is the other way round — an empty ring means you have not looked yet, and that
+     folder it is the other way round: an empty ring means you have not looked yet, and that
      is the one worth a red arc. Same three colours either way. */
   function band(p) { return p >= 70 ? 'critical' : p >= 50 ? 'watch' : 'ample' }
   function bandOpened(p) { return p >= 70 ? 'ample' : p >= 35 ? 'watch' : 'critical' }
@@ -177,7 +177,7 @@
   function show(k) {
     var g = GROUPS.filter(function (x) { return x.key === k })[0]; if (!g) return;
     openKey = k; paint(g); card.hidden = false;
-    /* Centre the card on the hovered ring, then keep it on screen — the tail follows, so the
+    /* Centre the card on the hovered ring, then keep it on screen; the tail follows, so the
        point still lands on its cell. Measured off rects: the body is centred with
        translateY(-50%) and offsetTop reports the position before that transform. */
     var well = cellEls[k].querySelector('.cn-well');
@@ -198,7 +198,7 @@
       hide();
       var g = GROUPS.filter(function (x) { return x.key === k })[0];
       if (g.estate) return void (T.openApp && T.openApp('littleriver'));
-      /* open the next thing in this folder you have not seen — more use than the folder itself */
+      /* open the next thing in this folder you have not seen, more use than the folder itself */
       var m = members(g), next = m.filter(function (x) { return seen.indexOf(x) < 0 })[0] || m[0];
       if (next && T.openApp) T.openApp(next);
     });
@@ -240,7 +240,7 @@
   }, 3000);
 
   /* their ActivityArc: a thinner arc on its own radius, so it reads as a separate fact rather
-     than the usage number moving. Only the estate works — a folder is not doing anything. */
+     than the usage number moving. Only the estate works; a folder is not doing anything. */
   setInterval(function () {
     var el = cellEls.lr; if (!el) return;
     el.classList.remove('is-busy');

@@ -1,4 +1,4 @@
-/* tommyroldan.com — the desktop shell (macOS on wide screens, iPhone launcher on phones).
+/* tommyroldan.com: the desktop shell (macOS on wide screens, iPhone launcher on phones).
    Every word on screen comes from the site's own content; this file is behaviour and chrome only. */
 (function(){
 'use strict';
@@ -24,7 +24,7 @@ var APPS=[
  {key:'build-roldan',title:'Roldan Group',category:'web',art:'roldan',init:'R',page:'/work/build-roldan/',live:'https://buildroldan.com',embed:true,shot:'/assets/live/build-roldan-1440.jpg'},
  {key:'social-audit',title:'SocialAudit',category:'apps',icon:'/assets/icons/social-audit.png',fit:'cover',init:'S',page:'/work/social-audit/',live:null,embed:false,shot:null}
 ];
-/* projects with no case page: [title, url, category label, year, description, badges] — words from /work/ */
+/* projects with no case page: [title, url, category label, year, description, badges], words from /work/ */
 var REST=[
  ['World Resort Rescue Portal','https://portal.worldresortrescue.com','Apps',2026,'Secure staff login portal, rebuilt from the database up with an audit trail.',['private','live']],
  ['GEO',null,'AI / Agents',2025,"Generative Engine Optimization agent that audits a site's AI crawlability, then auto-applies the fixes.",['private']],
@@ -35,7 +35,7 @@ var REST=[
  ['Alexandra Rossi Collection',null,'Web',2025,'Boutique e-commerce store for custom wallpapers and linens.',['private']],
  ['Local Legend Predictor','https://local-legend-predictor.onrender.com','Tools',2026,'Connect your Strava and see how many more efforts you need to claim the Local Legend title.',['live']]
 ];
-var ARCHIVED=[['Gravity Cycles',2015,'Custom Shopify website that made GRVT designs available to the public.'],['V&C Metal Supply Corp',2015,'Full website redesign for V&C Metal Supply Corp — cleaner, faster, modern.'],['Fixed Latinos',2015,'Application for the Fixed Latinos cycling team — community, routes & events.'],['Brick Breaker v1.0',2015,'A JS/Canvas game — break bricks with a ball while random RGBA balls appear for chaos.'],['Follow MeMe',2015,'Create, download & post memes to an anonymous public feed. Built on the MEAN stack.'],['Drinks on Demand',2015,'Alcohol delivery application — search, order, delivered. Full MEAN stack build.'],['Tropical Sun Design',2015,"Inspired by Miami's tropical atmosphere — a retro sun design originally sold online."],['Cycling Rick',2015,'A Rick & Morty-inspired design mashup with cycling culture.'],['GRVT Logo',2015,"Logo and brand identity for GRVT, my early cycling label. The brand didn't last, but the designs still hold up."]];
+var ARCHIVED=[['Gravity Cycles',2015,'Custom Shopify website that made GRVT designs available to the public.'],['V&C Metal Supply Corp',2015,'Full website redesign for V&C Metal Supply Corp: cleaner, faster, modern.'],['Fixed Latinos',2015,'Application for the Fixed Latinos cycling team: community, routes & events.'],['Brick Breaker v1.0',2015,'A JS/Canvas game: break bricks with a ball while random RGBA balls appear for chaos.'],['Follow MeMe',2015,'Create, download & post memes to an anonymous public feed. Built on the MEAN stack.'],['Drinks on Demand',2015,'Alcohol delivery application: search, order, delivered. Full MEAN stack build.'],['Tropical Sun Design',2015,"Inspired by Miami's tropical atmosphere, a retro sun design originally sold online."],['Cycling Rick',2015,'A Rick & Morty-inspired design mashup with cycling culture.'],['GRVT Logo',2015,"Logo and brand identity for GRVT, my early cycling label. The brand didn't last, but the designs still hold up."]];
 var LR={agents:37,departments:8,by:{'Marketing':11,'Clear Care Dental':7,'Studio':5,'Sales':5,'Support':4,'Research':2,'Floor & Chat':1,'Runtime':1,'Unassigned':1},asOf:'2026-09-05'};
 var ME={name:'Tommy Roldan',role:'Web Developer & Creative',location:'Miami, FL',email:'hi@tommyroldan.com',hero:'Building products that move the work forward.',since:'Building since 2015.',
  taglines:['Building since 2015.','Steady output, sharp lines.','Powered by café con leche.','Always one more ride.','Made in Miami. 🌴'],
@@ -183,7 +183,7 @@ var MENUS={
  apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['Stickies',function(){TR.extras&&TR.extras.openStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
  go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Armagetron',function(){openApp('arena')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
- help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site — "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
+ help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site: "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
 function buildMenu(items){
   var ul=document.createElement('ul');ul.className='menu';
@@ -326,7 +326,7 @@ function embedInto(host,url,shot,canEmbed){
   var nt='<a class="btn btn-secondary sm" href="'+esc(url)+'" target="_blank" rel="noopener">Open in a new tab ↗</a>';
   var toolbar='<div class="browser-toolbar">'+back+'<span class="url">'+esc(url.replace(/^https?:\/\//,''))+'</span>'+nt+'</div>';
   var frame=canEmbed?'<div class="browser-frame-wrap"><iframe src="'+esc(url)+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" title="'+esc(url)+'"></iframe></div>'
-    :'<div class="browser-frame-wrap"><div class="embed-fallback">'+(shot?'<img src="'+esc(shot)+'" alt="Screenshot of '+esc(url)+'">':'')+'<p>This site doesn\'t allow embedding — it opens in a new tab.</p><a class="btn btn-primary" href="'+esc(url)+'" target="_blank" rel="noopener">Open '+esc(url.replace(/^https?:\/\//,'').replace(/\/$/,''))+' ↗</a></div></div>';
+    :'<div class="browser-frame-wrap"><div class="embed-fallback">'+(shot?'<img src="'+esc(shot)+'" alt="Screenshot of '+esc(url)+'">':'')+'<p>This site doesn\'t allow embedding. It opens in a new tab.</p><a class="btn btn-primary" href="'+esc(url)+'" target="_blank" rel="noopener">Open '+esc(url.replace(/^https?:\/\//,'').replace(/\/$/,''))+' ↗</a></div></div>';
   var saved=body.innerHTML,savedScroll=body.scrollTop;
   body.innerHTML='<div class="browser">'+toolbar+frame+'</div>';
   body.querySelector('[data-back]').addEventListener('click',function(){body.innerHTML=saved;body.scrollTop=savedScroll});
@@ -339,9 +339,9 @@ function wireContact(body){
     var btn=f.querySelector('button[type=submit]'),d={};
     ['name','email','company','projectType','budget','message'].forEach(function(k){var el=f.querySelector('[name="'+k+'"]');d[k]=el?el.value:''});
     btn.disabled=true;btn.textContent='Sending…';
-    fetch('https://formsubmit.co/ajax/'+ME.email,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'—','Project type':d.projectType||'—',Budget:d.budget||'—',Message:d.message,_subject:'Portfolio inquiry — '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
+    fetch('https://formsubmit.co/ajax/'+ME.email,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
     .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return j.success==='true'||j.success===true||r.ok})})
-    .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent — thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
+    .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent. Thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
     .catch(function(){btn.disabled=false;btn.textContent='Send message →';var err=f.querySelector('.form-err');if(!err){err=document.createElement('p');err.className='form-err';err.innerHTML='Something went wrong. <a href="mailto:'+ME.email+'">Email me directly</a>.';f.appendChild(err)}});
   });
 }
@@ -387,14 +387,14 @@ function openBrave(){
   function show(app){
     var tb='<div class="browser-toolbar"><button class="btn btn-secondary sm" data-home>⌂</button><span class="url">'+esc(app?app.live.replace(/^https?:\/\//,''):'start')+'</span>'+(app?'<a class="btn btn-secondary sm" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open in a new tab ↗</a>':'')+'</div>';
     var bar='<div class="bookmarks">'+APPS.filter(function(a){return a.live}).map(function(a){return '<button class="bm" data-key="'+a.key+'" title="'+esc(a.title)+'">'+sqHTML(a,'xs')+'<span>'+esc(label(a))+'</span></button>'}).join('')+'</div>';
-    var content=!app?braveStart():(app.embed?'<div class="browser-frame-wrap"><iframe src="'+esc(app.live)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" title="'+esc(app.title)+'"></iframe></div>':'<div class="browser-frame-wrap"><div class="embed-fallback"><img src="'+esc(app.shot)+'" alt="Screenshot of '+esc(app.title)+'"><p>'+esc(app.live.replace(/^https?:\/\//,''))+' doesn\'t allow embedding — it opens in a new tab.</p><a class="btn btn-primary" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open ↗</a></div></div>');
+    var content=!app?braveStart():(app.embed?'<div class="browser-frame-wrap"><iframe src="'+esc(app.live)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" title="'+esc(app.title)+'"></iframe></div>':'<div class="browser-frame-wrap"><div class="embed-fallback"><img src="'+esc(app.shot)+'" alt="Screenshot of '+esc(app.title)+'"><p>'+esc(app.live.replace(/^https?:\/\//,''))+' doesn\'t allow embedding. It opens in a new tab.</p><a class="btn btn-primary" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open ↗</a></div></div>');
     body.innerHTML='<div class="browser">'+tb+bar+content+'</div>';
     body.querySelector('[data-home]').addEventListener('click',function(){show(null)});
     body.querySelectorAll('.bm,.dial').forEach(function(b){b.addEventListener('click',function(){show(appByKey(b.dataset.key))})});
   }
   show(null);
 }
-function musicHTML(){return '<div class="music"><div class="music-head"><span class="sq art sm">'+ART.music+'</span><div><strong>'+esc(MUSIC.title)+'</strong><a href="'+MUSIC.profile+'" target="_blank" rel="noopener">'+esc(MUSIC.handle)+' on Apple Music →</a></div><a class="btn btn-primary sm music-open" href="'+MUSIC.page+'" target="_blank" rel="noopener">Open in Apple Music ↗</a></div><p class="t3 music-note">Apple plays 30-second previews here until you sign in to Apple Music inside the player.</p><iframe allow="autoplay *; encrypted-media *; clipboard-write" frameborder="0" height="450" loading="lazy" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="'+MUSIC.embed+'" title="Apple Music — '+esc(MUSIC.title)+' playlist"></iframe></div>'}
+function musicHTML(){return '<div class="music"><div class="music-head"><span class="sq art sm">'+ART.music+'</span><div><strong>'+esc(MUSIC.title)+'</strong><a href="'+MUSIC.profile+'" target="_blank" rel="noopener">'+esc(MUSIC.handle)+' on Apple Music →</a></div><a class="btn btn-primary sm music-open" href="'+MUSIC.page+'" target="_blank" rel="noopener">Open in Apple Music ↗</a></div><p class="t3 music-note">Apple plays 30-second previews here until you sign in to Apple Music inside the player.</p><iframe allow="autoplay *; encrypted-media *; clipboard-write" frameborder="0" height="450" loading="lazy" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="'+MUSIC.embed+'" title="Apple Music: '+esc(MUSIC.title)+' playlist"></iframe></div>'}
 function openMusic(){var w=createWindow('music','Music',{w:720,h:560,dockKey:'music',appName:'Music'});w.body.innerHTML=musicHTML()}
 function openPaint(){var w=createWindow('paint','Paint',{w:900,h:620,dockKey:'paint',appName:'Paint'});var d=document.createElement('div');d.className='page';w.body.appendChild(d);window.initPaint(d)}
 function openArena(){var w=createWindow('arena','Armagetron',{w:1000,h:720,dockKey:'arena',appName:'Armagetron',minW:520,minH:420});var f=document.createElement('iframe');f.src='/arena/';f.title='Armagetron';f.setAttribute('allow','autoplay');f.style.cssText='width:100%;height:100%;border:0;background:#000;display:block';w.body.appendChild(f);w.body.style.padding='0';setTimeout(function(){try{f.contentWindow.focus()}catch(e){}},300)}
@@ -408,19 +408,19 @@ function termRun(cmd){
   var parts=cmd.trim().split(/\s+/),c=parts[0].toLowerCase(),arg=parts.slice(1).join(' ').toLowerCase();
   if(!c)return '';
   if(c==='help')return TERM_HELP;
-  if(c==='whoami')return ME.name+' — '+ME.role+' · '+ME.location;
+  if(c==='whoami')return ME.name+', '+ME.role+' · '+ME.location;
   if(c==='ls')return FOLDERS.map(function(f){return f.label+'/'}).concat(APPS.map(function(a){return a.key})).concat(['brick','arena','meme']).join('  ');
   if(c==='stats')return ME.stats.map(function(s){return s[0]+' '+s[1]}).join('\n');
   if(c==='about')return ME.hero+'\n'+ME.since;
   if(c==='contact')return ME.email;
-  if(c==='music')return MUSIC.title+' — '+MUSIC.handle+' on Apple Music';
+  if(c==='music')return MUSIC.title+' by '+MUSIC.handle+' on Apple Music';
   if(c==='date')return new Date().toString();
   if(c==='pwd')return '/Users/tommy';
-  if(c==='open'){var a=APPS.filter(function(x){return x.key===arg||x.title.toLowerCase()===arg})[0];var d=DOCK.concat(EXTRA.map(function(x){return{key:x.key,label:x.title}})).filter(function(x){return x.key===arg||x.label.toLowerCase()===arg})[0];if(a||d){setTimeout(function(){openApp((a||d).key)},50);return 'opening '+(a?a.title:d.label)+'…'}return 'open: no app called "'+arg+'" — try ls'}
+  if(c==='open'){var a=APPS.filter(function(x){return x.key===arg||x.title.toLowerCase()===arg})[0];var d=DOCK.concat(EXTRA.map(function(x){return{key:x.key,label:x.title}})).filter(function(x){return x.key===arg||x.label.toLowerCase()===arg})[0];if(a||d){setTimeout(function(){openApp((a||d).key)},50);return 'opening '+(a?a.title:d.label)+'…'}return 'open: no app called "'+arg+'". Try ls'}
   if(c==='sudo')return 'Nice try.';
   return c+': command not found. Type help.';
 }
-function termHTML(){return '<div class="term" tabindex="0"><pre class="term-out">'+esc(ME.name+' — '+ME.role)+'\n'+esc(ME.location+' · '+ME.since)+'\nType <b>help</b> to see what this machine can do.\n</pre><div class="term-line"><span class="p">tommy@roldan ~ % </span><input class="term-in" autocomplete="off" spellcheck="false" aria-label="Terminal input"></div></div>'}
+function termHTML(){return '<div class="term" tabindex="0"><pre class="term-out">'+esc(ME.name+', '+ME.role)+'\n'+esc(ME.location+' · '+ME.since)+'\nType <b>help</b> to see what this machine can do.\n</pre><div class="term-line"><span class="p">tommy@roldan ~ % </span><input class="term-in" autocomplete="off" spellcheck="false" aria-label="Terminal input"></div></div>'}
 function wireTerm(root){
   var out=root.querySelector('.term-out'),inp=root.querySelector('.term-in'),hist=[],hi=0;
   root.addEventListener('click',function(){inp.focus()});
@@ -443,7 +443,7 @@ function lrPane(name){
   return '<h2>'+esc(name)+'</h2><p class="t3">This part lives in the real app.</p>';
 }
 function openLR(){var w=createWindow('littleriver','Little River',{w:1060,h:680,dockKey:'littleriver',appName:'Little River',minW:720});window.initLR(w.body)}
-function infoHTML(r){return '<div class="page"><div class="panel"><span class="badges">'+r[5].map(function(b){return '<span class="badge '+b+'">'+b+'</span>'}).join('')+'</span><h2>'+esc(r[0])+'</h2><p class="case-meta">'+esc(r[2])+' · '+r[3]+'</p><p>'+esc(r[4])+'</p>'+(r[1]?'<a class="btn btn-primary" href="'+esc(r[1])+'" target="_blank" rel="noopener">Open ↗</a>':'<p class="t3">Private — no public link.</p>')+'</div></div>'}
+function infoHTML(r){return '<div class="page"><div class="panel"><span class="badges">'+r[5].map(function(b){return '<span class="badge '+b+'">'+b+'</span>'}).join('')+'</span><h2>'+esc(r[0])+'</h2><p class="case-meta">'+esc(r[2])+' · '+r[3]+'</p><p>'+esc(r[4])+'</p>'+(r[1]?'<a class="btn btn-primary" href="'+esc(r[1])+'" target="_blank" rel="noopener">Open ↗</a>':'<p class="t3">Private, no public link.</p>')+'</div></div>'}
 function openInfo(r){if(isPhone()){sheet.hidden=false;sheetTitle.textContent=r[0];sheetBody.innerHTML=infoHTML(r);return}var w=createWindow('info-'+r[0],r[0],{w:560,h:380,dockKey:'finder',appName:r[0]});w.body.innerHTML=infoHTML(r)}
 
 /* ---------- phone launcher ---------- */
@@ -451,7 +451,7 @@ var lGrid=document.getElementById('lGrid'),lDock=document.getElementById('lDock'
 /* iOS home-screen widgets: a Clock and a Calendar, each 2x2 tiles wide (they cost 4 grid slots in layoutPages) */
 function widgetTile(kind){
   var b=document.createElement('button');b.className='lwidget lw-'+kind;b.__slots=4;b.type='button';
-  if(kind==='clock'){b.setAttribute('aria-label','Clock — tap to change the watch face');b.classList.add('lw-clock');b.innerHTML=clockFaceHTML(clockFace());b.title='Tap to change the watch face';b.addEventListener('click',function(){var i=(CLOCK_FACES.indexOf(clockFace())+1)%CLOCK_FACES.length;setClockFace(CLOCK_FACES[i],false)})}
+  if(kind==='clock'){b.setAttribute('aria-label','Clock, tap to change the watch face');b.classList.add('lw-clock');b.innerHTML=clockFaceHTML(clockFace());b.title='Tap to change the watch face';b.addEventListener('click',function(){var i=(CLOCK_FACES.indexOf(clockFace())+1)%CLOCK_FACES.length;setClockFace(CLOCK_FACES[i],false)})}
   else{b.setAttribute('aria-label','Calendar');b.innerHTML='<div class="lw-card lw-cal"><span class="lw-dow"></span><span class="lw-day"></span><span class="lw-note">Say hi</span><span class="lw-sub">Open for freelance and full-time work</span></div><span class="label">Calendar</span>';b.addEventListener('click',function(){openSheetPage('contact')})}
   return b;
 }

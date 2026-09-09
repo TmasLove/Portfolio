@@ -20,8 +20,8 @@ window.TRWall=(function(){
       });
   }
   function galleryHTML(res,kind){
-    if(!res.items.length)return '<p class="t3">'+(res.online?'Nothing on the wall yet — be the first.':'The wall is offline right now; anything you save stays on this device until it is back.')+'</p>';
-    return (res.online?'':'<p class="t3">The wall is offline right now — showing what you saved on this device.</p>')+'<div class="wall-grid">'+res.items.map(function(i){
+    if(!res.items.length)return '<p class="t3">'+(res.online?'Nothing on the wall yet. Be the first.':'The wall is offline right now; anything you save stays on this device until it is back.')+'</p>';
+    return (res.online?'':'<p class="t3">The wall is offline right now, showing what you saved on this device.</p>')+'<div class="wall-grid">'+res.items.map(function(i){
       var when=new Date(i.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});
       return '<figure class="wall-item"><a href="'+i.src+'" target="_blank" rel="noopener"><img src="'+i.src+'" alt="'+(kind==='paint'?'Drawing':'Meme')+(i.name?' by '+i.name.replace(/"/g,'&quot;'):'')+'" loading="lazy"></a><figcaption>'+(i.name?'<b>'+i.name.replace(/</g,'&lt;')+'</b> · ':'')+when+'</figcaption></figure>';
     }).join('')+'</div>';

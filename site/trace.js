@@ -1,4 +1,4 @@
-/* Trace — a game inside Paint. An image sits under a sheet of white tracing paper; you trace it with the tools the
+/* Trace: a game inside Paint. An image sits under a sheet of white tracing paper; you trace it with the tools the
    level allows; the closer your lines are to the image, the higher the score (100/100 = a perfect trace).
    Images are our own line drawings, drawn by code. Higher levels: fainter paper, harder pictures, fewer tools. */
 window.TRTrace = (function(){
@@ -48,7 +48,7 @@ window.TRTrace = (function(){
   }
   function refMask(level){var cv=document.createElement('canvas');cv.width=W;cv.height=H;var c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,W,H);level.draw(c);return c.getImageData(0,0,W,H).data}
   /* score: 2px cells. Distance from every cell to the nearest reference cell and to the nearest user cell (BFS).
-     Credit is 1 on the line, then slides to 0 over a few pixels — so a wobble costs points instead of being free.
+     Credit is 1 on the line, then slides to 0 over a few pixels, so a wobble costs points instead of being free.
      coverage = average credit over the picture's cells; precision = average credit over your ink cells; score = F1. */
   function dist(A,cw,ch){var D=new Int16Array(cw*ch).fill(-1),q=new Int32Array(cw*ch),h=0,t=0,i;for(i=0;i<cw*ch;i++)if(A[i]){D[i]=0;q[t++]=i}
     while(h<t){var c=q[h++],x=c%cw,y=(c/cw)|0,d=D[c]+1;if(x>0&&D[c-1]<0){D[c-1]=d;q[t++]=c-1}if(x<cw-1&&D[c+1]<0){D[c+1]=d;q[t++]=c+1}if(y>0&&D[c-cw]<0){D[c-cw]=d;q[t++]=c-cw}if(y<ch-1&&D[c+cw]<0){D[c+cw]=d;q[t++]=c+cw}}return D}

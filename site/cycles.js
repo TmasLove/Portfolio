@@ -1,10 +1,10 @@
-/* Lightwall — an Armagetron-style arena, written for this desktop. Own code, no libraries.
+/* Lightwall: an Armagetron-style arena, written for this desktop. Own code, no libraries.
    Movement model: Armagetron's rules (re-implemented in our own code from how Armagetron / Armawebtron behave):
    the cycle is a point and walls have no width; RUBBER is a distance budget that only burns while you press into a
    wall (turn away and it refills); speed snaps back up to cruise fast but bleeds off slowly above it; walls beside
    you accelerate you by how close you run; every turn costs 5% speed, has a 20 ms delay and queues up to three, a brake with a recharging meter, boost that grows the
-   closer you run parallel to a wall, a shield that is also your size — it drains while you touch a wall,
-   shrinking you so you can dig through gaps, and refills when clear — trails of finite length so the grid
+   closer you run parallel to a wall, a shield that is also your size. It drains while you touch a wall,
+   shrinking you so you can dig through gaps, and refills when clear. Trails of finite length so the grid
    keeps opening up. Solo vs three bots, 2 players on one keyboard, or Survival: a ladder of short levels
    with fixed walls, a goal ring and a clock (dig, turn, grind for boost, tunnel, double-bind flip, mazes). */
 window.initCycles=function(root){
@@ -46,14 +46,14 @@ window.initCycles=function(root){
       msg:[[120,60,'Grind inside the tunnel, not the rim'],[120,240,'Both walls push you at once']]},
     {id:'bind',name:'Double bind',tier:'training',w:1000,h:600,spawn:[500,130,1],goal:[500,40,30],limit:6,
       walls:[[200,100,200,400,'#d946ef'],[200,400,800,400,'#d946ef'],[800,100,800,400,'#d946ef']],
-      msg:[[300,250,'You cannot reverse — but two turns can'],[300,300,'Press two left keys at once (A + Q, or ← + ,) to flip 180°']]},
+      msg:[[300,250,'You cannot reverse, but two turns can'],[300,300,'Press two left keys at once (A + Q, or ← + ,) to flip 180°']]},
     {id:'novice1',name:'Novice 1',tier:'novice',w:1000,h:700,spawn:[60,60,0],goal:[940,640,40],limit:20,
       walls:[[300,0,300,500,'#06b6d4'],[600,200,600,700,'#06b6d4'],[850,0,850,450,'#06b6d4']],msg:[]},
     {id:'novice2',name:'Corridors',tier:'novice',w:1200,h:700,spawn:[60,75,0],goal:[1140,650,35],limit:16,
       walls:[[0,150,1000,150,'#f97316'],[200,300,1200,300,'#f97316'],[0,450,1000,450,'#f97316'],[200,600,1200,600,'#f97316']],msg:[]},
     {id:'easy1',name:'Pinch',tier:'easy',w:1000,h:600,spawn:[80,280,0],goal:[920,300,36],limit:9,
       walls:[[350,0,350,292,'#22c55e'],[350,308,350,600,'#22c55e'],[650,0,650,292,'#ef4444'],[650,308,650,600,'#ef4444']],
-      msg:[[420,120,'Two tight gaps — line up, the cycle is a point']]},
+      msg:[[420,120,'Two tight gaps: line up, the cycle is a point']]},
     {id:'easy2',name:'Spiral',tier:'easy',w:1000,h:800,spawn:[500,400,0],goal:[60,60,34],limit:18,
       walls:[[400,300,650,300,'#8B7DFF'],[650,300,650,550,'#8B7DFF'],[650,550,300,550,'#8B7DFF'],[300,550,300,200,'#8B7DFF'],[300,200,800,200,'#8B7DFF'],[800,200,800,700,'#8B7DFF'],[800,700,150,700,'#8B7DFF'],[150,700,150,120,'#8B7DFF']],
       msg:[[420,430,'Unwind it']]}
@@ -95,7 +95,7 @@ window.initCycles=function(root){
   }
   /* walls: the level's fixed walls, every trail segment (axis-aligned) plus the head segment of each cycle */
   function segments(){var out=statics.slice();cycles.forEach(function(c){var t=c.trail;for(var i=1;i<t.length;i++)out.push([t[i-1][0],t[i-1][1],t[i][0],t[i][1],c,false]);out.push([t[t.length-1][0],t[t.length-1][1],c.x,c.y,c,true])});return out}
-  /* distance along direction d from (x,y) to the first wall; returns {d, seg} — the rim counts as a wall.
+  /* distance along direction d from (x,y) to the first wall; returns {d, seg}; the rim counts as a wall.
      tol is how wide the cycle is: a bigger shield clips wall ends it would otherwise slip past (that is digging) */
   function ray(x,y,d,self,maxD,segs,tol,tolPar){ /* tol: lateral reach for walls across the path; tolPar: for walls running alongside (their far end) */
     tol=tol||1.2;tolPar=tolPar||1.2;
@@ -158,7 +158,7 @@ window.initCycles=function(root){
       c.speed=Math.max(base*CFG.minF,Math.min(base*CFG.maxF,c.speed));
       /* move, Armagetron style: the cycle is a point. A wall across the path stops you a hair short of it, and the
          travel you could not make burns RUBBER. Rubber gone = crash (blamed on the wall's owner). Turn away and
-         rubber refills. Running alongside a wall, however close, costs nothing — that is grinding. */
+         rubber refills. Running alongside a wall, however close, costs nothing. That is grinding. */
       var rad=radius(c),dist=c.speed*dt,front=ray(c.x,c.y,c.d,c,dist+CFG.minDist+2,segs,.02,.02),room=front.d-CFG.minDist;
       if(dist>room){
         var moved=Math.max(0,room),blocked=dist-moved;c.x+=DIRS[c.d][0]*moved;c.y+=DIRS[c.d][1]*moved;
@@ -221,7 +221,7 @@ window.initCycles=function(root){
     if(mode<4)return;
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');countEl.hidden=true;
     var st=standings(),you=st.indexOf(cycles[0])+1,tot=zoneScore.reduce(function(a,b){return a+b},0)||1;
-    var title=you===1?(mode===5?'King of the Zone':'King of the Arena'):'#'+you+' of '+st.length+(mode===5?' — '+st[0].name+' is King of the Zone':' — '+st[0].name+' is King of the Arena');
+    var title=you===1?(mode===5?'King of the Zone':'King of the Arena'):'#'+you+' of '+st.length+(mode===5?', '+st[0].name+' is King of the Zone':', '+st[0].name+' is King of the Arena');
     menu.innerHTML='<h2>'+title+'</h2><p class="cyc-small">'+st.map(function(c,i){return (i+1)+'. '+c.name+' '+(mode===5?Math.round(zoneScore[c.i]/tot*100)+'% zone · '+score[c.i]+'K':score[c.i]+'K / '+c.deaths+'D')}).join(' · ')+'</p><div class="cyc-opts"><button class="cyc-btn" data-start="'+mode+'">Again</button><button class="cyc-btn" data-start="'+(mode===5?4:5)+'">'+(mode===5?'King of the Arena':'King of the Zone')+'</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
@@ -270,7 +270,7 @@ window.initCycles=function(root){
     if(mode!==3||!level)return; /* the mode changed during the end delay */
     running=false;ui.hidden=false;humSet(false,0);menu.classList.remove('cyc-wide');
     var next=levelIx+1<LEVELS.length;
-    menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' — new best':' · best '+BEST[level.id].toFixed(2)+'s'):' — '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
+    menu.innerHTML='<h2>'+(won?'Cleared in '+how.toFixed(2)+'s':'Level failed')+'</h2><p>'+level.name+(won?(BEST[level.id]===how?' · new best':' · best '+BEST[level.id].toFixed(2)+'s'):' · '+how)+'</p><div class="cyc-opts">'+(won&&next?'<button class="cyc-btn" data-level="'+(levelIx+1)+'">Next level</button>':'')+'<button class="cyc-btn" data-level="'+levelIx+'">'+(won?'Again':'Retry')+'</button><button class="cyc-btn" data-levels="1">All levels</button><button class="cyc-btn" data-lobby="1">Lobby</button><button class="cyc-btn" data-view="1"></button></div>';
     wire();
   }
   function levelMenu(){
@@ -281,7 +281,7 @@ window.initCycles=function(root){
   }
   function start(m){if(m!==mode||m>=4){score=[0,0,0,0,0,0,0,0];round=0}mode=m;reset();if(g3)g3.reset();ui.hidden=true;running=true;last=0;countdown=m===3?1:2;now=0;sound();blip(440,.1);canvas.focus();cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
   function human(i,act,on){var c=cycles[i];if(!c||!c.alive||!running||countdown>0)return;var chase=g3&&g3.chase()&&mode!==2;if(act==='brake'||(chase&&act===1)){c.braking=on;return}if(!on)return;if(typeof act==='number'&&chase){if(act===2)act='left';else if(act===0)act='right';else return}turn(c,act)} /* chase view: the left key turns left, the right key turns right, whatever the heading */
-  /* Controls. Every action can have any number of keys — that is how a double bind works: bind two keys to
+  /* Controls. Every action can have any number of keys. That is how a double bind works: bind two keys to
      "turn left", press both at once, and the two 90° turns land back to back for a 180° flip. Solo mode
      listens to both players' keys; 2-player mode splits them. Saved in this browser. */
   var ACTIONS=[['up','Go up'],['down','Go down'],['left','Go left'],['right','Go right'],['turnL','Turn left'],['turnR','Turn right'],['brake','Brake']];
@@ -320,7 +320,7 @@ window.initCycles=function(root){
     menu.innerHTML='<div class="cyc-lobby"><div class="cyc-lobby-head"><h2>LIGHTWALL</h2><p class="cyc-tag">Tron-style light cycles. Your wall is your weapon.</p></div>'+
       '<div class="cyc-modes">'+MODES.map(function(m){return '<button class="cyc-mode'+(String(m[0])===String(picked)?' sel':'')+'" data-mode="'+m[0]+'"><strong>'+m[1]+'</strong><span>'+m[2]+'</span></button>'}).join('')+'</div>'+
       '<div class="cyc-lobby-side"><label class="cyc-name">Rider name<input id="cycName" maxlength="14" value="'+RIDER.replace(/"/g,'&quot;')+'" autocomplete="off" spellcheck="false"></label><button class="cyc-btn cyc-play" data-play="1">PLAY</button><div class="cyc-opts"><button class="cyc-btn cyc-mini" data-keys="1">Controls</button><button class="cyc-btn cyc-mini" data-view="1"></button><button class="cyc-btn cyc-mini" data-help="1">How to play</button></div></div>'+
-      '<div class="cyc-help" hidden><p>Arrow keys or WASD. In the chase views left and right turn you and down brakes; from above the arrows point the way and Space brakes. Run close and parallel to a wall to boost — the closer, the faster. Ride into a wall and it holds you while your RUBBER burns; turn away before it runs out. Grinding alongside a wall is free and fast.</p><p>Two turn keys at once flip you 180° (a double bind). V or the View button switches the camera. M mutes. Trails fade behind you, so the grid keeps opening up.</p><p class="cyc-small">Inspired by Armagetron Advanced · own code and art</p></div></div>';
+      '<div class="cyc-help" hidden><p>Arrow keys or WASD. In the chase views left and right turn you and down brakes; from above the arrows point the way and Space brakes. Run close and parallel to a wall to boost. The closer, the faster. Ride into a wall and it holds you while your RUBBER burns; turn away before it runs out. Grinding alongside a wall is free and fast.</p><p>Two turn keys at once flip you 180° (a double bind). V or the View button switches the camera. M mutes. Trails fade behind you, so the grid keeps opening up.</p><p class="cyc-small">Inspired by Armagetron Advanced · own code and art</p></div></div>';
     menu.querySelectorAll('[data-mode]').forEach(function(b){b.addEventListener('click',function(){picked=isNaN(+b.dataset.mode)?b.dataset.mode:+b.dataset.mode;try{localStorage.setItem('tr-cycles-mode',JSON.stringify(picked))}catch(e){}menu.querySelectorAll('[data-mode]').forEach(function(x){x.classList.toggle('sel',x===b)})});b.addEventListener('dblclick',play)});
     menu.querySelector('[data-play]').addEventListener('click',play);
     var nameEl=menu.querySelector('#cycName');nameEl.addEventListener('input',function(){RIDER=(nameEl.value.trim()||'You').slice(0,14);NAMES[0]=RIDER;if(cycles[0])cycles[0].name=RIDER;try{localStorage.setItem('tr-cycles-name',RIDER)}catch(e){}});
