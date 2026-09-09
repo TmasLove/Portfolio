@@ -583,5 +583,3 @@ html:not(.still) .cn-dot{animation:cnBreathe 2.2s ease-in-out infinite}
 
 /* the phone has its own status bar, and a short desktop drops the tail of the floor */
 @media (max-width:900px){.cn{display:none}}
-@media (max-height:800px){.cn-cell[data-k="sales"]{display:none}}
-@media (max-height:680px){.cn-cell[data-k="studio"]{display:none}}
