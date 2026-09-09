@@ -232,21 +232,67 @@
   markSeen();
 
   var estate = GROUPS[GROUPS.length - 1];
-  setInterval(function () {
-    if (still()) return;
-    estate.load = Math.max(18, Math.min(96, Math.round(estate.load + (Math.random() * 9 - 4.5))));
-    setCell(estate);
-    if (openKey === 'lr') paint(estate);
-  }, 3000);
 
-  /* their ActivityArc: a thinner arc on its own radius, so it reads as a separate fact rather
-     than the usage number moving. Only the estate works; a folder is not doing anything. */
-  setInterval(function () {
+  /*  A floor filling up, not a number being shuffled.
+
+      This used to step +/-4.5 every three seconds, which is a random walk: it fell as often as
+      it rose and never sat still, so the reading visibly bounced (80, 77, 65, back up) and drew
+      the eye every few seconds. Now it creeps a point at a time, mostly upward, and most ticks
+      do nothing at all. Between nine and twenty seconds apart, so it is never metronomic and you
+      have to be watching to catch it move.
+
+      It has to shed load somewhere or it would just peg at the ceiling, so it eases back down
+      near the top rather than being reset. The band boundaries at 50 and 70 are crossed rarely
+      enough, at one point a tick, that the ring changes colour as a slow fade rather than a
+      flicker.  */
+  var LOAD_MIN = 46, LOAD_MAX = 92;
+  function driftEstate() {
+    if (!still()) {
+      var r = Math.random(), step;
+      if (r < 0.34) step = 1;        /* the usual: one point up */
+      else if (r < 0.44) step = 2;   /* now and then, a little more */
+      else if (r < 0.88) step = 0;   /* most ticks it just holds */
+      else step = -1;                /* and occasionally it eases */
+      if (step > 0 && estate.load >= LOAD_MAX - 2) step = -1;   /* shed rather than peg */
+      if (step < 0 && estate.load <= LOAD_MIN + 2) step = 1;
+      if (step) {
+        estate.load = Math.max(LOAD_MIN, Math.min(LOAD_MAX, estate.load + step));
+        setCell(estate);
+        refreshOpenEstate();
+      }
+    }
+    setTimeout(driftEstate, 9000 + Math.random() * 11000);
+  }
+
+  /*  Update the two things that actually changed rather than repainting the card. Rewriting the
+      whole sheet under the pointer re-renders every row while somebody is reading it.  */
+  function refreshOpenEstate() {
+    if (openKey !== 'lr') return;
+    var bar = sheet.querySelector('.cn-bar span'), used = sheet.querySelector('.cn-used');
+    if (bar) { bar.style.width = Math.max(estate.load, 2) + '%'; bar.className = 'b-' + band(estate.load) }
+    if (used) used.textContent = estate.load + '% busy';
+  }
+
+  setTimeout(driftEstate, 9000 + Math.random() * 11000);
+
+  /*  Their ActivityArc: a thinner arc on its own radius, so it reads as a separate fact rather
+      than the usage number moving. Only the estate works; a folder is not doing anything.
+
+      It used to flip a coin every 5.2s, so the arc blinked on and off continuously. A job that
+      runs takes a while and then stops, so now it spins for one stretch and rests for a longer
+      one, both randomised.  */
+  function idleEstate() {
     var el = cellEls.lr; if (!el) return;
     el.classList.remove('is-busy');
-    if (still()) return;
-    if (Math.random() < 0.6) el.classList.add('is-busy');
-  }, 5200);
+    setTimeout(busyEstate, 24000 + Math.random() * 26000);
+  }
+  function busyEstate() {
+    var el = cellEls.lr; if (!el) return;
+    if (still()) return void setTimeout(busyEstate, 20000);
+    el.classList.add('is-busy');
+    setTimeout(idleEstate, 7000 + Math.random() * 6000);
+  }
+  setTimeout(busyEstate, 6000 + Math.random() * 8000);
 
   if (cellEls.lr) cellEls.lr.classList.add('is-waiting');
 })();
