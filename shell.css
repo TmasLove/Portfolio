@@ -589,3 +589,7 @@ html:not(.still) .cn-dot{animation:cnBreathe 2.2s ease-in-out infinite}
 
 /* the phone has its own status bar, and a short desktop drops the tail of the floor */
 @media (max-width:900px){.cn{display:none}}
+
+/* the mint role chip hardcodes a deep green for the light page, which is unreadable on the
+   dark desktop; the accent chip beside it needs nothing, its tokens already flip */
+html.dark .tag.sales{background:rgba(0,224,198,.15);color:#6FE3CE;box-shadow:inset 0 0 0 1px rgba(0,224,198,.30)}
