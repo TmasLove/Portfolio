@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="site/assets/og/tommyos.jpg" width="820" alt="TommyOS: a Mac-style desktop in the browser with the About window open">
+<img src="site/assets/og/tommyos-v2.jpg" width="820" alt="TommyOS: a Mac-style desktop in the browser with the About window open">
 
 # TommyOS
 
