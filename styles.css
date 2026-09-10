@@ -140,6 +140,38 @@ canvas.paint-canvas{border:1px solid var(--border);border-radius:10px;background
 .socials a{white-space:nowrap}
 @media (max-width:600px){.contact-form{grid-template-columns:1fr}.contact-form .span2,.form-err{grid-column:auto}}
 
+/* Contact page. Every class here is standalone rather than nested under .contact:
+   the desktop injects <main>'s children into .page-in and the page's own class is
+   dropped, so anything scoped to .contact would only style the plain route. Colour
+   and surface come from tokens, which shell.css reassigns for dark, so these need
+   no separate dark rules. */
+.contact-hero{margin-bottom:22px}
+.contact-hero h1{margin-bottom:.2em}
+.contact-hero .lead{font-size:1.125rem;color:var(--text-2);max-width:54ch;margin-bottom:14px}
+.status{display:inline-flex;align-items:center;gap:9px;margin:0;font-family:var(--font-display);font-size:.8125rem;font-weight:500;color:var(--text-2);background:var(--accent-soft);border:1px solid var(--border);border-radius:var(--r-chip);padding:7px 14px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 3px rgba(0,168,143,.18)}
+.contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(262px,1fr));gap:14px;margin:0 0 32px}
+.contact-card,.slink{flex-direction:row;align-items:center;gap:12px;text-decoration:none}
+.cicon{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--border);color:var(--accent-text)}
+.cicon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cbody{min-width:0}
+.cbody strong{display:block;font-family:var(--font-display);font-size:.9375rem;line-height:1.25;overflow-wrap:anywhere}
+.cbody span{display:block;font-size:.8125rem;color:var(--text-3);margin-top:2px}
+.contact-send,.contact-follow{margin-bottom:32px}
+.contact-send h2,.contact-follow h2{margin-bottom:.25em}
+.contact-sub{color:var(--text-2);font-size:.9375rem;max-width:58ch;margin-bottom:16px}
+.contact-form.panel{max-width:720px;padding:20px;margin-bottom:0}
+.field{min-width:0}
+.field label{display:block;font-family:var(--font-display);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px}
+.field .req{color:var(--accent-text)}
+.form-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.form-note{margin:0;font-size:.8125rem;color:var(--text-3)}
+.social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.slink .go{margin-left:auto;color:var(--text-3);font-size:.9375rem;transition:transform .14s,color .14s}
+.slink:hover .go{transform:translateX(3px);color:var(--accent-text)}
+/* the location card is information, not a link: it should not lift on hover */
+.card.fact:hover{transform:none;box-shadow:0 8px 24px rgba(10,8,20,.07);border-color:var(--border)}
+
 .sq.cover img{padding:0;background:none;object-fit:cover}
 .sq.plain img{padding:0;background:none;object-fit:contain}
 

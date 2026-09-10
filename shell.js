@@ -180,8 +180,8 @@ tick();setInterval(tick,30000);
 /* ---------- menu bar ---------- */
 var menubar=document.getElementById('menubar');
 var MENUS={
- apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['Stickies',function(){TR.extras&&TR.extras.openStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
- go:[['Work',function(){openWork()}],['About',function(){openPage('about')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Armagetron',function(){openApp('arena')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
+ apple:[['About Tommy',function(){openAbout()}],['Work',function(){openWork('work')}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Little River',function(){openApp('littleriver')}],['Launchpad','F4',function(){openLP()}],['Spotlight','⌘K',function(){openSpot()}],['Mission Control','F3',function(){TR.extras&&TR.extras.openMission()}],null,['Stickies',function(){TR.extras&&TR.extras.openStickies()}],['Take the tour',function(){TR.extras&&TR.extras.startTour()}],null,['Restart…',function(){location.reload()}]],
+ go:[['Work',function(){openWork('work')}],['About',function(){openAbout()}],['Tools',function(){openPage('tools')}],['Contact',function(){openPage('contact')}],null,['Brave Browser',function(){openApp('brave')}],['Music',function(){openApp('music')}],['Paint',function(){openApp('paint')}],['Brick Breaker',function(){openApp('brick')}],['Armagetron',function(){openApp('arena')}],['Meme Maker',function(){openApp('meme')}],['Guestbook',function(){openApp('guestbook')}],['Stickies',function(){openApp('stickies')}],['Terminal',function(){openApp('terminal')}],['Trash',function(){openApp('trash')}],null,['FAQ',function(){openPage('faq')}],['Privacy policy',function(){window.open('/privacy.html','_blank','noopener')}]],
  window:function(){var items=[['Show Desktop',function(){TR.extras&&TR.extras.showDesktop()}],['Minimize',function(){var t=topWin();if(t)minimize(t)}],['Zoom',function(){var t=topWin();if(t)toggleMax(t)}],['Close',function(){var t=topWin();if(t)closeWindow(t.key)}],null];var keys=Object.keys(openMap);if(!keys.length)items.push(['No open windows',null]);keys.forEach(function(k){var w=openMap[k];items.push([(w.el.classList.contains('min')?'◇ ':'')+w.title,function(){restore(w)}])});return items},
  help:[['Keyboard: ⌘K Spotlight · Esc closes · drag a window edge to resize',null],['Every project opens the real site: "Open ↗" inside its case file',null],null,['Email Tommy',function(){openPage('contact')}]]
 };
@@ -351,30 +351,42 @@ function openApp(key){
   if(isPhone())return openSheet(key);
   var app=appByKey(key);
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
-  var fn={finder:openWork,launchpad:openLP,settings:function(){window.TR&&TR.extras&&TR.extras.openSettings&&TR.extras.openSettings()},cycles:openCycles,arena:openArena,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:function(){openPage('about')},contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
+  var fn={finder:openWork,launchpad:openLP,settings:function(){window.TR&&TR.extras&&TR.extras.openSettings&&TR.extras.openSettings()},cycles:openCycles,arena:openArena,brave:openBrave,music:openMusic,paint:openPaint,brick:openBrick,meme:openMeme,littleriver:openLR,terminal:openTerminal,trash:openTrash,about:openAbout,contact:function(){openPage('contact')},tools:function(){openPage('tools')},work:openWork}[key];
   if(fn)return fn();
   if(REG[key])return REG[key].open();
 }
 function openPage(slug){var p=PAGES[slug];if(isPhone())return openSheetPage(slug);var w=createWindow('page-'+slug,p.title,{w:780,h:600,dockKey:slug==='work'?'finder':'page-'+slug,appName:p.title});loadPage(w,p.url);return w}
 /* Finder: sidebar of pages, folders and documents (the privacy and policy pages live here) */
 var DOCS=[['FAQ','/faq/'],['Privacy policy','/privacy.html'],['Rehab Pro privacy','/rehabpro/privacy.html'],['GRVT','/GRVT.html']];
-function openWork(){
-  if(isPhone())return openSheetPage('work');
-  var w=createWindow('finder','Work',{w:940,h:620,dockKey:'finder',appName:'Finder',minW:640});
-  var side='<div class="fside"><h4>Favorites</h4>'+Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).map(function(k){return '<button class="fitem'+(k==='work'?' on':'')+'" data-page="'+k+'">'+svgI(k)+PAGES[k].title+'</button>'}).join('')+'<h4>Folders</h4>'+FOLDERS.map(function(f){return '<button class="fitem" data-folder="'+f.key+'"><span class="fi">'+ART.folder+'</span>'+f.label+'</button>'}).join('')+'<h4>Documents</h4>'+DOCS.map(function(d){return '<button class="fitem" data-doc="'+d[1]+'"><span class="fi doc">'+ART.doc+'</span>'+d[0]+'</button>'}).join('')+'</div>';
+/* One Finder window, opened on whichever sidebar page was asked for. Calling it
+   again with a different page navigates the window that is already open rather
+   than stacking a second one on top of it. */
+function openWork(startKey){
+  var start=(startKey&&PAGES[startKey]&&!PAGES[startKey].hidden)?startKey:'work';
+  if(isPhone())return openSheetPage(start);
+  var already=!!openMap['finder'];
+  var w=createWindow('finder',PAGES[start].title,{w:940,h:620,dockKey:'finder',appName:'Finder',minW:640});
+  /* Only a request for a named page moves a Finder that is already open. The dock
+     icon passes nothing and, as on a Mac, simply brings the window back. */
+  if(already){if(startKey&&w.finderGo)w.finderGo(start);return w}
+  var side='<div class="fside"><h4>Favorites</h4>'+Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden}).map(function(k){return '<button class="fitem'+(k===start?' on':'')+'" data-page="'+k+'">'+svgI(k)+PAGES[k].title+'</button>'}).join('')+'<h4>Folders</h4>'+FOLDERS.map(function(f){return '<button class="fitem" data-folder="'+f.key+'"><span class="fi">'+ART.folder+'</span>'+f.label+'</button>'}).join('')+'<h4>Documents</h4>'+DOCS.map(function(d){return '<button class="fitem" data-doc="'+d[1]+'"><span class="fi doc">'+ART.doc+'</span>'+d[0]+'</button>'}).join('')+'</div>';
   w.el.classList.add('finder');
   w.body.innerHTML='<div class="fwrap">'+side+'<div class="fmain win-body"></div></div>';
   var main=w.body.querySelector('.fmain');var host={body:main,el:w.el,nav:[]};
   function sel(b){w.body.querySelectorAll('.fitem').forEach(function(x){x.classList.toggle('on',x===b)})}
-  w.body.querySelectorAll('[data-page]').forEach(function(b){b.addEventListener('click',function(){sel(b);host.nav=[];loadPage(host,PAGES[b.dataset.page].url,{replace:true});setTitle(w,PAGES[b.dataset.page].title)})});
+  function goPage(k){var b=w.body.querySelector('[data-page="'+k+'"]');if(!b)return;sel(b);host.nav=[];loadPage(host,PAGES[k].url,{replace:true});setTitle(w,PAGES[k].title)}
+  w.finderGo=goPage;
+  w.body.querySelectorAll('[data-page]').forEach(function(b){b.addEventListener('click',function(){goPage(b.dataset.page)})});
   w.body.querySelectorAll('[data-folder]').forEach(function(b){b.addEventListener('click',function(){sel(b);var f=FOLDERS.filter(function(x){return x.key===b.dataset.folder})[0];main.innerHTML=folderHTML(f);main.querySelectorAll('.ficon').forEach(function(x){x.addEventListener('click',function(){openApp(x.dataset.key)})});setTitle(w,f.label)})});
   w.body.querySelectorAll('[data-doc]').forEach(function(b){b.addEventListener('click',function(){sel(b);main.innerHTML='<iframe class="docframe" src="'+b.dataset.doc+'" title="'+esc(b.textContent)+'"></iframe>';setTitle(w,b.textContent.trim())})});
   host.el={querySelector:function(){return {hidden:true}}};
-  loadPage(host,'/work/',{replace:true});
+  goPage(start);
   return w;
 }
 function svgI(k){var d={work:'<path d="M3 7h6l2 2h10v10H3z"/>',about:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',contact:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M4 8l8 6 8-6"/>',tools:'<path d="M14 6a4 4 0 0 0-5.6 4.6L4 15l3 3 4.4-4.4A4 4 0 0 0 16 8l-2 2-2-2z"/>'}[k];return '<svg viewBox="0 0 24 24" class="fi">'+d+'</svg>'}
-function openAbout(){var w=openPage('about');return w}
+/* About is a Finder page, not a window of its own: the sidebar is most of what
+   makes it look like a desktop, and a bare About window loses it. */
+function openAbout(){return openWork('about')}
 
 /* Brave: a start page of the sites Tommy built, each one opened inside the browser when the site allows it */
 function braveStart(){
@@ -556,7 +568,7 @@ if(lp){lp.addEventListener('click',function(e){if(e.target===lp||e.target===lpGr
 /* ---------- spotlight ---------- */
 var spot=document.getElementById('spotlight'),spotInput=document.getElementById('spotInput'),spotResults=document.getElementById('spotResults');
 var ALL=APPS.map(function(a){return{title:a.title,cat:a.category,go:function(){openApp(a.key)}}})
- .concat(Object.keys(PAGES).map(function(k){return{title:PAGES[k].title,cat:'page',go:function(){openPage(k)}}}))
+ .concat(Object.keys(PAGES).map(function(k){return{title:PAGES[k].title,cat:'page',go:PAGES[k].hidden?function(){openPage(k)}:function(){openWork(k)}}}))
  .concat(DOCK.filter(function(d){return d.key!=='finder'}).map(function(d){return{title:d.label,cat:'app',go:function(){openApp(d.key)}}}))
  .concat(EXTRA.map(function(d){return{title:d.title,cat:'game',go:function(){openApp(d.key)}}}))
  .concat([{title:'Stickies',cat:'app',go:function(){openApp('stickies')}}])
