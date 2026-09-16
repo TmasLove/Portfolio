@@ -493,9 +493,50 @@ function tickWidgets(){
   var cal=document.querySelector('.lw-calendar');
   if(cal){cal.querySelector('.lw-dow').textContent=d.toLocaleDateString('en-US',{weekday:'long'});cal.querySelector('.lw-day').textContent=d.getDate()}
 }
+/*  A home-screen folder. The closed tile is the iOS trick: a rounded translucent plate holding
+    the members' own icons shrunk into a grid, so you can tell what is inside without opening it.
+    Tapping it lifts the wallpaper behind a blur and shows the apps full size.  */
+function folderTile(label,members){
+  var b=document.createElement('button');b.className='lapp lfolder';b.type='button';
+  b.setAttribute('aria-label',label+' folder, '+members.length+' apps');
+  b.innerHTML='<span class="lf-plate">'+members.slice(0,9).map(function(m){
+    return '<span class="lf-mini">'+sqHTML(m)+'</span>'}).join('')+
+    '</span><span class="label">'+esc(label)+'</span>';
+  b.addEventListener('click',function(){openPhoneFolder(label,members)});
+  return b;
+}
+function openPhoneFolder(label,members){
+  var ov=document.createElement('div');ov.className='lfolder-open';
+  ov.innerHTML='<h2 class="lfo-title">'+esc(label)+'</h2><div class="lfo-panel">'+
+    members.map(function(m){
+      return '<button class="lapp" type="button" data-key="'+esc(m.key)+'">'+sqHTML(m)+
+        '<span class="label">'+esc(m.short||m.title)+'</span></button>'}).join('')+'</div>';
+  document.body.appendChild(ov);
+  function shut(){ov.classList.add('out');setTimeout(function(){ov.remove()},200);document.removeEventListener('keydown',onKey)}
+  function onKey(e){if(e.key==='Escape')shut()}
+  /* anywhere off the panel closes it, same as the real thing */
+  ov.addEventListener('click',function(e){if(!e.target.closest('.lfo-panel'))shut()});
+  ov.querySelectorAll('.lapp').forEach(function(t){
+    t.addEventListener('click',function(){shut();openApp(t.dataset.key)});
+  });
+  document.addEventListener('keydown',onKey);
+}
 if(lGrid){
   ltiles.push(widgetTile('clock'),widgetTile('calendar'));setInterval(tickWidgets,1000);tickWidgets();
-  APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}})).forEach(function(a){
+  /* The games sit in one folder, the way they do on a real home screen (Tommy: "could we group
+     up the games in a single folder like the phone does"). Membership is read off the desktop's
+     own Games folder rather than listed again here, so the two views cannot drift apart. */
+  var gamesFolder=FOLDERS.filter(function(f){return f.key==='games'})[0];
+  var GAME_KEYS=gamesFolder.members().map(function(m){return m.key});
+  var flat=APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}));
+  var gameApps=flat.filter(function(a){return GAME_KEYS.indexOf(a.key)>-1});
+  var folderPlaced=false;
+  flat.forEach(function(a){
+    /* the folder takes the slot the first game held, so the grid keeps its order */
+    if(GAME_KEYS.indexOf(a.key)>-1){
+      if(!folderPlaced){ltiles.push(folderTile(gamesFolder.label,gameApps));folderPlaced=true}
+      return;
+    }
     var b=document.createElement('button');b.className='lapp';
     b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
