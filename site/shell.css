@@ -225,6 +225,23 @@ canvas.meme-canvas{border:1px solid var(--border);border-radius:10px;background:
   .lapp .sq{width:60px;height:60px}
   .lapp .label{font-size:.6875rem;font-weight:500;letter-spacing:-.005em;text-shadow:0 1px 2px rgba(0,0,0,.55);text-align:center;line-height:1.2;max-width:76px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .launcher .sq{box-shadow:none;transition:transform .12s ease-out}.launcher .lapp:active .sq,.launcher .lwidget:active .lw-card{transform:scale(.92)}
+  /* home-screen folder: a translucent plate of shrunken icons, then the real thing on tap */
+  .lfolder .lf-plate{width:60px;height:60px;border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:5px;box-sizing:border-box;background:rgba(255,255,255,.22);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);transition:transform .12s ease-out}
+  .launcher .lfolder:active .lf-plate{transform:scale(.92)}
+  .lfolder .lf-mini{display:block;min-width:0;min-height:0;overflow:hidden;border-radius:4px}
+  .lfolder .lf-mini .sq{width:100%;height:100%;border-radius:4px;box-shadow:none}
+  .lfolder .lf-mini .sq img{padding:0}
+  .lfolder .lf-mini .sq.letter::before{font-size:7px}
+  .lfolder .lf-mini .sq svg{width:100%;height:100%}
+  /* the opened folder */
+  .lfolder-open{position:fixed;inset:0;z-index:1600;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;padding:24px;background:rgba(10,10,14,.42);backdrop-filter:blur(28px) saturate(1.3);-webkit-backdrop-filter:blur(28px) saturate(1.3);animation:lfoIn .22s cubic-bezier(.2,.7,.2,1)}
+  .lfolder-open.out{animation:lfoOut .2s ease-in forwards}
+  @keyframes lfoIn{from{opacity:0}to{opacity:1}}
+  @keyframes lfoOut{to{opacity:0}}
+  .lfo-title{margin:0;font-size:2.1rem;font-weight:700;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .lfo-panel{width:min(100%,340px);box-sizing:border-box;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 8px;padding:20px 14px;border-radius:30px;background:rgba(255,255,255,.16);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 20px 50px rgba(0,0,0,.35);animation:lfoPanel .26s cubic-bezier(.2,.7,.2,1)}
+  @keyframes lfoPanel{from{transform:scale(.86);opacity:0}to{transform:none;opacity:1}}
+  .lfolder-open .lapp{height:auto;min-height:0}
   .ldock{margin:8px 16px calc(12px + env(safe-area-inset-bottom));padding:12px;display:flex;justify-content:space-around;background:rgba(255,255,255,.26);backdrop-filter:blur(28px) saturate(1.8);border-radius:34px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
   .ldock .lapp .sq{width:56px;height:56px}
   .ldock .lapp .label{display:none}
