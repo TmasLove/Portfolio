@@ -39,7 +39,7 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 
 - [WrapMe](https://wrapme.app): Real-time 3D configurator for vehicle wrap and paint shops. Customers orbit their own car in the browser and try real films across six independently painted zones, rendered live in WebGL.
 - [Roldan Group](https://buildroldan.com): Site for a family exterior construction and remodelling business, including Pool Vision, an AI feature that previews the finished result on a homeowner's own property.
-- [Clear Care Dental](https://app.clearcaredentalgroup.com/login): Full-stack dental benefits platform in React Native and Expo. Members find in-network dentists, track plan usage in real time, and book visits from one cross-platform app.
+- [Clear Care Dental Group](https://tommyroldan.com/work/clear-care-dental/): One dental membership product in three places: an iPhone app on the App Store (React Native, Expo; https://apps.apple.com/us/app/clear-care-dental/id6813132091), a web app (React, Vite; https://app.clearcaredentalgroup.com), and the marketing website (https://clearcaredentalgroup.com).
 - [Clear Care Dental Enterprise](https://clearcaredentalenterprise.com/): Enterprise dashboard handling benefits administration, member management, and practice operations at scale.
 - [Dolce Vita Supplements](https://www.dolcevitasupplements.com/): Shopify e-commerce brand for sublingual supplement strips, with editorial storefront design and a frictionless checkout.
 - [Versatile Customs](https://versatile-customs.vercel.app): Storefront for a vehicle wrap studio, built around the 3D visualizer, covering PPF, colour-change wraps, ceramic tint, and lighting.
