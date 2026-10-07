@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50   # enough history to see what this push changed, for IndexNow below
       - name: Publish site/ to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -27,3 +29,11 @@ jobs:
           publish_branch: gh-pages
           enable_jekyll: false
           commit_message: "Deploy ${{ github.sha }}"
+      # Tell Bing (and the other IndexNow engines) which pages this push changed, so they do not
+      # wait for their next sitemap read. Google does not use IndexNow. GitHub Pages goes live a
+      # minute or so after the gh-pages push, hence the pause. Never fails the deploy.
+      - name: Notify search engines (IndexNow)
+        continue-on-error: true
+        run: |
+          sleep 60
+          python3 scripts/indexnow.py --before "${{ github.event.before }}" --after "${{ github.sha }}"
