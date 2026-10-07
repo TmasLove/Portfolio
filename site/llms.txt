@@ -40,7 +40,9 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 - [WrapMe](https://wrapme.app): Real-time 3D configurator for vehicle wrap and paint shops. Customers orbit their own car in the browser and try real films across six independently painted zones, rendered live in WebGL.
 - [Websites for wrap shops](https://tommyroldan.com/wrap-shop-websites/): Web design for vehicle wrap shops and wrap studios. A built-in 3D wrap configurator (WrapMe), a site the shop edits itself, booking that carries the customer's design, and search setup for Google and AI assistants.
 - [Roldan Group](https://buildroldan.com): Site for a family exterior construction and remodelling business, including Pool Vision, an AI feature that previews the finished result on a homeowner's own property.
-- [Clear Care Dental Group](https://tommyroldan.com/work/clear-care-dental/): One dental membership product in three places: an iPhone app on the App Store (React Native, Expo; https://apps.apple.com/us/app/clear-care-dental/id6813132091), a web app (React, Vite; https://app.clearcaredentalgroup.com), and the marketing website (https://clearcaredentalgroup.com).
+- [Clear Care Dental Group Web App](https://tommyroldan.com/work/clear-care-dental/): The secure member and provider portal at https://app.clearcaredentalgroup.com. React, Vite.
+- [Clear Care Dental for iPhone](https://tommyroldan.com/work/clear-care-dental-ios/): The member app, free on the App Store (https://apps.apple.com/us/app/clear-care-dental/id6813132091), iOS 17 or later. React Native, Expo.
+- [Clear Care Dental Group Website](https://tommyroldan.com/work/cleancare-marketing/): Conversion-focused marketing site at https://clearcaredentalgroup.com. React, Vite.
 - [Clear Care Dental Enterprise](https://clearcaredentalenterprise.com/): Enterprise dashboard handling benefits administration, member management, and practice operations at scale.
 - [Dolce Vita Supplements](https://www.dolcevitasupplements.com/): Shopify e-commerce brand for sublingual supplement strips, with editorial storefront design and a frictionless checkout.
 - [Versatile Custom](https://versatilecustom.com): Site for a Miami vehicle wrap studio, built around the 3D visualizer I developed for the shop. Customers design their build in the browser, see the services (colour-change wraps, paint protection film, chrome delete, custom lighting and starlight headliners), then get in touch for a quote.
@@ -52,3 +54,5 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 
 - [Privacy Policy](https://tommyroldan.com/privacy.html): How data is collected, used, and protected across the tools on this site.
 - [Sitemap](https://tommyroldan.com/sitemap.xml): Machine-readable index of all canonical URLs.
+- [Personal Effort Tracker](https://tommyroldan.com/work/local-legend-predictor/): Open-source Strava tool (MIT): top 10 segments from the last 90 days, pace against last year, a shareable card. Source: https://github.com/TmasLove/local-legend-predictor
+- [KOM Memorial](https://tommyroldan.com/work/kom-memorial/): Open-source web app for cyclists (MIT): log KOMs and memorialize lost ones. No Strava API. Source: https://github.com/TmasLove/kom-memorial
