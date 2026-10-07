@@ -22,8 +22,8 @@ var APPS=[
  {key:'dolce-vita-supplements',title:'Dolce Vita Supplements',short:'Dolce Vita',category:'web',icon:'/assets/icons/dolce-vita-supplements.png',fit:'cover',init:'D',page:'/work/dolce-vita-supplements/',live:'https://www.dolcevitasupplements.com/',embed:false,shot:'/assets/live/dolce-vita-supplements-1440.jpg'},
  {key:'la-dolce-vita-casa',title:'La Dolce Vita Casa',category:'web',icon:'/assets/icons/la-dolce-vita-casa.png',fit:'cover',init:'L',page:'/work/la-dolce-vita-casa/',live:'https://ladolcevitacasa.com',embed:false,shot:'/assets/live/la-dolce-vita-casa-1440.jpg'},
  {key:'powerpoint-speech-tool',title:'PowerPoint Speech Tool',short:'PPT Speech',category:'tool',art:'ppt',init:'P',page:'/work/powerpoint-speech-tool/',live:'https://tommyroldan.com/ppt-speech/',embed:true,shot:'/assets/live/powerpoint-speech-tool-1440.jpg'},
- {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
- {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
+ {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',tone:'strava',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
+ {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',tone:'strava',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
  {key:'build-roldan',title:'Roldan Group',category:'web',art:'roldan',init:'R',page:'/work/build-roldan/',live:'https://buildroldan.com',embed:true,shot:'/assets/live/build-roldan-1440.jpg'},
  {key:'social-audit',title:'SocialAudit',category:'apps',icon:'/assets/icons/social-audit.png',fit:'cover',init:'S',page:'/work/social-audit/',live:null,embed:false,shot:null}
 ];
@@ -96,7 +96,7 @@ function sqHTML(o,cls){
   cls=cls||'';
   if(o.art)return '<span class="sq art '+cls+'">'+ART[o.art]+'</span>';
   if(o.icon)return '<span class="sq '+(o.fit||'contain')+' '+cls+'"><img src="'+o.icon+'" alt="" onerror="var p=this.parentNode;p.classList.add(\'letter\');p.setAttribute(\'data-init\',\''+esc(o.init||'')+'\');this.remove()"></span>';
-  return '<span class="sq letter '+cls+'" data-init="'+esc(o.init||'')+'"></span>';
+  return '<span class="sq letter '+(o.tone?'tone-'+o.tone+' ':'')+cls+'" data-init="'+esc(o.init||'')+'"></span>';
 }
 function appByKey(k){for(var i=0;i<APPS.length;i++)if(APPS[i].key===k)return APPS[i];return null}
 function isPhone(){return matchMedia('(max-width:768px)').matches}
@@ -594,7 +594,7 @@ var sc=document.getElementById('sheetClose');if(sc)sc.addEventListener('click',c
 /* ---------- launchpad ---------- */
 var lp=document.getElementById('launchpad'),lpGrid=document.getElementById('lpGrid'),lpInput=document.getElementById('lpInput');
 function lpItems(){
-  return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init}})
+  return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init,tone:a.tone}})
    .concat(EXTRA.map(function(x){return{key:x.key,title:x.title,art:x.art}}))
    .concat([{key:'stickies',title:'Stickies',art:'stickies'}])
    .concat(DOCK.filter(function(d){return ['brave','music','paint','guestbook','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
