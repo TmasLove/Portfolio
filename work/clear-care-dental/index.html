@@ -1,26 +1,79 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Clear Care Dental Group Web App | Tommy Roldan</title>
+<title>Clear Care Dental Group Web App: Case Study | Tommy Roldan</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css?v=20261007b"><link rel="canonical" href="https://tommyroldan.com/work/clear-care-dental/">
-<meta name="description" content="The Clear Care Dental Group web app: the secure member and provider portal at app.clearcaredentalgroup.com, for finding in-network dentists, tracking plan usage and booking visits.">
+<meta name="description" content="Case study: the Clear Care Dental Group web app, a member portal and the back office behind it, with support tickets and a blog manager that publishes through GitHub.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
-<meta property="og:title" content="Clear Care Dental Group Web App"><meta property="og:description" content="The Clear Care Dental Group web app: the secure member and provider portal at app.clearcaredentalgroup.com, for finding in-network dentists, tracking plan usage and booking visits.">
+<meta property="og:title" content="Clear Care Dental Group Web App: Case Study"><meta property="og:description" content="Case study: the Clear Care Dental Group web app, a member portal and the back office behind it, with support tickets and a blog manager that publishes through GitHub.">
 <meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://tommyroldan.com/work/clear-care-dental/">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Clear Care Dental Group Web App"><meta name="twitter:description" content="The Clear Care Dental Group web app: the secure member and provider portal at app.clearcaredentalgroup.com, for finding in-network dentists, tracking plan usage and booking visits."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Clear Care Dental Group web app", "url": "https://app.clearcaredentalgroup.com", "applicationCategory": "HealthApplication", "description": "Secure member and provider portal for the Clear Care Dental Group membership plan.", "creator": {"@type": "Person", "name": "Tommy Roldan", "url": "https://tommyroldan.com"}, "mainEntityOfPage": "https://tommyroldan.com/work/clear-care-dental/"}</script>
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Clear Care Dental Group Web App: Case Study"><meta name="twitter:description" content="Case study: the Clear Care Dental Group web app, a member portal and the back office behind it, with support tickets and a blog manager that publishes through GitHub."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Clear Care Dental Group web app", "url": "https://app.clearcaredentalgroup.com", "applicationCategory": "HealthApplication", "description": "Member portal and back office for the Clear Care Dental Group membership plan.", "creator": {"@type": "Person", "name": "Tommy Roldan", "url": "https://tommyroldan.com"}, "mainEntityOfPage": "https://tommyroldan.com/work/clear-care-dental/"}</script>
 </head><body>
 <header class="page-header"><a class="back-link" href="/work/">← All work</a></header>
 <main class="page">
+<style>
+.cs-shot{display:block;margin:14px 0 6px}
+.cs-shot img{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 10px 30px rgba(10,8,20,.16)}
+.cs-pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:14px 0 6px}
+.cs-pair .cs-shot{margin:0}
+.cs-cap{font-size:.8rem;margin:4px 0 0}
+.cs-step{margin-top:34px}
+</style>
 <div class="panel"><div class="case-head"><span class="sq"><img src="/assets/icons/clear-care-dental.png" alt="Clear Care Dental icon"></span>
 <div><h1>Clear Care Dental Group Web App</h1><p class="case-meta">Apps · 2025</p><span class="badges"><span class="badge live">live</span><span class="badge private">private</span></span></div></div></div>
+
 <h2>What it is</h2>
-<p>The secure member and provider portal for Clear Care Dental Group, a dental membership plan rather than insurance. Members find in-network dentists, track what their plan has covered, and book visits, from any browser.</p>
-<div class="case-shots"><img class="shot-1440" src="/assets/live/clear-care-dental-1440.jpg" alt="Clear Care Dental web app sign-in at desktop width"><span class="phone-frame"><img src="/assets/live/clear-care-dental-390.jpg" alt="Clear Care Dental web app sign-in on a phone"></span></div>
-<h2>On the live app</h2>
-<div class="hquote">Secure Member &amp; Provider Portal</div><div class="hquote">HIPAA-compliant secure login</div><div class="hquote">New member? Enroll now</div>
-<h2>Built with</h2><span class="chip">React</span><span class="chip">Vite</span>
+<p>Clear Care Dental Group is a dental membership plan, not insurance. The web app is the software it runs on, and it has two sides: the portal members and dentists sign in to, and the back office the team runs the business from. It shares one backend with the <a href="/work/clear-care-dental-ios/">iPhone app</a>, so a change made in one shows up in the other.</p>
+<p class="t3">These screens were captured in August 2026, so the live app has moved on in places. The admin screens use sample data and are marked on the image.</p>
+
+<section class="cs-step">
+<h2>1. One door for members and dentists</h2>
+<a class="cs-shot" href="/assets/live/ccd-web/01-login.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/01-login.jpg" alt="Clear Care Dental sign-in: secure member and provider portal" loading="lazy" width="1600" height="900"></a>
+<p>Members and dental providers sign in at the same place and land on the side that is theirs. New members can enroll from the same screen.</p>
+</section>
+
+<section class="cs-step">
+<h2>2. What a member sees first</h2>
+<a class="cs-shot" href="/assets/live/ccd-web/02-member-dashboard-dark.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/02-member-dashboard-dark.jpg" alt="Member dashboard: savings this year, free benefits left, quick actions" loading="lazy" width="1440" height="900"></a>
+<p>The member's dashboard opens on what the membership has saved them this year, then the benefits the plan includes for free (cleanings, exams, X-rays, fluoride) with how many are left. Quick actions sit beside them: find a dentist in network, check what a procedure costs, and review treatment plans.</p>
+<p class="t3 cs-cap">An earlier version, on the demo account. Some of its wording has since changed, because Clear Care is a membership rather than insurance.</p>
+</section>
+
+<section class="cs-step">
+<h2>3. The back office, at a glance</h2>
+<div class="cs-pair">
+<a class="cs-shot" href="/assets/live/ccd-web/03-admin-dashboard-dark.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/03-admin-dashboard-dark.jpg" alt="Admin overview in dark mode, sample data" loading="lazy" width="1600" height="1111"></a>
+<a class="cs-shot" href="/assets/live/ccd-web/04-admin-dashboard-light.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/04-admin-dashboard-light.jpg" alt="Admin overview in light mode, sample data" loading="lazy" width="1600" height="1111"></a>
+</div>
+<p>The team's home screen: members, dentists, revenue and activity in one view, in dark or light. The sidebar is the whole business: members, dentists and leads; appointments and support; plans, plan requests and promo codes; media affiliates; staff and reports.</p>
+<p class="t3 cs-cap">Sample data. These are not Clear Care's real figures.</p>
+</section>
+
+<section class="cs-step">
+<h2>4. Every member issue in one queue</h2>
+<div class="cs-pair">
+<a class="cs-shot" href="/assets/live/ccd-web/05-admin-tickets-dark.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/05-admin-tickets-dark.jpg" alt="Support tickets in dark mode, sample data" loading="lazy" width="1600" height="1111"></a>
+<a class="cs-shot" href="/assets/live/ccd-web/06-admin-tickets-light.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/06-admin-tickets-light.jpg" alt="Support tickets in light mode, sample data" loading="lazy" width="1600" height="1111"></a>
+</div>
+<p>Staff raise a ticket about a member, give it a priority and a category (billing, appointment, benefits, general) and work it from open to closed, so a declined card or a same-day appointment request does not get lost in someone's inbox.</p>
+<p class="t3 cs-cap">Sample data. The names are invented.</p>
+</section>
+
+<section class="cs-step">
+<h2>5. The marketing blog, run from the same app</h2>
+<a class="cs-shot" href="/assets/live/ccd-web/07-admin-blog-manager.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/07-admin-blog-manager.jpg" alt="Marketing blog manager listing published posts" loading="lazy" width="1600" height="900"></a>
+<p>Posts on the public marketing site are markdown files in git. This page edits them through the GitHub API, so the team and the AI publishing agent work from one source of truth. Every save goes live within a minute or two, and a post that would break the site is rejected before anything is committed.</p>
+</section>
+
+<section class="cs-step">
+<h2>6. Editing a post</h2>
+<a class="cs-shot" href="/assets/live/ccd-web/08-admin-blog-editor.jpg" target="_blank" rel="noopener"><img src="/assets/live/ccd-web/08-admin-blog-editor.jpg" alt="Editing one marketing blog post" loading="lazy" width="1600" height="900"></a>
+<p>Title, audience and date, a description that is used word for word as the search and social preview text, and the body in markdown. The address is locked once a post is live, because changing it would break every link already pointing at it.</p>
+</section>
+
+<h2>Built with</h2><span class="chip">React</span><span class="chip">Vite</span><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PostgreSQL</span><span class="chip">GitHub API</span>
 <h2>Details</h2>
-<div class="panel"><dl class="dl"><div><dt>Category</dt><dd>Apps</dd></div><div><dt>Since</dt><dd>2025</dd></div><div><dt>Live URL</dt><dd>app.clearcaredentalgroup.com</dd></div></dl></div>
-<div class="case-actions"><a class="btn btn-primary js-embed" data-embed="no" href="https://app.clearcaredentalgroup.com/login" target="_blank" rel="noopener" data-shot="/assets/live/clear-care-dental-1440.jpg">Open ↗</a><a class="btn btn-secondary" href="https://app.clearcaredentalgroup.com/login" target="_blank" rel="noopener">Open in a new tab</a></div>
+<div class="panel"><dl class="dl"><div><dt>Since</dt><dd>2025</dd></div><div><dt>Live URL</dt><dd>app.clearcaredentalgroup.com</dd></div><div><dt>Screens from</dt><dd>August 2026</dd></div></dl></div>
+<div class="case-actions"><a class="btn btn-primary js-embed" data-embed="no" href="https://app.clearcaredentalgroup.com/login" target="_blank" rel="noopener" data-shot="/assets/live/ccd-web/01-login.jpg">Open ↗</a><a class="btn btn-secondary" href="https://app.clearcaredentalgroup.com/login" target="_blank" rel="noopener">Open in a new tab</a></div>
 <p class="t3">Also from Clear Care Dental Group: the <a href="/work/clear-care-dental-ios/">iPhone app</a>, the <a href="/work/cleancare-marketing/">website</a>, and the <a href="/work/cleancare-enterprise/">enterprise platform</a>.</p>
 </main><footer class="site-footer">Tommy Roldan · Miami, FL</footer></body></html>
