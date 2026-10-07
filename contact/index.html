@@ -45,7 +45,7 @@
     <div class="field"><label for="cf-type">Project type</label><select id="cf-type" name="projectType"><option value="">Pick one…</option><option value="Website">Website</option><option value="Web app">Web app</option><option value="E-commerce / Shopify">E-commerce / Shopify</option><option value="AI agent / automation">AI agent / automation</option><option value="Something else">Something else</option></select></div>
     <div class="field span2"><label for="cf-budget">Budget</label><select id="cf-budget" name="budget"><option value="">Optional, and it does not have to be exact…</option><option value="Not sure yet">Not sure yet</option><option value="&lt; $1k">&lt; $1k</option><option value="$1k – $5k">$1k – $5k</option><option value="$5k – $15k">$5k – $15k</option><option value="$15k+">$15k+</option></select></div>
     <div class="field span2"><label for="cf-message">What do you need? <span class="req" aria-hidden="true">*</span></label><textarea id="cf-message" name="message" rows="5" placeholder="What you are building, roughly when you need it, and anything that already exists." required></textarea></div>
-    <input type="hidden" name="_subject" value="Portfolio inquiry"><input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
+    <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"><label for="cf-hp">Leave this field empty</label><input id="cf-hp" type="text" name="_honey" tabindex="-1" autocomplete="off"></div><input type="hidden" name="_subject" value="Portfolio inquiry"><input type="hidden" name="_template" value="table"><input type="hidden" name="_captcha" value="false">
     <div class="span2 form-actions">
       <button type="submit" class="btn btn-primary">Send message →</button>
       <p class="form-note">It lands straight in my inbox. Prefer plain email? <a href="mailto:hi@tommyroldan.com">hi@tommyroldan.com</a></p>
@@ -91,8 +91,10 @@ document.querySelector('.contact-form').addEventListener('submit',function(e){
   if(window.trOpen)return; /* inside the desktop the shell handles it */
   e.preventDefault();var f=this,b=f.querySelector('button[type=submit]'),d={};
   ['name','email','company','projectType','budget','message'].forEach(function(k){d[k]=f.querySelector('[name="'+k+'"]').value});
+  /* honeypot: people never see it, bots fill it in, FormSubmit drops anything where it has a value */
+  d._honey=(f.querySelector('[name="_honey"]')||{}).value||'';
   b.disabled=true;b.textContent='Sending…';
-  fetch('https://formsubmit.co/ajax/hi@tommyroldan.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
+  fetch('https://formsubmit.co/ajax/hi@tommyroldan.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false',_honey:d._honey})})
   .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return j.success==='true'||j.success===true||r.ok})})
   .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent. Thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
   .catch(function(){b.disabled=false;b.textContent='Send message →';var p=document.createElement('p');p.className='form-err';p.innerHTML='Something went wrong. <a href="mailto:hi@tommyroldan.com">Email me directly</a>.';f.appendChild(p)});

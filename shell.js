@@ -337,8 +337,10 @@ function wireContact(body){
     e.preventDefault();
     var btn=f.querySelector('button[type=submit]'),d={};
     ['name','email','company','projectType','budget','message'].forEach(function(k){var el=f.querySelector('[name="'+k+'"]');d[k]=el?el.value:''});
+    /* honeypot, see contact/index.html: a value here means a bot, and FormSubmit drops it */
+    d._honey=(f.querySelector('[name="_honey"]')||{}).value||'';
     btn.disabled=true;btn.textContent='Sending…';
-    fetch('https://formsubmit.co/ajax/'+ME.email,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false'})})
+    fetch('https://formsubmit.co/ajax/'+ME.email,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({Name:d.name,Email:d.email,Company:d.company||'n/a','Project type':d.projectType||'n/a',Budget:d.budget||'n/a',Message:d.message,_subject:'Portfolio inquiry: '+(d.name||'new lead'),_template:'table',_captcha:'false',_honey:d._honey})})
     .then(function(r){return r.json().catch(function(){return{}}).then(function(j){return j.success==='true'||j.success===true||r.ok})})
     .then(function(ok){if(!ok)throw 0;f.innerHTML='<div class="panel form-ok"><p class="big">Message sent. Thank you!</p><p>I\'ll get back to you soon. Talk shortly. 🚀</p></div>'})
     .catch(function(){btn.disabled=false;btn.textContent='Send message →';var err=f.querySelector('.form-err');if(!err){err=document.createElement('p');err.className='form-err';err.innerHTML='Something went wrong. <a href="mailto:'+ME.email+'">Email me directly</a>.';f.appendChild(err)}});
