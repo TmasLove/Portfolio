@@ -29,8 +29,6 @@ button{font-family:inherit}
 .sq img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;padding:9%;background:#fff}
 .sq svg{position:relative;z-index:1;width:100%;height:100%;display:block}
 .sq.letter{background:linear-gradient(160deg,#5D67E6,#3A43C4)}
-/* Strava's orange (#FC4C02) for the Strava tools, so they read as Strava at a glance */
-.sq.letter.tone-strava{background:linear-gradient(160deg,#FF6A26,#FC4C02 55%,#E64400)}
 .sq.letter::before{content:attr(data-init);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:700;font-size:26px}
 /* The roles list sizes its own squircle. NOT .sq.xs - shell.css already owns that name for
    the dial widgets at 18px, and it loads after this file, so an .sq.xs here silently lost

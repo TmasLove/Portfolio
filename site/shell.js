@@ -22,8 +22,8 @@ var APPS=[
  {key:'dolce-vita-supplements',title:'Dolce Vita Supplements',short:'Dolce Vita',category:'web',icon:'/assets/icons/dolce-vita-supplements.png',fit:'cover',init:'D',page:'/work/dolce-vita-supplements/',live:'https://www.dolcevitasupplements.com/',embed:false,shot:'/assets/live/dolce-vita-supplements-1440.jpg'},
  {key:'la-dolce-vita-casa',title:'La Dolce Vita Casa',category:'web',icon:'/assets/icons/la-dolce-vita-casa.png',fit:'cover',init:'L',page:'/work/la-dolce-vita-casa/',live:'https://ladolcevitacasa.com',embed:false,shot:'/assets/live/la-dolce-vita-casa-1440.jpg'},
  {key:'powerpoint-speech-tool',title:'PowerPoint Speech Tool',short:'PPT Speech',category:'tool',art:'ppt',init:'P',page:'/work/powerpoint-speech-tool/',live:'https://tommyroldan.com/ppt-speech/',embed:true,shot:'/assets/live/powerpoint-speech-tool-1440.jpg'},
- {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',tone:'strava',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
- {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',tone:'strava',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
+ {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',art:'effort',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
+ {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',art:'kom',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
  {key:'build-roldan',title:'Roldan Group',category:'web',art:'roldan',init:'R',page:'/work/build-roldan/',live:'https://buildroldan.com',embed:true,shot:'/assets/live/build-roldan-1440.jpg'},
  {key:'social-audit',title:'SocialAudit',category:'apps',icon:'/assets/icons/social-audit.png',fit:'cover',init:'S',page:'/work/social-audit/',live:null,embed:false,shot:null}
 ];
@@ -59,6 +59,9 @@ var ART={
  about:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#4A54DC"/><circle cx="32" cy="24" r="10" fill="#fff"/><path d="M14 54c2-11 9-16 18-16s16 5 18 16z" fill="#fff"/></svg>',
  contact:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#00A88F"/><rect x="10" y="18" width="44" height="30" rx="5" fill="#fff"/><path d="M12 22l20 14 20-14" stroke="#00A88F" stroke-width="3" fill="none" stroke-linejoin="round"/></svg>',
  tools:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#2B2350"/><path d="M40 14a10 10 0 0 0-9.6 12.7L14 43l7 7 16.3-16.4A10 10 0 0 0 50 24l-6 6-5-1-1-5 6-6a10 10 0 0 0-4-4z" fill="#F2B07A"/></svg>',
+ /* Strava-style, not Strava's: Strava's orange with original marks, because their brand rules keep their logo off third-party apps */
+ effort:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FC4C02"/><path d="M0 53 L11 45 L23 35 L31 40 L48 22 L64 22 V64 H0 Z" fill="#fff" fill-opacity=".2"/><path d="M11 45 L23 35 L31 40 L48 22" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 21 H49 V32" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="45" r="4.5" fill="#fff"/></svg>',
+ kom:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FC4C02"/><rect x="10" y="51" width="44" height="4" rx="2" fill="#fff" fill-opacity=".45"/><path d="M18 52 V29 a14 14 0 0 1 28 0 V52 Z" fill="#fff"/><path d="M23.5 43 V32.5 L27.8 36.6 L32 29.5 L36.2 36.6 L40.5 32.5 V43 Z" fill="#FC4C02"/><rect x="23.5" y="45" width="17" height="2.6" rx="1.3" fill="#FC4C02"/></svg>',
  launchpad:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F7"/><stop offset="1" stop-color="#C9CAD2"/></linearGradient></defs><rect width="64" height="64" fill="url(#lpg)"/><g><rect x="12" y="12" width="11" height="11" rx="3" fill="#FF5F57"/><rect x="26.5" y="12" width="11" height="11" rx="3" fill="#FEBC2E"/><rect x="41" y="12" width="11" height="11" rx="3" fill="#28C840"/><rect x="12" y="26.5" width="11" height="11" rx="3" fill="#4A54DC"/><rect x="26.5" y="26.5" width="11" height="11" rx="3" fill="#00A88F"/><rect x="41" y="26.5" width="11" height="11" rx="3" fill="#F2B07A"/><rect x="12" y="41" width="11" height="11" rx="3" fill="#8B7DFF"/><rect x="26.5" y="41" width="11" height="11" rx="3" fill="#FC3C44"/><rect x="41" y="41" width="11" height="11" rx="3" fill="#3E9DE8"/></g></svg>',
  arena:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#000"/><path d="M0 16h64M0 32h64M0 48h64M16 0v64M32 0v64M48 0v64" stroke="#1d3fd6" stroke-width="1.6"/><path d="M10 44h22V18h20" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="miter"/><path d="M54 46v-16" stroke="#ff5f57" stroke-width="4"/><rect x="50" y="14" width="6" height="6" fill="#fff"/></svg>',
  cycles:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#07090c"/><path d="M8 8h48v48H8z" fill="none" stroke="rgba(0,224,198,.35)" stroke-width="1.5"/><path d="M12 40h18V20h14v24" fill="none" stroke="#00E0C6" stroke-width="4" stroke-linejoin="miter"/><path d="M52 16v22H38" fill="none" stroke="#FF5F57" stroke-width="4" stroke-linejoin="miter"/><rect x="42" y="42" width="5" height="5" fill="#fff"/></svg>',
@@ -96,7 +99,7 @@ function sqHTML(o,cls){
   cls=cls||'';
   if(o.art)return '<span class="sq art '+cls+'">'+ART[o.art]+'</span>';
   if(o.icon)return '<span class="sq '+(o.fit||'contain')+' '+cls+'"><img src="'+o.icon+'" alt="" onerror="var p=this.parentNode;p.classList.add(\'letter\');p.setAttribute(\'data-init\',\''+esc(o.init||'')+'\');this.remove()"></span>';
-  return '<span class="sq letter '+(o.tone?'tone-'+o.tone+' ':'')+cls+'" data-init="'+esc(o.init||'')+'"></span>';
+  return '<span class="sq letter '+cls+'" data-init="'+esc(o.init||'')+'"></span>';
 }
 function appByKey(k){for(var i=0;i<APPS.length;i++)if(APPS[i].key===k)return APPS[i];return null}
 function isPhone(){return matchMedia('(max-width:768px)').matches}
@@ -594,7 +597,7 @@ var sc=document.getElementById('sheetClose');if(sc)sc.addEventListener('click',c
 /* ---------- launchpad ---------- */
 var lp=document.getElementById('launchpad'),lpGrid=document.getElementById('lpGrid'),lpInput=document.getElementById('lpInput');
 function lpItems(){
-  return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init,tone:a.tone}})
+  return APPS.map(function(a){return{key:a.key,title:a.short||a.title,icon:a.icon,fit:a.fit,art:a.art,init:a.init}})
    .concat(EXTRA.map(function(x){return{key:x.key,title:x.title,art:x.art}}))
    .concat([{key:'stickies',title:'Stickies',art:'stickies'}])
    .concat(DOCK.filter(function(d){return ['brave','music','paint','guestbook','littleriver','terminal','trash'].indexOf(d.key)>-1}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}))
