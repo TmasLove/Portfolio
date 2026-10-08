@@ -32,6 +32,7 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 
 ## Products
 
+- [AirDJ](https://tommyroldan.com/work/airdj/): Live audio broadcasting for mobile and traveling DJs, at https://airdj.vercel.app. Go live from any audio input and hand people a link or a QR code; they listen in the browser with no app and no account. Audio goes peer to peer over WebRTC and is never recorded. Next.js, React, Node.js, Socket.IO.
 - [Canary](https://tommyroldan.com/canary/): Free Windows diagnostic tool that finds failing drives and crash causes that vendor software reports as healthy. Reads the SMART counters other tools skip, explains findings in plain English, and says "could not verify" rather than pretending a check passed.
 - [PPT Speech](https://tommyroldan.com/ppt-speech/): Upload any .pptx and have it read aloud slide by slide using your browser's built-in voices. Runs entirely client-side: no server, no upload.
 
