@@ -2,31 +2,30 @@
 <title>KOM Memorial, an Open-Source Tool for Cyclists | Tommy Roldan</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css?v=20261020d"><link rel="canonical" href="https://tommyroldan.com/work/kom-memorial/">
-<meta name="description" content="Open-source web app for cyclists: log the KOMs you hold, and when one is taken, generate an obituary, a days-held count and a 1080x1080 memorial card. No Strava API.">
+<meta name="description" content="Free tool for cyclists: when someone takes your KOM, make a memorial card with a funny obituary and a days-held count, as a square post or a 9:16 story. No account, nothing uploaded.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
-<meta property="og:title" content="KOM Memorial"><meta property="og:description" content="Open-source web app for cyclists: log the KOMs you hold, and when one is taken, generate an obituary, a days-held count and a 1080x1080 memorial card. No Strava API.">
+<meta property="og:title" content="KOM Memorial"><meta property="og:description" content="Free tool for cyclists: when someone takes your KOM, make a memorial card with a funny obituary and a days-held count, as a square post or a 9:16 story. No account, nothing uploaded.">
 <meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://tommyroldan.com/work/kom-memorial/">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="KOM Memorial"><meta name="twitter:description" content="Open-source web app for cyclists: log the KOMs you hold, and when one is taken, generate an obituary, a days-held count and a 1080x1080 memorial card. No Strava API."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "KOM Memorial", "codeRepository": "https://github.com/TmasLove/kom-memorial", "programmingLanguage": "JavaScript", "license": "https://opensource.org/licenses/MIT", "description": "Log the King of the Mountain segments you hold, and memorialize the ones you lose with an obituary, a days-held count and a shareable memorial card.", "author": {"@type": "Person", "name": "Tommy Roldan", "url": "https://tommyroldan.com"}}</script>
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="KOM Memorial"><meta name="twitter:description" content="Free tool for cyclists: when someone takes your KOM, make a memorial card with a funny obituary and a days-held count, as a square post or a 9:16 story. No account, nothing uploaded."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "KOM Memorial", "codeRepository": "https://github.com/TmasLove/kom-memorial", "programmingLanguage": "JavaScript", "license": "https://opensource.org/licenses/MIT", "description": "Make a memorial card for a King of the Mountain segment you lost: an editable obituary, a days-held count and a PNG for Instagram, drawn in the browser with no account.", "url": "https://kom-memorial.pages.dev/", "author": {"@type": "Person", "name": "Tommy Roldan", "url": "https://tommyroldan.com"}}</script>
 </head><body>
 <header class="page-header"><a class="back-link" href="/work/">← All work</a></header>
 <main class="page">
 <div class="panel"><div class="case-head"><span class="sq art"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FC4C02"/><rect x="10" y="51" width="44" height="4" rx="2" fill="#fff" fill-opacity=".45"/><path d="M18 52 V29 a14 14 0 0 1 28 0 V52 Z" fill="#fff"/><path d="M23.5 43 V32.5 L27.8 36.6 L32 29.5 L36.2 36.6 L40.5 32.5 V43 Z" fill="#FC4C02"/><rect x="23.5" y="45" width="17" height="2.6" rx="1.3" fill="#FC4C02"/></svg></span>
-<div><h1>KOM Memorial</h1><p class="case-meta">Tools · 2026</p><span class="badges"><span class="badge public">open source</span></span></div></div></div>
+<div><h1>KOM Memorial</h1><p class="case-meta">Tools · 2026</p><span class="badges"><span class="badge live">live</span><span class="badge public">open source</span></span></div></div></div>
 <h2>What it is</h2>
-<p>Log every King of the Mountain segment you hold. When someone steals your crown, give it the send-off it deserves: auto-generated funny obituary, days-held counter, and a shareable 1080×1080 PNG memorial card ready for Instagram. No Strava API needed.</p>
+<p>When someone steals your King of the Mountain, give it the send-off it deserves. Type in the segment, the day you took it, the day you lost it and who took it, and KOM Memorial drafts a funny obituary and draws a memorial card you can download or share. No Strava API, and no account.</p>
 <h2>What it does</h2>
 <ul>
-<li>Private dashboards, with an account for each rider</li>
-<li>Log active KOMs: segment, date achieved, an optional Strava link and notes</li>
-<li>Memorialize lost KOMs: date lost, the new holder, and an obituary you can edit</li>
-<li>Days held, counted for every KOM, active or lost</li>
-<li>A 1080×1080 memorial image for Instagram or the group chat</li>
-<li>No Strava API and no OAuth: everything is entered by the rider, and no data leaves your server</li>
+<li>Drafts an obituary from five templates; you can write another or edit it freely</li>
+<li>Counts the days you held the crown</li>
+<li>Draws the card in two sizes: a 1080×1080 post and a 1080×1920 story</li>
+<li>Download the PNG, or share it straight from your phone</li>
+<li>Runs entirely in your browser: no sign-up, no server, no uploads. Your draft is kept in this browser only</li>
 </ul>
-<h2>Built with</h2><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">PNG export</span>
+<h2>Built with</h2><span class="chip">JavaScript</span><span class="chip">Canvas</span><span class="chip">PNG export</span><span class="chip">Cloudflare Pages</span>
 <h2>Details</h2>
-<div class="panel"><dl class="dl"><div><dt>Category</dt><dd>Tools</dd></div><div><dt>License</dt><dd>MIT, open source</dd></div><div><dt>Source</dt><dd>github.com/TmasLove/kom-memorial</dd></div></dl></div>
-<div class="case-actions"><a class="btn btn-primary" href="https://github.com/TmasLove/kom-memorial" target="_blank" rel="noopener">Source on GitHub ↗</a><a class="btn btn-secondary" href="https://kom-memorial.vercel.app" target="_blank" rel="noopener">Demo ↗</a></div>
+<div class="panel"><dl class="dl"><div><dt>Category</dt><dd>Tools</dd></div><div><dt>License</dt><dd>MIT, open source</dd></div><div><dt>Account</dt><dd>None needed</dd></div><div><dt>Source</dt><dd>github.com/TmasLove/kom-memorial</dd></div></dl></div>
+<div class="case-actions"><a class="btn btn-primary js-embed" href="https://kom-memorial.pages.dev/" target="_blank" rel="noopener">Open ↗</a><a class="btn btn-secondary" href="https://kom-memorial.pages.dev/" target="_blank" rel="noopener">Open in a new tab</a><a class="btn btn-secondary" href="https://github.com/TmasLove/kom-memorial" target="_blank" rel="noopener">Source on GitHub ↗</a></div>
 <p class="t3">Also open source: <a href="/work/local-legend-predictor/">Personal Effort Tracker</a>.</p>
 </main><footer class="site-footer">Tommy Roldan · Miami, FL</footer></body></html>
