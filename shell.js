@@ -533,18 +533,18 @@ function openPhoneFolder(label,members){
 }
 if(lGrid){
   ltiles.push(widgetTile('clock'),widgetTile('calendar'));setInterval(tickWidgets,1000);tickWidgets();
-  /* The games sit in one folder, the way they do on a real home screen (Tommy: "could we group
-     up the games in a single folder like the phone does"). Membership is read off the desktop's
-     own Games folder rather than listed again here, so the two views cannot drift apart. */
-  var gamesFolder=FOLDERS.filter(function(f){return f.key==='games'})[0];
-  var GAME_KEYS=gamesFolder.members().map(function(m){return m.key});
+  /* Apps, Websites and Games each sit in one folder, the way they do on a real home screen
+     (Tommy: "could we group up the games in a single folder like the phone does", then "group up
+     the website icons and apps like we did to the games"). Membership is read off the desktop's
+     own folders rather than listed again here, so the two views cannot drift apart. */
+  var PHONE_FOLDERS=FOLDERS.filter(function(f){return ['apps','sites','games'].indexOf(f.key)>-1}).map(function(f){
+    return{folder:f,keys:f.members().map(function(m){return m.key}),placed:false}});
   var flat=APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}));
-  var gameApps=flat.filter(function(a){return GAME_KEYS.indexOf(a.key)>-1});
-  var folderPlaced=false;
   flat.forEach(function(a){
-    /* the folder takes the slot the first game held, so the grid keeps its order */
-    if(GAME_KEYS.indexOf(a.key)>-1){
-      if(!folderPlaced){ltiles.push(folderTile(gamesFolder.label,gameApps));folderPlaced=true}
+    var pf=PHONE_FOLDERS.filter(function(p){return p.keys.indexOf(a.key)>-1})[0];
+    /* a folder takes the slot its first member held, so the grid keeps its order */
+    if(pf){
+      if(!pf.placed){ltiles.push(folderTile(pf.folder.label,flat.filter(function(x){return pf.keys.indexOf(x.key)>-1})));pf.placed=true}
       return;
     }
     var b=document.createElement('button');b.className='lapp';
