@@ -25,6 +25,8 @@ var APPS=[
  {key:'powerpoint-speech-tool',title:'PowerPoint Speech Tool',short:'PPT Speech',category:'tool',art:'ppt',init:'P',page:'/work/powerpoint-speech-tool/',live:'https://tommyroldan.com/ppt-speech/',embed:true,shot:'/assets/live/powerpoint-speech-tool-1440.jpg'},
  {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',art:'effort',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
  {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',art:'kom',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
+ {key:'terryco-crm',title:'Terry Co CRM',short:'Terry Co CRM',category:'tool',icon:'/assets/icons/terryco-crm.png',fit:'cover',init:'T',page:'/work/terryco-crm/',live:'https://crm.terryco.com',embed:false,shot:'/assets/live/terryco-crm-1440.jpg'},
+ {key:'social-manager',title:'Social Manager',category:'tool',art:'social',init:'S',page:'/work/social-manager/',live:'https://social.littleriver.site',embed:false,shot:'/assets/live/social-manager-1440.jpg'},
  {key:'build-roldan',title:'Roldan Group',category:'web',art:'roldan',init:'R',page:'/work/build-roldan/',live:'https://buildroldan.com',embed:true,shot:'/assets/live/build-roldan-1440.jpg'},
  {key:'social-audit',title:'SocialAudit',category:'apps',icon:'/assets/icons/social-audit.png',fit:'cover',init:'S',page:'/work/social-audit/',live:null,embed:false,shot:null}
 ];
@@ -63,6 +65,8 @@ var ART={
  /* Strava-style, not Strava's: Strava's orange with original marks, because their brand rules keep their logo off third-party apps */
  /* AirDJ's own app icon (client/app/icon.svg), squared off for the tile */
  airdj:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="adjglow" cx="50%" cy="18%" r="80%"><stop offset="0" stop-color="#ffa82e" stop-opacity=".55"/><stop offset=".7" stop-color="#ff4438" stop-opacity=".12"/><stop offset="1" stop-color="#0b0c0e" stop-opacity="0"/></radialGradient></defs><rect width="64" height="64" fill="#0b0c0e"/><rect width="64" height="64" fill="url(#adjglow)"/><g fill="none" stroke="#ffa82e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 38a6 6 0 0 0 6-6V22a6 6 0 0 0-12 0v10a6 6 0 0 0 6 6Z"/><path d="M20 31a12 12 0 0 0 24 0"/><path d="M32 44v5"/></g></svg>',
+ /* Social Manager's own logo (web/src/logo.svg), squared off for the tile */
+ social:'<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="smg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcaf45"/><stop offset=".5" stop-color="#e1306c"/><stop offset="1" stop-color="#833ab4"/></linearGradient></defs><rect width="32" height="32" fill="url(#smg)"/><g transform="translate(4 4)"><path fill="#fff" d="M5 4.5h14a2.2 2.2 0 0 1 2.2 2.2v8.6a2.2 2.2 0 0 1-2.2 2.2h-7l-4.4 3.6v-3.6H5a2.2 2.2 0 0 1-2.2-2.2V6.7A2.2 2.2 0 0 1 5 4.5z"/><path fill="#e1306c" d="M12 14.6s-3.4-2-3.4-4.3a1.8 1.8 0 0 1 3.4-.8 1.8 1.8 0 0 1 3.4.8c0 2.3-3.4 4.3-3.4 4.3z"/></g></svg>',
  effort:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FC4C02"/><path d="M0 53 L11 45 L23 35 L31 40 L48 22 L64 22 V64 H0 Z" fill="#fff" fill-opacity=".2"/><path d="M11 45 L23 35 L31 40 L48 22" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 21 H49 V32" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="45" r="4.5" fill="#fff"/></svg>',
  kom:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FC4C02"/><rect x="10" y="51" width="44" height="4" rx="2" fill="#fff" fill-opacity=".45"/><path d="M18 52 V29 a14 14 0 0 1 28 0 V52 Z" fill="#fff"/><path d="M23.5 43 V32.5 L27.8 36.6 L32 29.5 L36.2 36.6 L40.5 32.5 V43 Z" fill="#FC4C02"/><rect x="23.5" y="45" width="17" height="2.6" rx="1.3" fill="#FC4C02"/></svg>',
  launchpad:'<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lpg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F7"/><stop offset="1" stop-color="#C9CAD2"/></linearGradient></defs><rect width="64" height="64" fill="url(#lpg)"/><g><rect x="12" y="12" width="11" height="11" rx="3" fill="#FF5F57"/><rect x="26.5" y="12" width="11" height="11" rx="3" fill="#FEBC2E"/><rect x="41" y="12" width="11" height="11" rx="3" fill="#28C840"/><rect x="12" y="26.5" width="11" height="11" rx="3" fill="#4A54DC"/><rect x="26.5" y="26.5" width="11" height="11" rx="3" fill="#00A88F"/><rect x="41" y="26.5" width="11" height="11" rx="3" fill="#F2B07A"/><rect x="12" y="41" width="11" height="11" rx="3" fill="#8B7DFF"/><rect x="26.5" y="41" width="11" height="11" rx="3" fill="#FC3C44"/><rect x="41" y="41" width="11" height="11" rx="3" fill="#3E9DE8"/></g></svg>',
@@ -533,27 +537,26 @@ function openPhoneFolder(label,members){
 }
 if(lGrid){
   ltiles.push(widgetTile('clock'),widgetTile('calendar'));setInterval(tickWidgets,1000);tickWidgets();
-  /* Apps, Websites and Games each sit in one folder, the way they do on a real home screen
+  /* Every desktop folder is a folder here too, the way a real home screen groups things
      (Tommy: "could we group up the games in a single folder like the phone does", then "group up
-     the website icons and apps like we did to the games"). Membership is read off the desktop's
-     own folders rather than listed again here, so the two views cannot drift apart. */
-  var PHONE_FOLDERS=FOLDERS.filter(function(f){return ['apps','sites','games'].indexOf(f.key)>-1}).map(function(f){
-    return{folder:f,keys:f.members().map(function(m){return m.key}),placed:false}});
+     the website icons and apps like we did to the games", then "put the tools in the Tools folder
+     too"). Membership is read off the desktop's own folders rather than listed again here, so the
+     two views cannot drift apart. The folders come first, in the desktop's order. */
   var flat=APPS.concat(EXTRA).concat(DOCK.filter(function(d){return d.key!=='finder'&&d.key!=='launchpad'}).map(function(d){return{key:d.key,title:d.label,icon:d.icon,fit:d.fit,art:d.art,init:d.init}}));
+  var inFolder={};
+  FOLDERS.forEach(function(f){
+    var keys=f.members().map(function(m){return m.key});
+    keys.forEach(function(k){inFolder[k]=1});
+    ltiles.push(folderTile(f.label,flat.filter(function(x){return keys.indexOf(x.key)>-1})));
+  });
   flat.forEach(function(a){
-    var pf=PHONE_FOLDERS.filter(function(p){return p.keys.indexOf(a.key)>-1})[0];
-    /* a folder takes the slot its first member held, so the grid keeps its order */
-    if(pf){
-      if(!pf.placed){ltiles.push(folderTile(pf.folder.label,flat.filter(function(x){return pf.keys.indexOf(x.key)>-1})));pf.placed=true}
-      return;
-    }
+    if(inFolder[a.key])return;
     var b=document.createElement('button');b.className='lapp';
     b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
     ltiles.push(b);
   });
-  /* Tools is a home-screen tile; the dock holds four like an iPhone (Work, About, Contact, Settings) */
-  var tb=document.createElement('button');tb.className='lapp';tb.innerHTML=sqHTML({art:'tools'})+'<span class="label">Tools</span>';tb.addEventListener('click',function(){openSheetPage('tools')});ltiles.push(tb);
+  /* the dock holds four like an iPhone (Work, About, Contact, Settings) */
   Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
   /* the gear is Settings, like on a phone: wallpaper, appearance, motion (Tommy: "open up the system settings for the website") */
   var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'});sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
