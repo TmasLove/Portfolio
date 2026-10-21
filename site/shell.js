@@ -24,7 +24,7 @@ var APPS=[
  {key:'la-dolce-vita-casa',title:'La Dolce Vita Casa',category:'web',icon:'/assets/icons/la-dolce-vita-casa.png',fit:'cover',init:'L',page:'/work/la-dolce-vita-casa/',live:'https://ladolcevitacasa.com',embed:false,shot:'/assets/live/la-dolce-vita-casa-1440.jpg'},
  {key:'powerpoint-speech-tool',title:'PowerPoint Speech Tool',short:'PPT Speech',category:'tool',art:'ppt',init:'P',page:'/work/powerpoint-speech-tool/',live:'https://tommyroldan.com/ppt-speech/',embed:true,shot:'/assets/live/powerpoint-speech-tool-1440.jpg'},
  {key:'local-legend-predictor',title:'Personal Effort Tracker',short:'Effort Tracker',category:'tool',init:'E',art:'effort',page:'/work/local-legend-predictor/',live:'https://local-legend-predictor.onrender.com',embed:false,shot:'/assets/live/local-legend-predictor-1440.jpg'},
- {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',art:'kom',page:'/work/kom-memorial/',live:'https://github.com/TmasLove/kom-memorial',embed:false},
+ {key:'kom-memorial',title:'KOM Memorial',category:'tool',init:'K',art:'kom',page:'/work/kom-memorial/',live:'https://kom-memorial.pages.dev/',embed:true},
  {key:'terryco-crm',title:'Terry Co CRM',short:'Terry Co CRM',category:'tool',icon:'/assets/icons/terryco-crm.png',fit:'cover',init:'T',page:'/work/terryco-crm/',live:'https://crm.terryco.com',embed:false,shot:'/assets/live/terryco-crm-1440.jpg'},
  {key:'social-manager',title:'Social Manager',category:'tool',art:'social',init:'S',page:'/work/social-manager/',live:'https://social.littleriver.site',embed:false,shot:'/assets/live/social-manager-1440.jpg'},
  {key:'build-roldan',title:'Roldan Group',category:'web',art:'roldan',init:'R',page:'/work/build-roldan/',live:'https://buildroldan.com',embed:true,shot:'/assets/live/build-roldan-1440.jpg'},
@@ -338,7 +338,7 @@ function embedInto(host,url,shot,canEmbed){
   var back='<button class="btn btn-secondary sm" data-back>← Back to the case</button>';
   var nt='<a class="btn btn-secondary sm" href="'+esc(url)+'" target="_blank" rel="noopener">Open in a new tab ↗</a>';
   var toolbar='<div class="browser-toolbar">'+back+'<span class="url">'+esc(url.replace(/^https?:\/\//,''))+'</span>'+nt+'</div>';
-  var frame=canEmbed?'<div class="browser-frame-wrap"><iframe src="'+esc(url)+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" title="'+esc(url)+'"></iframe></div>'
+  var frame=canEmbed?'<div class="browser-frame-wrap"><iframe src="'+esc(url)+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads" title="'+esc(url)+'"></iframe></div>'
     :'<div class="browser-frame-wrap"><div class="embed-fallback">'+(shot?'<img src="'+esc(shot)+'" alt="Screenshot of '+esc(url)+'">':'')+'<p>This site doesn\'t allow embedding. It opens in a new tab.</p><a class="btn btn-primary" href="'+esc(url)+'" target="_blank" rel="noopener">Open '+esc(url.replace(/^https?:\/\//,'').replace(/\/$/,''))+' ↗</a></div></div>';
   var saved=body.innerHTML,savedScroll=body.scrollTop;
   body.innerHTML='<div class="browser">'+toolbar+frame+'</div>';
@@ -414,7 +414,7 @@ function openBrave(){
   function show(app){
     var tb='<div class="browser-toolbar"><button class="btn btn-secondary sm" data-home>⌂</button><span class="url">'+esc(app?app.live.replace(/^https?:\/\//,''):'start')+'</span>'+(app?'<a class="btn btn-secondary sm" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open in a new tab ↗</a>':'')+'</div>';
     var bar='<div class="bookmarks">'+APPS.filter(function(a){return a.live}).map(function(a){return '<button class="bm" data-key="'+a.key+'" title="'+esc(a.title)+'">'+sqHTML(a,'xs')+'<span>'+esc(label(a))+'</span></button>'}).join('')+'</div>';
-    var content=!app?braveStart():(app.embed?'<div class="browser-frame-wrap"><iframe src="'+esc(app.live)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" title="'+esc(app.title)+'"></iframe></div>':'<div class="browser-frame-wrap"><div class="embed-fallback"><img src="'+esc(app.shot)+'" alt="Screenshot of '+esc(app.title)+'"><p>'+esc(app.live.replace(/^https?:\/\//,''))+' doesn\'t allow embedding. It opens in a new tab.</p><a class="btn btn-primary" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open ↗</a></div></div>');
+    var content=!app?braveStart():(app.embed?'<div class="browser-frame-wrap"><iframe src="'+esc(app.live)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads" title="'+esc(app.title)+'"></iframe></div>':'<div class="browser-frame-wrap"><div class="embed-fallback"><img src="'+esc(app.shot)+'" alt="Screenshot of '+esc(app.title)+'"><p>'+esc(app.live.replace(/^https?:\/\//,''))+' doesn\'t allow embedding. It opens in a new tab.</p><a class="btn btn-primary" href="'+esc(app.live)+'" target="_blank" rel="noopener">Open ↗</a></div></div>');
     body.innerHTML='<div class="browser">'+tb+bar+content+'</div>';
     body.querySelector('[data-home]').addEventListener('click',function(){show(null)});
     body.querySelectorAll('.bm,.dial').forEach(function(b){b.addEventListener('click',function(){show(appByKey(b.dataset.key))})});
