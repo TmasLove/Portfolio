@@ -326,6 +326,7 @@ function wire(host){
   body.addEventListener('click',function(e){
     var chip=e.target.closest('.filter-chip');
     if(chip){var f=chip.dataset.f;body.querySelectorAll('.filter-chip').forEach(function(x){x.classList.toggle('active',x===chip)});body.querySelectorAll('.work-grid > *').forEach(function(c){c.hidden=!(f==='all'||c.dataset.cat===f)});return}
+    if(e.target.closest('[data-lr-snapshot]')){e.preventDefault();showLRSnapshot(body);return}
     var a=e.target.closest('a[href]');if(!a)return;
     var href=a.getAttribute('href');
     if(a.classList.contains('js-embed')){e.preventDefault();embedInto(host,href,a.dataset.shot||'',a.dataset.embed!=='no');return}
@@ -468,7 +469,15 @@ function lrPane(name){
   if(name==='Agents')return '<h2>Agents</h2>'+stat+'<p class="t3">'+LR.agents+' agents across '+LR.departments+' departments.</p>';
   return '<h2>'+esc(name)+'</h2><p class="t3">This part lives in the real app.</p>';
 }
-function openLR(){var w=createWindow('littleriver','Little River',{w:1060,h:680,dockKey:'littleriver',appName:'Little River',minW:720});window.initLR(w.body)}
+/* Little River opens on its project page like every other project (Tommy: "make it like the other
+   projects, that it describes what it does"). The command-centre look-alike is one button away on it. */
+function openLR(){var w=createWindow('littleriver','Little River',{w:780,h:600,dockKey:'littleriver',appName:'Little River'});loadPage(w,'/work/little-river/');return w}
+function showLRSnapshot(body){
+  var saved=body.innerHTML,savedScroll=body.scrollTop;
+  body.innerHTML='<div class="browser-toolbar"><button class="btn btn-secondary sm" data-back>← Back to Little River</button><span class="url">Command centre, frozen snapshot</span></div><div class="lr-snap-host"></div>';
+  window.initLR(body.querySelector('.lr-snap-host'));body.scrollTop=0;
+  body.querySelector('[data-back]').addEventListener('click',function(){body.innerHTML=saved;body.scrollTop=savedScroll});
+}
 function infoHTML(r){return '<div class="page"><div class="panel"><span class="badges">'+r[5].map(function(b){return '<span class="badge '+b+'">'+b+'</span>'}).join('')+'</span><h2>'+esc(r[0])+'</h2><p class="case-meta">'+esc(r[2])+' · '+r[3]+'</p><p>'+esc(r[4])+'</p>'+(r[1]?'<a class="btn btn-primary" href="'+esc(r[1])+'" target="_blank" rel="noopener">Open ↗</a>':'<p class="t3">Private, no public link.</p>')+'</div></div>'}
 function openInfo(r){if(isPhone()){sheet.hidden=false;sheetTitle.textContent=r[0];sheetBody.innerHTML=infoHTML(r);return}var w=createWindow('info-'+r[0],r[0],{w:560,h:380,dockKey:'finder',appName:r[0]});w.body.innerHTML=infoHTML(r)}
 
@@ -593,7 +602,7 @@ function openSheet(key){
   if(key==='music')return void(sheetBody.innerHTML=musicHTML());
   if(key==='terminal'){sheetBody.innerHTML=termHTML();return wireTerm(sheetBody)}
   if(key==='trash'){sheetBody.innerHTML=trashHTML();sheetBody.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openApp(b.dataset.open)})});return}
-  if(key==='littleriver')return void window.initLR(sheetBody);
+  if(key==='littleriver'){sheetTitle.textContent='Little River';return void loadPage(sheetBody,'/work/little-river/',{keepTitle:true})}
   if(REG[key]){sheetTitle.textContent=REG[key].title;return REG[key].sheet(sheetBody)}
   if(key==='brave'){sheetBody.innerHTML='<div class="browser">'+braveStart()+'</div>';sheetBody.querySelectorAll('.dial').forEach(function(b){b.addEventListener('click',function(){var a=appByKey(b.dataset.key);window.open(a.live,'_blank','noopener')})});return}
 }
