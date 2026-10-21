@@ -1,34 +1,43 @@
 <!DOCTYPE html>
-<html style="background:black">
+<html lang="en" style="background:black">
 <head>
 
-	<title id="progtitle">Armagetron</title>
+	<meta charset="utf-8">
+	<title id="progtitle">Armagetron: Light Cycles in the Browser | Tommy Roldan</title>
+	<meta name="description" content="Armagetron Advanced light cycles in the browser, a port built on the open-source Armawebtron engine. Play on TommyOS, Tommy Roldan's desktop portfolio.">
+	<link rel="canonical" href="https://tommyroldan.com/arena/">
+	<meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
+	<meta property="og:title" content="Armagetron: Light Cycles in the Browser"><meta property="og:description" content="Armagetron Advanced light cycles in the browser, a port built on the open-source Armawebtron engine. Play on TommyOS, Tommy Roldan's desktop portfolio.">
+	<meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="TommyOS, Tommy Roldan’s desktop portfolio: a Mac-style desktop with the About window open in Finder, Tommy’s photo, and the dock"><meta property="og:url" content="https://tommyroldan.com/arena/">
+	<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Armagetron: Light Cycles in the Browser"><meta name="twitter:description" content="Armagetron Advanced light cycles in the browser, a port built on the open-source Armawebtron engine. Play on TommyOS, Tommy Roldan's desktop portfolio."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
 	<link rel="icon" type="image/x-icon" href="favicon.ico"/>
 
 
 	<link rel="stylesheet" type="text/css" href="css/main.css"/>
 	<link rel="stylesheet" type="text/css" href="css/arma.css"/>
 
-	<script  type="text/javascript" src="test.js"></script>
+	<script  type="text/javascript" src="test.js" defer></script>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
 
-	<script type="text/javascript" src="src/lib/Three.js"></script><!-- webgl framework -->
-	<script type="text/javascript" src="src/lib/legacy/Projector.js"></script><!-- needed for softwarerenderer -->
-	<script type="text/javascript" src="src/lib/legacy/SoftwareRenderer.js"></script><!-- canvas renderer for older browsers -->
-	<script type="text/javascript" src="src/lib/Detector.js"></script><!--//detects webgl renderer -->
-	<script type="text/javascript" src="src/lib/OBJLoader.js"></script><!-- webgl framework addon for obj loading -->
-	<script type="text/javascript" src="src/lib/rAF.js"></script><!-- requestAnimationFrame shim/polyfill -->
-	<script type="text/javascript" src="src/lib/OrbitControls.js"></script><!-- camera orbit -->
-	<script type="text/javascript" src="src/lib/SceneUtils.js"></script>
-	<script type="text/javascript" src="src/lib/Reflector.js"></script>
-	
-	<script type="text/javascript" src="src/lib/xmllint.js"></script><!-- XML verification -->
-	
-	<script type="text/javascript" src="src/functions-head.js?v=20260908j"></script><!-- predefined functions that can be in head -->
+	<!-- Every script on this page is deferred so the head does not block rendering. Deferred
+	     scripts still run in document order, so the body scripts below are deferred too. -->
+	<script type="text/javascript" src="src/lib/Three.js" defer></script><!-- webgl framework -->
+	<script type="text/javascript" src="src/lib/legacy/Projector.js" defer></script><!-- needed for softwarerenderer -->
+	<script type="text/javascript" src="src/lib/legacy/SoftwareRenderer.js" defer></script><!-- canvas renderer for older browsers -->
+	<script type="text/javascript" src="src/lib/Detector.js" defer></script><!--//detects webgl renderer -->
+	<script type="text/javascript" src="src/lib/OBJLoader.js" defer></script><!-- webgl framework addon for obj loading -->
+	<script type="text/javascript" src="src/lib/rAF.js" defer></script><!-- requestAnimationFrame shim/polyfill -->
+	<script type="text/javascript" src="src/lib/OrbitControls.js" defer></script><!-- camera orbit -->
+	<script type="text/javascript" src="src/lib/SceneUtils.js" defer></script>
+	<script type="text/javascript" src="src/lib/Reflector.js" defer></script>
 
-	<script type="text/javascript" src="src/lib/buffer-loader.js"></script><!-- buffer loader for sound -->
-	<script type="text/javascript" src="src/sound.js"></script><!-- loading sound files -->	
+	<script type="text/javascript" src="src/lib/xmllint.js" defer></script><!-- XML verification -->
+
+	<script type="text/javascript" src="src/functions-head.js?v=20260908j" defer></script><!-- predefined functions that can be in head -->
+
+	<script type="text/javascript" src="src/lib/buffer-loader.js" defer></script><!-- buffer loader for sound -->
+	<script type="text/javascript" src="src/sound.js" defer></script><!-- loading sound files -->
 
 </head>
 
@@ -148,30 +157,30 @@
 
 
 
-	<script type="text/javascript" src="src/input.js"></script>
-	<script type="text/javascript" src="src/menu.js"></script>
+	<script type="text/javascript" src="src/input.js" defer></script>
+	<script type="text/javascript" src="src/menu.js" defer></script>
 
-	<script type="text/javascript" src="src/config.js?v=20260908j"></script><!-- configuration + local storage -->
-	<script type="text/javascript" src="src/engine.js"></script>
-	<script type="text/javascript" src="src/zone.js"></script>
-	<script type="text/javascript" src="src/player.js?v=20260908j"></script>
-	<script type="text/javascript" src="src/team.js"></script>
-	<script type="text/javascript" src="src/ai.js"></script>
-	<script type="text/javascript" src="src/functions-body.js"></script><!-- body functions -->
+	<script type="text/javascript" src="src/config.js?v=20260908j" defer></script><!-- configuration + local storage -->
+	<script type="text/javascript" src="src/engine.js" defer></script>
+	<script type="text/javascript" src="src/zone.js" defer></script>
+	<script type="text/javascript" src="src/player.js?v=20260908j" defer></script>
+	<script type="text/javascript" src="src/team.js" defer></script>
+	<script type="text/javascript" src="src/ai.js" defer></script>
+	<script type="text/javascript" src="src/functions-body.js" defer></script><!-- body functions -->
 
-	<script type="text/javascript" src="src/buildObjects.js"></script><!-- builds usable scene objects -->
+	<script type="text/javascript" src="src/buildObjects.js" defer></script><!-- builds usable scene objects -->
 
-	<script type="text/javascript" src="src/init.js?v=20260908s"></script><!-- initializes render -->
-	<script type="text/javascript" src="src/game.js?v=20260908j"></script><!-- game -->
-	<script type="text/javascript" src="src/render.js"></script><!-- render loop functions -->
-	
+	<script type="text/javascript" src="src/init.js?v=20260908s" defer></script><!-- initializes render -->
+	<script type="text/javascript" src="src/game.js?v=20260908j" defer></script><!-- game -->
+	<script type="text/javascript" src="src/render.js" defer></script><!-- render loop functions -->
+
 	<!-- network crap -->
-	<script type="text/javascript" src="src/network/base.js"></script>
-	<script type="text/javascript" src="src/network/3dc_net.js"></script>
-	<script type="text/javascript" src="src/network/serverBrowser.js"></script>
+	<script type="text/javascript" src="src/network/base.js" defer></script>
+	<script type="text/javascript" src="src/network/3dc_net.js" defer></script>
+	<script type="text/javascript" src="src/network/serverBrowser.js" defer></script>
 	<link rel="stylesheet" type="text/css" href="css/serverBrowser.css"/>
 
-	<script type="text/javascript" src="tr-style.js?v=20260908j"></script><!-- tommyroldan.com: walls, grid colour, billboards (GPL, see README) -->
+	<script type="text/javascript" src="tr-style.js?v=20260908j" defer></script><!-- tommyroldan.com: walls, grid colour, billboards (GPL, see README) -->
 	
 
 </body>
