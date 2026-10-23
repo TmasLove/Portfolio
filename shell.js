@@ -102,10 +102,12 @@ var PAGES={work:{title:'Work',url:'/work/',icon:'/assets/icons/dock-finder.png',
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function sqHTML(o,cls){
+/* imgAttr is extra <img> attributes (fetchpriority / loading): the phone's first screen asks for its
+   full-size icons first, so the shrunken folder minis and the hidden desktop dock do not hold it back */
+function sqHTML(o,cls,imgAttr){
   cls=cls||'';
   if(o.art)return '<span class="sq art '+cls+'">'+ART[o.art]+'</span>';
-  if(o.icon)return '<span class="sq '+(o.fit||'contain')+' '+cls+'"><img src="'+o.icon+'" alt="" onerror="var p=this.parentNode;p.classList.add(\'letter\');p.setAttribute(\'data-init\',\''+esc(o.init||'')+'\');this.remove()"></span>';
+  if(o.icon)return '<span class="sq '+(o.fit||'contain')+' '+cls+'"><img src="'+o.icon+'" alt=""'+(imgAttr?' '+imgAttr:'')+' onerror="var p=this.parentNode;p.classList.add(\'letter\');p.setAttribute(\'data-init\',\''+esc(o.init||'')+'\');this.remove()"></span>';
   return '<span class="sq letter '+cls+'" data-init="'+esc(o.init||'')+'"></span>';
 }
 function appByKey(k){for(var i=0;i<APPS.length;i++)if(APPS[i].key===k)return APPS[i];return null}
@@ -145,7 +147,7 @@ if(dockEl){
     if(d.key==='trash'){var div=document.createElement('div');div.className='dock-div';dockEl.appendChild(div)}
     var b=document.createElement('button');
     b.className='dock-icon';b.dataset.key=d.key;b.setAttribute('aria-label',d.label);
-    b.innerHTML=sqHTML(d)+'<span class="tip">'+esc(d.label)+'</span><span class="dot"></span>';
+    b.innerHTML=sqHTML(d,'',isPhone()?'loading="lazy"':'')+'<span class="tip">'+esc(d.label)+'</span><span class="dot"></span>';
     b.addEventListener('click',function(){bounce(b);openApp(d.key)});
     dockEl.appendChild(b);dockIcons.push(b);
   });
@@ -523,7 +525,7 @@ function folderTile(label,members){
   var b=document.createElement('button');b.className='lapp lfolder';b.type='button';
   b.setAttribute('aria-label',label+' folder, '+members.length+' apps');
   b.innerHTML='<span class="lf-plate">'+members.slice(0,9).map(function(m){
-    return '<span class="lf-mini">'+sqHTML(m)+'</span>'}).join('')+
+    return '<span class="lf-mini">'+sqHTML(m,'','fetchpriority="low"')+'</span>'}).join('')+
     '</span><span class="label">'+esc(label)+'</span>';
   b.addEventListener('click',function(){openPhoneFolder(label,members)});
   return b;
@@ -561,14 +563,14 @@ if(lGrid){
   flat.forEach(function(a){
     if(inFolder[a.key])return;
     var b=document.createElement('button');b.className='lapp';
-    b.innerHTML=sqHTML(a)+'<span class="label">'+esc(a.short||a.title)+'</span>';
+    b.innerHTML=sqHTML(a,'','fetchpriority="high"')+'<span class="label">'+esc(a.short||a.title)+'</span>';
     b.addEventListener('click',function(){openApp(a.key)});
     ltiles.push(b);
   });
   /* the dock holds four like an iPhone (Work, About, Contact, Settings) */
-  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit});b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
+  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit},'','fetchpriority="high"');b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
   /* the gear is Settings, like on a phone: wallpaper, appearance, motion (Tommy: "open up the system settings for the website") */
-  var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'});sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
+  var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'},'','fetchpriority="high"');sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
 }
 /* the phone launcher pages sideways like an iPhone home screen: as many rows as fit, 4 per row, dots underneath */
 function layoutPages(){
