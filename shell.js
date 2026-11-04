@@ -364,7 +364,12 @@ function wireContact(body){
 }
 
 /* ---------- app openers ---------- */
+/* index.html loads the games after this file, so the home screen can draw first. A game tapped before its
+   script has arrived opens as soon as it has (deferred scripts all finish before DOMContentLoaded). */
+var scriptsReady=false;document.addEventListener('DOMContentLoaded',function(){scriptsReady=true});
+function afterScripts(fn){if(scriptsReady)fn();else document.addEventListener('DOMContentLoaded',fn,{once:true})}
 function openApp(key){
+  if(!scriptsReady&&['paint','cycles','brick','meme'].indexOf(key)>-1)return afterScripts(function(){openApp(key)});
   if(isPhone())return openSheet(key);
   var app=appByKey(key);
   if(app){var w=createWindow(key,app.title,{w:760,h:580,appName:app.title});loadPage(w,app.page);return w}
@@ -477,7 +482,7 @@ function openLR(){var w=createWindow('littleriver','Little River',{w:780,h:600,d
 function showLRSnapshot(body){
   var saved=body.innerHTML,savedScroll=body.scrollTop;
   body.innerHTML='<div class="browser-toolbar"><button class="btn btn-secondary sm" data-back>← Back to Little River</button><span class="url">Command centre, frozen snapshot</span></div><div class="lr-snap-host"></div>';
-  window.initLR(body.querySelector('.lr-snap-host'));body.scrollTop=0;
+  afterScripts(function(){var h=body.querySelector('.lr-snap-host');if(h)window.initLR(h)});body.scrollTop=0;
   body.querySelector('[data-back]').addEventListener('click',function(){body.innerHTML=saved;body.scrollTop=savedScroll});
 }
 function infoHTML(r){return '<div class="page"><div class="panel"><span class="badges">'+r[5].map(function(b){return '<span class="badge '+b+'">'+b+'</span>'}).join('')+'</span><h2>'+esc(r[0])+'</h2><p class="case-meta">'+esc(r[2])+' · '+r[3]+'</p><p>'+esc(r[4])+'</p>'+(r[1]?'<a class="btn btn-primary" href="'+esc(r[1])+'" target="_blank" rel="noopener">Open ↗</a>':'<p class="t3">Private, no public link.</p>')+'</div></div>'}

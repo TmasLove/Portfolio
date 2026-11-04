@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://tommyroldan-wall.troldan92.workers.dev" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/styles.css?v=20261020d">
 <link rel="stylesheet" href="/shell.css?v=20261020d">
 <link rel="canonical" href="https://tommyroldan.com/">
@@ -78,14 +79,15 @@
   </div>
 </div>
 
-<script src="/wall.js?v=20261001a"></script>
-<script src="/trace.js?v=20261001a"></script><script src="/paint.js?v=20261001a"></script>
-<script src="/brick.js?v=20261001a"></script>
-<script src="/cycles3d.js?v=20261001a"></script><script src="/cycles.js?v=20261001a"></script>
-<script src="/meme.js?v=20261001a"></script>
-<script src="/lr.js?v=20261001a"></script>
-<script src="/shell.js?v=20261023a"></script>
-<script src="/extras.js?v=20261001a"></script>
-<script src="/notch.js?v=20261001a"></script>
+<!-- Deferred, and the shell goes before the games: the home screen is drawn by shell.js, so it must not wait for code that only runs when a game is opened. -->
+<script src="/wall.js?v=20261001a" defer></script>
+<script src="/shell.js?v=20261104a" defer fetchpriority="high"></script>
+<script src="/extras.js?v=20261001a" defer></script>
+<script src="/notch.js?v=20261001a" defer></script>
+<script src="/trace.js?v=20261001a" defer></script><script src="/paint.js?v=20261001a" defer></script>
+<script src="/brick.js?v=20261001a" defer></script>
+<script src="/cycles3d.js?v=20261001a" defer></script><script src="/cycles.js?v=20261001a" defer></script>
+<script src="/meme.js?v=20261001a" defer></script>
+<script src="/lr.js?v=20261001a" defer></script>
 </body>
 </html>
