@@ -29,6 +29,7 @@ The site is called TommyOS: the portfolio presented as a desktop operating syste
 - [Armagetron](https://tommyroldan.com/arena/): Armagetron Advanced in the browser, the light-cycles game Tommy grew up playing, built on the open-source Armawebtron port, real Armagetron rules (rubber, grinding), bots named after the estate agents, billboards for the apps on this site.
 - [Trace](https://tommyroldan.com/paint/): Inside Paint: trace a photo or drawing under tracing paper; closer lines score higher, fewer tools on harder levels.
 - [Meme Maker](https://tommyroldan.com/meme/): Follow MeMe revived: make a meme, post it, no sign-up.
+- [Resume](https://tommyroldan.com/resume/): Tommy Roldan's resume, with a PDF download.
 
 ## Products
 
