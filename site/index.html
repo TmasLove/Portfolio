@@ -12,6 +12,10 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="/styles.css?v=20261020d">
 <link rel="stylesheet" href="/shell.css?v=20261020d">
+<link rel="preload" as="image" href="/assets/icons/dock-finder.png" media="(max-width:768px)" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/icons/dock-contacts.png" media="(max-width:768px)" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/icons/dock-mail.png" media="(max-width:768px)" fetchpriority="high">
+<link rel="preload" as="image" href="/assets/icons/dock-settings.png" media="(max-width:768px)" fetchpriority="high">
 <link rel="canonical" href="https://tommyroldan.com/">
 <meta name="description" content="Freelance Miami web developer since 2015: websites, iPhone apps, Shopify stores and AI agents for startups and small businesses. Available for hire.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
@@ -79,15 +83,10 @@
   </div>
 </div>
 
-<!-- Deferred, and the shell goes before the games: the home screen is drawn by shell.js, so it must not wait for code that only runs when a game is opened. -->
+<!-- The home screen is drawn by shell.js, so it goes first and must not wait for anything else. The games (trace, paint, brick, cycles3d, cycles, meme, lr) are not listed here: shell.js loads them after the page has finished, or as soon as one is opened. -->
+<script src="/shell.js?v=20261106a" defer fetchpriority="high"></script>
 <script src="/wall.js?v=20261001a" defer></script>
-<script src="/shell.js?v=20261104a" defer fetchpriority="high"></script>
 <script src="/extras.js?v=20261001a" defer></script>
 <script src="/notch.js?v=20261001a" defer></script>
-<script src="/trace.js?v=20261001a" defer></script><script src="/paint.js?v=20261001a" defer></script>
-<script src="/brick.js?v=20261001a" defer></script>
-<script src="/cycles3d.js?v=20261001a" defer></script><script src="/cycles.js?v=20261001a" defer></script>
-<script src="/meme.js?v=20261001a" defer></script>
-<script src="/lr.js?v=20261001a" defer></script>
 </body>
 </html>

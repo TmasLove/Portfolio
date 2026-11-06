@@ -364,10 +364,24 @@ function wireContact(body){
 }
 
 /* ---------- app openers ---------- */
-/* index.html loads the games after this file, so the home screen can draw first. A game tapped before its
-   script has arrived opens as soon as it has (deferred scripts all finish before DOMContentLoaded). */
-var scriptsReady=false;document.addEventListener('DOMContentLoaded',function(){scriptsReady=true});
-function afterScripts(fn){if(scriptsReady)fn();else document.addEventListener('DOMContentLoaded',fn,{once:true})}
+/* The games only define window.init* functions and are not needed to draw the home screen, so they load once
+   the page has finished, when the browser is idle. A game tapped before then starts the load right away and
+   opens as soon as its script has arrived. async=false keeps them in this order (paint.js needs trace.js,
+   cycles.js needs cycles3d.js). */
+var GAME_SCRIPTS=['/trace.js?v=20261001a','/paint.js?v=20261001a','/brick.js?v=20261001a','/cycles3d.js?v=20261001a','/cycles.js?v=20261001a','/meme.js?v=20261001a','/lr.js?v=20261001a'];
+var scriptsReady=false,scriptsStarted=false,scriptsWaiting=[];
+function loadScripts(){
+  if(scriptsStarted)return;scriptsStarted=true;
+  var left=GAME_SCRIPTS.length;
+  GAME_SCRIPTS.forEach(function(src){
+    var s=document.createElement('script');s.src=src;s.async=false;
+    s.onload=s.onerror=function(){if(--left)return;scriptsReady=true;scriptsWaiting.splice(0).forEach(function(fn){fn()})};
+    document.head.appendChild(s);
+  });
+}
+function afterScripts(fn){if(scriptsReady)fn();else{scriptsWaiting.push(fn);loadScripts()}}
+function loadScriptsWhenIdle(){if(window.requestIdleCallback)requestIdleCallback(loadScripts,{timeout:3000});else setTimeout(loadScripts,1000)}
+if(document.readyState==='complete')loadScriptsWhenIdle();else window.addEventListener('load',loadScriptsWhenIdle,{once:true});
 function openApp(key){
   if(!scriptsReady&&['paint','cycles','brick','meme'].indexOf(key)>-1)return afterScripts(function(){openApp(key)});
   if(isPhone())return openSheet(key);
