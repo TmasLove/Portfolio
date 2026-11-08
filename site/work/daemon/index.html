@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daemon, a Cyberpunk 2077 Mod Menu | Tommy Roldan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=20261108a"><link rel="canonical" href="https://tommyroldan.com/work/daemon/">
+<meta name="description" content="Daemon: a Cyber Engine Tweaks mod menu for Cyberpunk 2077 2.5 that repairs stuck quests, hands over items and checks every id against the running game before it fires.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="TommyOS, Tommy Roldan">
+<meta property="og:title" content="Daemon, a Cyberpunk 2077 Mod Menu"><meta property="og:description" content="Daemon: a Cyber Engine Tweaks mod menu for Cyberpunk 2077 2.5 that repairs stuck quests, hands over items and checks every id against the running game before it fires.">
+<meta property="og:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://tommyroldan.com/work/daemon/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Daemon, a Cyberpunk 2077 Mod Menu"><meta name="twitter:description" content="Daemon: a Cyber Engine Tweaks mod menu for Cyberpunk 2077 2.5 that repairs stuck quests, hands over items and checks every id against the running game before it fires."><meta name="twitter:image" content="https://tommyroldan.com/assets/og/tommyos-v2.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "Daemon", "codeRepository": "https://github.com/TmasLove/Daemon---Cyberpunk-2077---Mod-Menu-", "programmingLanguage": "Lua", "description": "A Cyber Engine Tweaks mod menu for Cyberpunk 2077 2.5 that repairs stuck quests, hands over items and browses every record the running game reports, checking every id against the live game first.", "author": {"@type": "Person", "name": "Tommy Roldan", "url": "https://tommyroldan.com"}}</script>
+</head><body>
+<header class="page-header"><a class="back-link" href="/work/">← All work</a></header>
+<main class="page">
+<div class="panel"><div class="case-head"><span class="sq art"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="dmnc-case"><rect width="64" height="64"/></clipPath></defs><rect width="64" height="64" fill="#0A0A0E"/><g clip-path="url(#dmnc-case)" stroke="#F0D01A" stroke-opacity=".22" stroke-width="4"><path d="M22 66 L52 36 M32 66 L62 36 M42 66 L72 36 M52 66 L82 36"/></g><path d="M9 17 H55 L49 33 H9 Z" fill="#F0D01A"/><path d="M17.5 20.5 H25.5 C29.6 20.5 31.5 22.6 31.5 25 C31.5 27.4 29.6 29.5 25.5 29.5 H17.5 Z M21 23.3 V26.7 H25.2 C26.9 26.7 27.8 26 27.8 25 C27.8 24 26.9 23.3 25.2 23.3 Z" fill="#0A0A0E" fill-rule="evenodd"/><rect x="9" y="41" width="10" height="2.4" fill="#F0D01A"/><rect x="19" y="41" width="36" height="2.4" fill="#1FD6F0"/></svg></span>
+<div><h1>Daemon</h1><p class="case-meta">Tools · 2026</p><span class="badges"><span class="badge public">public</span></span></div></div></div>
+<img src="/assets/live/daemon/banner.png" alt="Daemon, a Night City toolkit: a quest-repair and item menu for Cyberpunk 2077 on Cyber Engine Tweaks" style="width:100%;height:auto;display:block;border-radius:12px;margin:14px 0">
+<h2>What it is</h2>
+<p>A mod menu for Cyberpunk 2077, built on Cyber Engine Tweaks for game 2.5. It started with one stuck quest: Letter of the Law would not register that I had gathered what it needed. The usual fix is a console command from a community list, and four of the ids on those lists turned out to be wrong, including one that reads perfectly but belongs to a different quest in a different district.</p>
+<p>A wrong id does not throw an error. It does nothing, quietly, so you cannot tell "wrong code" from "code worked, quest still broken". Daemon is built so that never happens.</p>
+<div class="case-shots"><img class="shot-1440" src="/assets/live/daemon/quest-fixes.jpg" alt="The Daemon window in game: Quest Fixes with the checklist of all 17 cyberpsycho sightings and 24 of 32 ids verified" loading="lazy"></div>
+<p class="t3">In game, on the Quest Fixes tab: the cyberpsycho checklist, and the header counting how many ids this install verified.</p>
+<h2>Nothing fires blind</h2>
+<p>Every item id is checked against the game's own database when the mod loads. Anything your install does not recognise is greyed out and labelled instead of fired into nothing. Functions cannot be checked that way, so they are probed against the game first, and where neither is possible the menu says it could not verify rather than implying success.</p>
+<img src="/assets/live/daemon/how-it-verifies.png" alt="How verification works: an id is asked of your running game, and the button is live only if the record is present" loading="lazy" style="width:100%;height:auto;display:block;border-radius:12px;margin:12px 0">
+<h2>What it does</h2>
+<ul>
+<li><strong>Quest fixes</strong> that read the old value before writing, so every change can be reversed from the Undo tab, plus a checklist of all 17 cyberpsycho sightings with their districts.</li>
+<li><strong>Shards</strong>: the conversation shards that fail to spawn on a body, the usual reason a sighting will not complete.</li>
+<li><strong>Inventory and world</strong>: eddies, points, ammo, crafting components, time, weather, and teleports with saved waypoints.</li>
+<li><strong>Browse</strong>: reads every clothing, weapon and vehicle record out of your own running game (about 2,000, 1,800 and 1,400 on a 2.5 install), with search, readable names and a filter for what V can actually obtain.</li>
+<li><strong>Six palettes</strong>, and the whole window is derived from two colours.</li>
+</ul>
+<img src="/assets/live/daemon/palettes.png" alt="Six colour palettes for the Daemon window" loading="lazy" style="width:100%;height:auto;display:block;border-radius:12px;margin:12px 0">
+<h2>What it deliberately will not do</h2>
+<p>Force-complete a quest, rewrite story facts, or teleport you somewhere you cannot leave. Each of those can break a run in a way an undo cannot reverse, so they are left out on purpose. The line is "can it break a run", not "does it help the player".</p>
+<h2>Built with</h2><span class="chip">Lua</span><span class="chip">Cyber Engine Tweaks</span><span class="chip">ImGui</span><span class="chip">TweakDB</span>
+<h2>Details</h2>
+<div class="panel"><dl class="dl"><div><dt>Game</dt><dd>Cyberpunk 2077 2.5</dd></div><div><dt>Requires</dt><dd>Cyber Engine Tweaks 1.38.1</dd></div><div><dt>Since</dt><dd>November 2026</dd></div></dl></div>
+<div class="case-actions"><a class="btn btn-primary" href="https://github.com/TmasLove/Daemon---Cyberpunk-2077---Mod-Menu-" target="_blank" rel="noopener">Source on GitHub ↗</a><a class="btn btn-secondary" href="https://github.com/TmasLove/Daemon---Cyberpunk-2077---Mod-Menu-/raw/main/dist/Daemon-1.0.zip">Download Daemon 1.0 (zip)</a></div>
+<p class="t3">A fan-made mod. Not affiliated with or endorsed by CD Projekt RED. Cyberpunk 2077 is a trademark of CD Projekt S.A.</p>
+</main><footer class="site-footer">Tommy Roldan · Miami, FL</footer></body></html>
