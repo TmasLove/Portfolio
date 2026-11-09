@@ -18,8 +18,8 @@
 <p>A mod menu for Cyberpunk 2077, built on Cyber Engine Tweaks for game 2.5. It started with one stuck quest: Letter of the Law would not register that I had gathered what it needed. The usual fix is a console command from a community list, and four of the ids on those lists turned out to be wrong, including one that reads perfectly but belongs to a different quest in a different district.</p>
 <p>It is named after Mikoshi, the Arasaka vault in Cyberpunk 2077 that holds the engrams Soulkiller takes: a fitting name for a tool whose whole job is reading what the game is holding.</p>
 <p>A wrong id does not throw an error. It does nothing, quietly, so you cannot tell "wrong code" from "code worked, quest still broken". Mikoshi is built so that never happens.</p>
-<div class="case-shots"><img class="shot-1440" src="/assets/live/mikoshi/quest-fixes.jpg" alt="The menu in game: Quest Fixes with the checklist of all 17 cyberpsycho sightings and 24 of 32 ids verified" loading="lazy"></div>
-<p class="t3">In game, on the Quest Fixes tab: the cyberpsycho checklist, and the header counting how many ids this install verified. Captured before the rename, so the window still reads Daemon.</p>
+<div class="case-shots"><img class="shot-1440" src="/assets/live/mikoshi/quest-fixes.jpg" alt="Mikoshi in game on the Quest Fixes tab: the tracked quest, and three known fact fixes each marked already set, nothing to do" loading="lazy"></div>
+<p class="t3">In game, on the Quest Fixes tab. Each fix reads the save first, so one that is already applied says so and cannot be pressed again.</p>
 <h2>Nothing fires blind</h2>
 <p>Every item id is checked against the game's own database when the mod loads. Anything your install does not recognise is greyed out and labelled instead of fired into nothing. Functions cannot be checked that way, so they are probed against the game first, and where neither is possible the menu says it could not verify rather than implying success.</p>
 <img src="/assets/live/mikoshi/how-it-verifies.png" alt="How verification works: an id is asked of your running game, and the button is live only if the record is present" loading="lazy" style="width:100%;height:auto;display:block;border-radius:12px;margin:12px 0">
@@ -27,16 +27,26 @@
 <ul>
 <li><strong>Quest fixes</strong> that read the old value before writing, so every change can be reversed from the Undo tab, plus a checklist of all 17 cyberpsycho sightings with their districts.</li>
 <li><strong>Shards</strong>: the conversation shards that fail to spawn on a body, the usual reason a sighting will not complete.</li>
-<li><strong>Inventory and world</strong>: eddies, points, ammo, crafting components, time, weather, and teleports with saved waypoints.</li>
+<li><strong>Inventory and world</strong>: eddies, points, ammo and crafting components; time of day, a nudge upward for when V falls through the floor, and teleports with saved waypoints.</li>
 <li><strong>Browse</strong>: reads every clothing, weapon and vehicle record out of your own running game (about 2,000, 1,800 and 1,400 on a 2.5 install), with search, readable names and a filter for what V can actually obtain.</li>
-<li><strong>Six palettes</strong>, and the whole window is derived from two colours.</li>
+<li><strong>Nine palettes</strong>, each one a whole window design: every surface, grey and status colour is derived from three colours.</li>
 </ul>
-<img src="/assets/live/mikoshi/palettes.png" alt="Six colour palettes for the Mikoshi window" loading="lazy" style="width:100%;height:auto;display:block;border-radius:12px;margin:12px 0">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin:12px 0 8px">
+<figure style="margin:0"><img src="/assets/live/mikoshi/shards.jpg" alt="The Shards tab: eight shards with Give buttons, two marked unavailable on this build" loading="lazy" width="1034" height="866" style="width:100%;height:auto;border-radius:12px;display:block"><figcaption class="t3" style="margin-top:6px;font-size:.85rem">Shards: the two this build does not recognise get a red mark and the word unavailable, not a Give button.</figcaption></figure>
+<figure style="margin:0"><img src="/assets/live/mikoshi/inventory.jpg" alt="The Inventory tab: eddies, perk and attribute points, street cred, level and ammo" loading="lazy" width="1045" height="857" style="width:100%;height:auto;border-radius:12px;display:block"><figcaption class="t3" style="margin-top:6px;font-size:.85rem">Inventory: eddies, points, street cred, level and ammo by type.</figcaption></figure>
+<figure style="margin:0"><img src="/assets/live/mikoshi/world.jpg" alt="The World tab: time of day, weather state ids, the nudge upward, and teleport with waypoints" loading="lazy" width="1022" height="832" style="width:100%;height:auto;border-radius:12px;display:block"><figcaption class="t3" style="margin-top:6px;font-size:.85rem">World: time of day, the unstuck nudge, and teleport with saved waypoints. The weather buttons in this shot are gone in 1.0.1; more on that below.</figcaption></figure>
+<figure style="margin:0"><img src="/assets/live/mikoshi/diagnostics.jpg" alt="The Diagnostics tab: the watch list and the palette picker" loading="lazy" width="1024" height="875" style="width:100%;height:auto;border-radius:12px;display:block"><figcaption class="t3" style="margin-top:6px;font-size:.85rem">Diagnostics: pin quest facts to watch live while you play, and pick a palette.</figcaption></figure>
+</div>
+<p class="t3">These were taken on 1.0, so the header reads 24/32 ids verified. The catalogue corrections in 1.0.1 bring it to 36 of 36; the panels are unchanged.</p>
+<img src="/assets/live/mikoshi/palettes.png" alt="Nine palettes for the Mikoshi window: Samurai, Arasaka, Militech, Netrunner, Voodoo, Nomad, Kang Tao, Trauma and Corpo" loading="lazy" style="width:100%;height:auto;display:block;border-radius:12px;margin:12px 0">
+<div class="case-shots"><img class="shot-1440" src="/assets/live/mikoshi/palette-voodoo.jpg" alt="The Diagnostics panel in the Voodoo palette: jungle green on near-black" loading="lazy"></div>
+<p class="t3">The same window in Voodoo: "Pacifica. Jungle green under wet neon."</p>
 <h2>What it deliberately will not do</h2>
 <p>Force-complete a quest, rewrite story facts, or teleport you somewhere you cannot leave. Each of those can break a run in a way an undo cannot reverse, so they are left out on purpose. The line is "can it break a run", not "does it help the player".</p>
+<p>It also does not set the weather, and that one is not a choice: on 2.5 the game's weather system only exposes rain values, with no way to change the weather at all. The World tab shows what it does expose instead of a button that would do nothing.</p>
 <h2>Built with</h2><span class="chip">Lua</span><span class="chip">Cyber Engine Tweaks</span><span class="chip">ImGui</span><span class="chip">TweakDB</span>
 <h2>Details</h2>
-<div class="panel"><dl class="dl"><div><dt>Game</dt><dd>Cyberpunk 2077 2.5</dd></div><div><dt>Requires</dt><dd>Cyber Engine Tweaks 1.38.1</dd></div><div><dt>Licence</dt><dd>MIT, open source</dd></div><div><dt>Since</dt><dd>November 2026</dd></div></dl></div>
-<div class="case-actions"><a class="btn btn-primary" href="https://github.com/TmasLove/Mikoshi" target="_blank" rel="noopener">Source on GitHub ↗</a><a class="btn btn-secondary" href="https://github.com/TmasLove/Mikoshi/raw/main/dist/Mikoshi-1.0.zip">Download Mikoshi 1.0 (zip)</a></div>
+<div class="panel"><dl class="dl"><div><dt>Game</dt><dd>Cyberpunk 2077 2.5</dd></div><div><dt>Requires</dt><dd>Cyber Engine Tweaks 1.38.1</dd></div><div><dt>Version</dt><dd>1.0.1</dd></div><div><dt>Licence</dt><dd>MIT, open source</dd></div><div><dt>Since</dt><dd>November 2026</dd></div></dl></div>
+<div class="case-actions"><a class="btn btn-primary" href="https://github.com/TmasLove/Mikoshi" target="_blank" rel="noopener">Source on GitHub ↗</a><a class="btn btn-secondary" href="https://github.com/TmasLove/Mikoshi/raw/main/dist/Mikoshi-1.0.1.zip">Download Mikoshi 1.0.1 (zip)</a></div>
 <p class="t3">A fan-made mod. Not affiliated with or endorsed by CD Projekt RED. Cyberpunk 2077 is a trademark of CD Projekt S.A.</p>
 </main><footer class="site-footer">Tommy Roldan · Miami, FL</footer></body></html>
