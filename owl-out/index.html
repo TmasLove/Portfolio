@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Owl Out: an elimination game show for you and your friends</title>
+<meta name="description" content="Six games. One mistake and you are out. Download the early test build for Windows and Mac.">
+<meta property="og:title" content="Owl Out">
+<meta property="og:description" content="An elimination game show for you and your friends. Download the early test build for Windows and Mac.">
+<meta property="og:image" content="https://tommyroldan.com/owl-out/img/lights.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Figtree:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!--
+unslop pass (unslop by Damir Sokolovsky, @heydamir, CC BY 4.0). Second direction, 2026-11-15, after "not a fan of the purple".
+Direction
+  Product    an elimination game show you play with friends: six games, one mistake and you are out
+  Character  loud, a little cruel, deadpan
+  World      a dark arena lit only by its follow-spots: black floor, warm light, one signal lamp
+  Moments    the final game under its shafts of light, full width; six small moving diagrams, one per game
+  Signature  the game's own Stop / Go signal. When it says Stop, everything moving on the page freezes
+PLAN (product)
+#top      · the show is on                      · Last Light under its shafts of gold  · bleed     · 1 · Download the test build
+#games    · six games, a different show         · a frame and a diagram per game       · grid      · 2
+#out      · going out is half the fun           · the medical suite, a live monitor    · split     · 1
+#fall     · fall all the way down               · a contestant in the water            · bleed     · 1   (daylight: the contrasting ground)
+#you      · same suit, your colours             · two contestants, hats, back gear     · trio      · 1
+#play     · get the test build                  · none (the one list: steps)           · list      · 1 · Download the test build
+#feedback · tell us what broke                  · none (the one form)                  · form      · 1
+-->
+<style>
+html { scroll-behavior: smooth; } body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important; }
+</style>
+<style>
+/* Layout: one 1160px column on black; pictures run edge to edge, words stay narrow; gold only where the eye should go. 4px grid. */
+:root {
+  --black: #0a0a0b; --floor: #121214; --raised: #1b1b1e; --line: rgba(255, 255, 255, .09);
+  --ink: #f2f1ee; --dim: #a9a7a1; --faint: #77756f;
+  --gold: #ffcf45; --stop: #e5484d; --go: #30a46c;
+  --display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --body: "Figtree", "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  color-scheme: dark;
+}
+body { background: var(--black); color: var(--ink); font: 400 16px/1.6 var(--body); }
+.wrap { max-width: 1160px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(2.25rem, 5.2vw, 4.25rem); }
+p { margin: 0; max-width: 58ch; }
+a { color: inherit; }
+img { display: block; width: 100%; height: auto; }
+a:focus-visible, button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.watched *, .watched *::before, .watched *::after { animation-play-state: paused !important; }
+
+/* header */
+header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--black); box-shadow: 0 1px 0 var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--black); }
+header .wrap { display: flex; align-items: center; gap: 24px; padding-block: 12px; }
+.mark { display: flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--display); font-size: 1.375rem; margin-right: auto; }
+.mark img { width: 36px; height: 36px; border-radius: 8px; }
+nav { display: flex; gap: 24px; font-size: .9375rem; color: var(--dim); }
+nav a { text-decoration: none; transition: color 160ms var(--ease); }
+nav a:hover, nav a:focus-visible { color: var(--ink); }
+.btn { display: inline-block; border: 0; cursor: pointer; font: 500 1rem/1 var(--body); text-decoration: none; color: #171204; background: var(--gold); padding: 16px 24px; border-radius: 8px; transition: background-color 160ms var(--ease), transform 120ms var(--ease); }
+.btn:hover, .btn:focus-visible { background: #ffdb73; }
+.btn:active { transform: scale(.985); }
+.btn.quiet { background: var(--raised); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+.btn.quiet:hover { background: #242428; }
+.btn[disabled] { opacity: .5; cursor: default; }
+header .btn { padding: 12px 20px; }
+@media (max-width: 860px) { nav { display: none; } }
+
+/* the signal */
+.signal { display: inline-flex; align-items: center; gap: 8px; font: 400 1.125rem/1 var(--display); padding: 12px 16px 12px 12px; border-radius: 8px; background: var(--go); color: #fff; transition: background-color 160ms var(--ease); }
+.signal i { width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+.watched .signal { background: var(--stop); }
+.signal .stop, .watched .signal .go { display: none; }
+.watched .signal .stop { display: inline; }
+
+/* hero: the final game, edge to edge */
+#top { padding-block: 0; }
+#top .shot { position: relative; overflow: hidden; }
+#top .shot > img { aspect-ratio: 16 / 8.6; object-fit: cover; object-position: 62% 42%; }
+#top .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 10, 11, .96) 0%, rgba(10, 10, 11, .8) 34%, rgba(10, 10, 11, 0) 64%), linear-gradient(0deg, var(--black) 0%, rgba(10, 10, 11, 0) 28%); }
+.spot { position: absolute; top: -12%; width: 22%; height: 124%; transform-origin: 50% 0; mix-blend-mode: screen; pointer-events: none; opacity: .42;
+  background: linear-gradient(180deg, rgba(255, 221, 140, .55), rgba(255, 221, 140, 0) 82%); clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%); }
+.spot.a { left: 46%; animation: sway 10s var(--ease) infinite alternate; }
+.spot.b { left: 66%; animation: sway 13s var(--ease) -5s infinite alternate-reverse; }
+@keyframes sway { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+#top .words { position: absolute; inset: 0; display: flex; align-items: center; }
+#top .words .wrap { width: 100%; }
+#top .stack { display: grid; gap: 24px; justify-items: start; }
+h1 { font-size: clamp(4rem, 13vw, 10.5rem); line-height: .92; }
+#top p { font-size: clamp(1.0625rem, 1.7vw, 1.375rem); max-width: 28ch; color: var(--ink); }
+.meta { font: 400 .8125rem/1 var(--mono); color: var(--dim); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+@media (max-width: 760px) {
+  #top .shot > img { aspect-ratio: 4 / 5.4; object-position: 62% 50%; }
+  #top .shade { background: linear-gradient(0deg, var(--black) 6%, rgba(10, 10, 11, .86) 50%, rgba(10, 10, 11, .1) 84%); }
+  #top .words { align-items: end; padding-bottom: 32px; }
+  .spot { width: 40%; }
+}
+
+section { padding-block: clamp(72px, 10vw, 136px); }
+.lead { color: var(--dim); margin-top: 20px; font-size: 1.125rem; }
+
+/* six games */
+.games { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+.game { overflow: hidden; border-radius: 16px; background: var(--floor); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+.game img { aspect-ratio: 16 / 10.5; object-fit: cover; }
+.game .body { padding: 20px; display: grid; grid-template-columns: 56px 1fr; gap: 4px 16px; align-items: center; }
+.game svg { grid-row: span 2; width: 56px; height: 56px; align-self: start; }
+.game h3 { font-size: 1.5rem; }
+.game p { font-size: .9375rem; color: var(--dim); }
+.game.wide { grid-column: span 2; }
+.game.wide img { aspect-ratio: 16 / 7.4; }
+@media (max-width: 880px) { .games { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .games { grid-template-columns: 1fr; } .game.wide { grid-column: auto; } .game.wide img { aspect-ratio: 16 / 10.5; } }
+.d { fill: none; stroke: var(--dim); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.f { fill: var(--dim); } .fy { fill: var(--gold); } .fr { fill: var(--stop); }
+.pupil { animation: look 4.8s var(--ease) infinite; }
+@keyframes look { 0%, 52% { transform: translateX(-5px); fill: var(--dim); } 60%, 92% { transform: translateX(0); fill: var(--stop); } 100% { transform: translateX(-5px); fill: var(--dim); } }
+.tile { animation: drop 4.2s var(--ease) infinite; }
+.tile:nth-child(2) { animation-delay: .5s; } .tile:nth-child(3) { animation-delay: 1s; } .tile:nth-child(4) { animation-delay: 1.5s; } .tile:nth-child(5) { animation-delay: 2s; }
+@keyframes drop { 0%, 30% { transform: translateY(0); opacity: 1; fill: var(--dim); } 40% { fill: var(--stop); transform: translateY(0); opacity: 1; } 62%, 86% { transform: translateY(18px); opacity: 0; fill: var(--stop); } 100% { transform: translateY(0); opacity: 1; fill: var(--dim); } }
+.bomb { animation: pass 2.6s var(--ease) infinite alternate; }
+@keyframes pass { 0%, 36% { transform: translateX(0); } 64%, 100% { transform: translateX(24px); } }
+.spark { animation: blink .5s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+.bar { transform-origin: 28px 28px; animation: spin 3.2s linear infinite; }
+.bar2 { transform-origin: 28px 28px; animation: spin 4.4s linear infinite reverse; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hop { animation: hop 1.6s var(--ease) infinite; }
+@keyframes hop { 0%, 38%, 62%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.sq { animation: fall4 4.4s var(--ease) infinite; }
+@keyframes fall4 { 0%, 50% { opacity: 1; transform: translateY(0); } 62%, 88% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+.pool { animation: pool 5s var(--ease) infinite; }
+@keyframes pool { 0%, 40% { transform: translate(0, 0); opacity: 1; } 46% { opacity: 0; transform: translate(0, 0); } 52% { opacity: 0; transform: translate(20px, -6px); } 58%, 94% { opacity: 1; transform: translate(20px, -6px); } 100% { opacity: 0; transform: translate(20px, -6px); } }
+.runner { animation: chase 5s var(--ease) infinite; }
+@keyframes chase { 0%, 46% { transform: translate(0, 0); } 70%, 100% { transform: translate(17px, -5px); } }
+
+/* going out */
+#out { background: var(--floor); }
+.split { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(24px, 5vw, 72px); align-items: center; }
+.split > * { min-width: 0; }
+.split img { border-radius: 16px; aspect-ratio: 16 / 10; object-fit: cover; object-position: 62% 40%; }
+.split .text { display: grid; gap: 20px; }
+.split .text p { color: var(--dim); }
+.monitor { font: 400 .875rem/1.75 var(--mono); background: #060d0b; color: #8ff0b0; border-radius: 8px; padding: 16px 20px 12px; max-width: 34ch; box-shadow: inset 0 0 0 1px rgba(143, 240, 176, .14); font-variant-numeric: tabular-nums; }
+.monitor b { font-weight: 500; color: #fff; } .monitor .bad { color: #ff9a9a; } .monitor .who { color: #fff; }
+.monitor svg { display: block; width: 100%; height: 36px; margin-top: 8px; }
+.trace { fill: none; stroke: #5ff59a; stroke-width: 2; stroke-linejoin: round; stroke-dasharray: 70 330; animation: trace 2.2s linear infinite; }
+@keyframes trace { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }
+.watched .monitor .rate::after { content: " (it stopped. So did everything)"; color: #ff9a9a; }
+@media (max-width: 880px) { .split { grid-template-columns: 1fr; } }
+
+/* the fall */
+#fall { padding-block: 0; }
+#fall .frame { position: relative; overflow: hidden; }
+#fall img { aspect-ratio: 16 / 7.2; object-fit: cover; object-position: 50% 62%; }
+#fall .over { position: absolute; inset: auto 0 0 0; padding-block: clamp(24px, 4vw, 56px); background: linear-gradient(0deg, rgba(6, 34, 62, .9), rgba(6, 34, 62, 0)); color: #fff; }
+#fall .over p { color: #e6f4ff; margin-top: 12px; }
+@media (max-width: 720px) { #fall img { aspect-ratio: 4 / 4.2; } }
+
+/* you */
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+.trio figure { margin: 0; overflow: hidden; border-radius: 16px; min-width: 0; box-shadow: inset 0 0 0 1px var(--line); }
+.trio img { aspect-ratio: 4 / 3.4; object-fit: cover; }
+.trio .a img { object-position: 22% 40%; } .trio .b img { object-position: 82% 28%; } .trio .c img { object-position: 84% 26%; }
+@media (max-width: 760px) { .trio { grid-template-columns: 1fr; } }
+
+/* play: the two downloads and what to expect */
+#play { background: var(--floor); }
+.builds { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+.build { background: var(--black); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line); padding: 24px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+.build h3 { font-size: 1.75rem; }
+.build .size { font: 400 .8125rem/1 var(--mono); color: var(--dim); }
+.build ol { margin: 0; padding-left: 20px; color: var(--dim); display: grid; gap: 8px; font-size: .9375rem; }
+.build ol b { font-weight: 500; color: var(--ink); }
+.notes { margin: 32px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; color: var(--dim); font-size: .9375rem; max-width: 72ch; }
+.notes li { display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline; }
+.notes li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--faint); transform: translateY(-1px); }
+.notes .ok::before { background: var(--go); } .notes .wait::before { background: var(--gold); }
+@media (max-width: 760px) { .builds { grid-template-columns: 1fr; } }
+
+/* feedback */
+form { display: grid; gap: 16px; margin-top: 40px; max-width: 720px; }
+label { display: grid; gap: 8px; font-size: .9375rem; color: var(--dim); }
+textarea, select, input[type="text"] { font: 400 1rem/1.5 var(--body); color: var(--ink); background: var(--floor); border: 0; border-radius: 8px; padding: 12px 16px; box-shadow: inset 0 0 0 1px var(--line); }
+textarea { min-height: 160px; resize: vertical; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+#fb-status { color: var(--dim); font-size: .9375rem; min-height: 1.6em; }
+#fb-status.good { color: #8ff0b0; } #fb-status.bad { color: #ff9a9a; }
+#inbox { margin-top: 48px; display: grid; gap: 12px; max-width: 720px; }
+#inbox h3 { font-size: 1.5rem; }
+.note { background: var(--floor); border-radius: 8px; padding: 16px; box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 4px; }
+.note small { font: 400 .8125rem/1.4 var(--mono); color: var(--faint); }
+.note p { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .pair { grid-template-columns: 1fr; } }
+
+footer { color: var(--faint); font-size: .875rem; padding-block: 24px 48px; box-shadow: 0 -1px 0 var(--line); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 32px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  #top .stack > * { animation: rise 800ms var(--ease) both; }
+  #top .stack > :nth-child(2) { animation-delay: 80ms; } #top .stack > :nth-child(3) { animation-delay: 160ms; } #top .stack > :nth-child(4) { animation-delay: 240ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; } .spot { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="mark" href="#top"><img src="img/icon.png" alt="">Owl Out</a>
+    <nav><a href="#games">The games</a><a href="#out">Going out</a><a href="#you">Your contestant</a><a href="#feedback">Feedback</a></nav>
+    <a class="btn" href="#play">Download the test build</a>
+  </div>
+</header>
+
+<main>
+<section id="top">
+  <div class="shot">
+    <img src="img/lights.jpg" alt="A dark arena where shafts of gold light fall on a few glowing circles and contestants race for them">
+    <div class="spot a"></div><div class="spot b"></div>
+    <div class="shade"></div>
+    <div class="words"><div class="wrap">
+      <div class="stack">
+        <span class="meta">Early test build for Windows and Mac</span>
+        <h1>Owl Out</h1>
+        <p>An elimination game show for you and your friends. Six games. One mistake and you are out.</p>
+        <div class="row">
+          <a class="btn" href="#play">Download the test build</a>
+          <span class="signal"><i></i><span class="go">Go</span><span class="stop">Stop</span></span>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section id="games">
+  <div class="wrap">
+    <h2>Six games, and a different show every time</h2>
+    <p class="lead">Every show opens under the owl and ends in the dark. In between come three of the four middle games, in an order nobody knows, each harder than the last.</p>
+    <div class="games">
+      <article class="game wide"><img src="img/watcher.jpg" alt="Players frozen mid-stride in a hall while a giant owl stares at them">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><circle class="d" cx="18" cy="28" r="10"/><circle class="d" cx="38" cy="28" r="10"/><path class="d" d="M24 40l4 6 4-6"/><circle class="pupil f" cx="18" cy="28" r="4"/><circle class="pupil f" cx="38" cy="28" r="4"/></svg>
+          <h3>The Watcher</h3><p>Run while the owl looks away. Freeze when it turns. Anyone still moving is out.</p>
+        </div></article>
+      <article class="game"><img src="img/drop.jpg" alt="A checkered floor in the sky with balloons and a stunt plane overhead">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><g><rect class="tile f" x="8" y="12" width="12" height="12" rx="2"/><rect class="tile f" x="36" y="12" width="12" height="12" rx="2"/><rect class="tile f" x="8" y="26" width="12" height="12" rx="2"/><rect class="tile f" x="36" y="26" width="12" height="12" rx="2"/><rect class="tile f" x="22" y="12" width="12" height="12" rx="2"/></g><rect class="f" x="22" y="26" width="12" height="12" rx="2"/><circle class="fy" cx="28" cy="22" r="3"/></svg>
+          <h3>Floor Drop</h3><p>The floor falls away from the outside in. Find a tile and keep it</p>
+        </div></article>
+      <article class="game"><img src="img/potato.jpg" alt="A player holding a bomb chases others across a yard of toy blocks in a cartoon city">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><circle class="d" cx="16" cy="40" r="5"/><circle class="d" cx="40" cy="40" r="5"/><g class="bomb"><circle class="fr" cx="16" cy="22" r="7"/><path class="d" d="M20 16l4-5"/><circle class="spark fy" cx="25" cy="9" r="2.5"/></g></svg>
+          <h3>Hot Potato</h3><p>Somebody has a bomb. Shove a friend to make it theirs before the fuse runs out</p>
+        </div></article>
+      <article class="game"><img src="img/sweeper.jpg" alt="Players jump an orange bar sweeping round a platform above lava">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><circle class="d" cx="28" cy="28" r="22"/><path class="bar" d="M6 28h44" stroke="#ff8a2a" stroke-width="3" stroke-linecap="round" fill="none"/><path class="bar2" d="M28 28V8" stroke="#38bdf0" stroke-width="3" stroke-linecap="round" fill="none"/><circle class="f" cx="28" cy="28" r="3"/><circle class="hop fy" cx="42" cy="38" r="3"/></svg>
+          <h3>The Sweeper</h3><p>Jump the low bar, slide under the high one, on a platform over lava. Both keep speeding up.</p>
+        </div></article>
+      <article class="game"><img src="img/colour.jpg" alt="A floor of red, blue, yellow and green tiles over water, with the word Blue called">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><rect class="sq" x="8" y="8" width="18" height="18" rx="3" fill="#e5484d"/><rect x="30" y="8" width="18" height="18" rx="3" fill="#3b82f0"/><rect class="sq" x="8" y="30" width="18" height="18" rx="3" fill="#ffcf45"/><rect class="sq" x="30" y="30" width="18" height="18" rx="3" fill="#30a46c"/><circle cx="39" cy="17" r="3" fill="#fff"/></svg>
+          <h3>Colour Call</h3><p>A colour is called. Every other tile drops into the sea. Less time each round.</p>
+        </div></article>
+      <article class="game wide"><img src="img/hero.jpg" alt="Contestants sprint down a hall toward the owl under spotlights, the medical suite hanging on the wall">
+        <div class="body">
+          <svg viewBox="0 0 56 56" aria-hidden="true"><ellipse class="pool fy" cx="18" cy="40" rx="11" ry="5"/><circle class="runner f" cx="16" cy="36" r="3.5"/><circle class="f" cx="46" cy="18" r="3.5" opacity=".45"/><circle class="f" cx="10" cy="14" r="3.5" opacity=".45"/></svg>
+          <h3>Last Light</h3><p>The final, and the picture at the top of this page. Fewer lights than players, and each light saves exactly one of you.</p>
+        </div></article>
+    </div>
+  </div>
+</section>
+
+<section id="out">
+  <div class="wrap split">
+    <div class="text">
+      <h2>Going out is half the fun</h2>
+      <p>Get eliminated and you are carried up to the medical suite: a glass ward hanging over the arena where everyone still playing can see you. You get bandages to match what got you, a drip of something restorative, and two medics who are not impressed.</p>
+      <p>Then you watch the rest of the show from above.</p>
+      <div class="monitor" aria-label="A patient's screen in the medical suite">
+        <span class="who">Bed 7 · Player</span><br>
+        <span class="bad">Forgot to jump</span><br>
+        <span class="rate">Pulse <b id="pulse">132</b> bpm</span><br>
+        Health <b>6%</b> &nbsp; Pride <span class="bad">0%</span><br>
+        Dignity <span class="bad">not found</span><br>
+        Rx: a biscuit
+        <svg viewBox="0 0 400 36" preserveAspectRatio="none" aria-hidden="true"><path class="trace" pathLength="400" d="M0 22h60l8-4 8 4h20l6-18 8 30 6-12h40l8-4 8 4h20l6-18 8 30 6-12h40l8-4 8 4h20l6-18 8 30 6-12h58"/></svg>
+      </div>
+    </div>
+    <img src="img/suite.jpg" alt="Two bandaged contestants sit on hospital beds with drips while a medic examines them, vitals on screens behind">
+  </div>
+</section>
+
+<section id="fall">
+  <div class="frame">
+    <img src="img/fall.jpg" alt="A contestant lies flat in the water after a long fall, a splash still in the air, the game floor far above">
+    <div class="over"><div class="wrap">
+      <h2>Fall all the way down</h2>
+      <p>Miss a tile and you do not vanish. You fall, loudly, to the bottom, and you bounce.</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="you">
+  <div class="wrap">
+    <h2>Same jumpsuit, your colours, your hat, your title</h2>
+    <p class="lead">Everyone wears the suit. What you put on it is earned: surviving pays, winning pays more, and taking a rival out on purpose pays too. Spend it on hats, face and back gear, emotes and takedown effects. A few titles cannot be bought at all.</p>
+    <div class="trio">
+      <figure class="a"><img src="img/you.jpg" alt="Two contestants in grey jumpsuits, one with yellow trim and one with pink"></figure>
+      <figure class="b"><img src="img/hats.jpg" alt="A shelf of hats: party hat, traffic cone, crown, viking helmet and more"></figure>
+      <figure class="c"><img src="img/back.jpg" alt="Back gear seen from behind: a cape, a turtle shell, a guitar, a jetpack, angel wings"></figure>
+    </div>
+  </div>
+</section>
+
+<section id="play">
+  <div class="wrap">
+    <h2>Get the test build</h2>
+    <p class="lead">Free, and unfinished on purpose. Play a show against the bots, break things, then tell us what broke.</p>
+    <div class="builds">
+      <div class="build">
+        <h3>Windows</h3>
+        <span class="size">Zip file, about 60 MB</span>
+        <a class="btn" href="https://github.com/TmasLove/owl-out-builds/releases/latest/download/OwlOut-windows.zip">Download for Windows</a>
+        <ol>
+          <li>Right-click the zip and choose <b>Extract All</b></li>
+          <li>Open the folder and run <b>OwlOut.exe</b></li>
+          <li>If Windows shows "Windows protected your PC", click <b>More info</b>, then <b>Run anyway</b></li>
+        </ol>
+      </div>
+      <div class="build">
+        <h3>Mac</h3>
+        <span class="size">Zip file, about 75 MB</span>
+        <a class="btn" href="https://github.com/TmasLove/owl-out-builds/releases/latest/download/OwlOut-mac.zip">Download for Mac</a>
+        <ol>
+          <li>Double-click the zip to unpack <b>Owl Out</b></li>
+          <li>Right-click the app and choose <b>Open</b>, then <b>Open</b> again</li>
+          <li>If macOS still refuses, go to <b>System Settings, Privacy and Security</b> and press <b>Open Anyway</b></li>
+        </ol>
+      </div>
+    </div>
+    <ul class="notes">
+      <li class="ok">All six games are playable against bots. A full show takes about five minutes.</li>
+      <li class="wait">Playing with friends works on the same Wi-Fi: one hosts, the others type the host's address. Across the internet is not ready.</li>
+      <li class="wait">Both warnings above appear because the game is not yet signed with Microsoft or Apple. It is the same game either way.</li>
+      <li>Owl Out is a working title. The name, the price and the release date are not decided.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="feedback">
+  <div class="wrap">
+    <h2>Tell us what broke</h2>
+    <p class="lead">What confused you, what felt unfair, what made you laugh. One line is plenty.</p>
+    <form id="fb" novalidate>
+      <label for="fb-text">Your feedback
+        <textarea id="fb-text" name="text" maxlength="4000" placeholder="The Sweeper knocked me off before I could move"></textarea>
+      </label>
+      <div class="pair">
+        <label for="fb-os">You played on
+          <select id="fb-os" name="os"><option>Windows</option><option>Mac</option><option>Have not played yet</option></select>
+        </label>
+        <label for="fb-name">Name or nickname (optional)
+          <input id="fb-name" name="name" type="text" maxlength="60" autocomplete="off">
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn" id="fb-send" type="submit">Send feedback</button>
+        <a class="btn quiet" id="fb-github" href="https://github.com/TmasLove/owl-out-builds/issues/new" hidden>Send it on GitHub</a>
+        <button class="btn quiet" id="fb-copy" type="button" hidden>Copy my feedback</button>
+      </div>
+      <p id="fb-status" role="status"></p>
+    </form>
+    <div id="inbox" hidden></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>Owl Out is a working title</span><span>Every picture on this page is the game itself, from an early build</span></div></footer>
+
+<script>
+// The page plays The Watcher on itself: on Stop, everything moving freezes.
+(function () {
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement, pulse = document.getElementById('pulse'), t = 0;
+  if (still) return;
+  function go() { root.classList.remove('watched'); setTimeout(stop, 4200 + Math.random() * 3200); }
+  function stop() { root.classList.add('watched'); setTimeout(go, 1700 + Math.random() * 900); }
+  setTimeout(stop, 5200);
+  setInterval(function () {
+    if (!pulse || root.classList.contains('watched')) return;
+    t += 0.6; pulse.textContent = Math.round(132 + Math.sin(t) * 7 + Math.sin(t * 2.3) * 3);
+  }, 600);
+})();
+
+// Feedback. On the Claude page it is saved where only the owner can read it. Anywhere else (or signed out) there is
+// nowhere to save it, so the form offers to open it as a GitHub issue or copy it instead. Nothing is sent on load.
+(function () {
+  var form = document.getElementById('fb'), text = document.getElementById('fb-text'), os = document.getElementById('fb-os'),
+      who = document.getElementById('fb-name'), send = document.getElementById('fb-send'), gh = document.getElementById('fb-github'),
+      copy = document.getElementById('fb-copy'), status = document.getElementById('fb-status'), inbox = document.getElementById('inbox');
+  var db = null, me = null, issues = 'https://github.com/TmasLove/owl-out-builds/issues/new';
+  function say(msg, kind) { status.textContent = msg; status.className = kind || ''; }
+  try { var draft = localStorage.getItem('owlout-feedback'); if (draft) text.value = draft; } catch (e) {}
+  text.addEventListener('input', function () { try { localStorage.setItem('owlout-feedback', text.value); } catch (e) {} });
+
+  function fallback(why) {
+    send.hidden = true; gh.hidden = false; copy.hidden = false;
+    say(why);
+  }
+  gh.addEventListener('click', function () {
+    var body = text.value.trim();
+    gh.href = issues + '?title=' + encodeURIComponent('Feedback: ' + body.slice(0, 60)) + '&body=' + encodeURIComponent(body + '\n\nPlayed on: ' + os.value);
+  });
+  copy.addEventListener('click', function () {
+    var body = text.value.trim();
+    if (!body) { say('Write something first', 'bad'); return; }
+    (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(body) : Promise.reject()).then(
+      function () { say('Copied. Paste it to whoever sent you this page', 'good'); },
+      function () { text.focus(); text.select(); say('Select all and copy it from the box'); });
+  });
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var body = text.value.trim();
+    if (!body) { say('Write something first', 'bad'); text.focus(); return; }
+    if (!db || !me) { fallback('This page cannot save feedback for you here. Send it on GitHub, or copy it'); return; }
+    send.disabled = true; say('Sending');
+    var ref = db.doc('feedback/' + me);
+    ref.get().then(function (snap) {
+      var had = snap && snap.exists && snap.data() && Array.isArray(snap.data().notes) ? snap.data().notes : [];
+      had.push({ text: body.slice(0, 4000), os: os.value, name: who.value.trim().slice(0, 60), at: new Date().toISOString(), build: 'test-1' });
+      return ref.set({ notes: had.slice(-50), updated: new Date().toISOString() });
+    }).then(function () {
+      text.value = ''; try { localStorage.removeItem('owlout-feedback'); } catch (e) {}
+      say('Sent. Thank you', 'good'); send.disabled = false;
+    }, function () {
+      send.disabled = false;
+      fallback('That did not save (you may only have view access to this page). Send it on GitHub, or copy it');
+    });
+  });
+
+  function showInbox() {                      // the owner and editors read what has come in, newest first
+    db.collection('feedback').get().then(function (q) {
+      var all = [];
+      (q.docs || []).forEach(function (d) { var n = d.data() && d.data().notes; if (Array.isArray(n)) n.forEach(function (x) { all.push(x); }); });
+      all.sort(function (a, b) { return String(b.at).localeCompare(String(a.at)); });
+      inbox.textContent = '';
+      var h = document.createElement('h3'); h.textContent = all.length ? 'Feedback received (' + all.length + '), only you can see this' : 'No feedback yet. Only you can see this';
+      inbox.appendChild(h);
+      all.forEach(function (x) {
+        var box = document.createElement('div'); box.className = 'note';
+        var meta = document.createElement('small'); meta.textContent = [x.name || 'No name', x.os || '', String(x.at || '').slice(0, 16).replace('T', ' ')].join('  ·  ');
+        var p = document.createElement('p'); p.textContent = String(x.text || '');
+        box.appendChild(meta); box.appendChild(p); inbox.appendChild(box);
+      });
+      inbox.hidden = false;
+    }, function () {});
+  }
+
+  if (!window.claude || !window.claude.use) { fallback(''); return; }
+  Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
+    db = r[0]; var user = r[1];
+    if (!db || !user) { fallback(''); return; }
+    return user.id().then(function (id) {
+      me = id;
+      if (!me) { fallback(''); return; }
+      if (user.canEdit) user.canEdit().then(function (ok) { if (ok) showInbox(); }, function () {});
+    });
+  }).catch(function () { fallback(''); });
+})();
+</script>
+
+</body>
+</html>
