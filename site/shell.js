@@ -595,8 +595,9 @@ if(lGrid){
     b.addEventListener('click',function(){openApp(a.key)});
     ltiles.push(b);
   });
-  /* the dock holds four like an iPhone (Work, About, Contact, Settings) */
-  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit},'','fetchpriority="high"');b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
+  /* the dock holds four like an iPhone (Work, About, Contact, Settings). Work wears the Phone icon here, as the
+     first dock icon does on a real iPhone (Tommy: "it should be the phone icon to reflect a real iphone"); the desktop keeps Finder */
+  Object.keys(PAGES).filter(function(k){return !PAGES[k].hidden&&k!=='tools'}).forEach(function(k){var p=PAGES[k];if(k==='work')p={title:p.title,icon:'/assets/icons/dock-phone.png',fit:'plain'};var b=document.createElement('button');b.className='lapp';b.setAttribute('aria-label',p.title);b.innerHTML=sqHTML(p.art?{art:p.art}:{icon:p.icon,fit:p.fit},'','fetchpriority="high"');b.addEventListener('click',function(){openSheetPage(k)});lDock.appendChild(b)});
   /* the gear is Settings, like on a phone: wallpaper, appearance, motion (Tommy: "open up the system settings for the website") */
   var sb=document.createElement('button');sb.className='lapp';sb.setAttribute('aria-label','Settings');sb.innerHTML=sqHTML({icon:'/assets/icons/dock-settings.png',fit:'plain'},'','fetchpriority="high"');sb.addEventListener('click',function(){openApp('settings')});lDock.appendChild(sb);
 }
